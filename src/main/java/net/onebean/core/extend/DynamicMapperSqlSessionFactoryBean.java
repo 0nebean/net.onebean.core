@@ -98,7 +98,7 @@ public class DynamicMapperSqlSessionFactoryBean extends SqlSessionFactoryBean {
 			Resource[] rs_model = resolver.getResources("classpath*:net/onebean/**/model/**/*.class");
 			// by tangmingbao 为了支持移动端数据上报 而添加，此处model的匹配规则应该是可配置
 			Resource[] rs_entity = resolver.getResources("classpath*:net/onebean/**/entity/**/*.class");
-			
+
 			Resource[] rs=(Resource[]) ArrayUtils.addAll(rs_model,rs_entity);
 			
 			for(Resource resource : rs){								

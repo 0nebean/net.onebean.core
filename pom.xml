@@ -8,10 +8,9 @@
     <parent>
         <groupId>net.onebean</groupId>
         <artifactId>net.onebean.spring.boot</artifactId>
-        <version>1.0.0.RELEASE</version>
+        <version>1.1.0.2.RELEASE</version>
     </parent>
     <artifactId>net.onebean.core</artifactId>
-
     <packaging>jar</packaging>
 
 
@@ -163,6 +162,14 @@
             <artifactId>jsoup</artifactId>
             <version>1.8.3</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.28</version>
+        </dependency>
+
 
         <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba/dubbo &ndash;&gt;-->
         <!--<dependency>-->

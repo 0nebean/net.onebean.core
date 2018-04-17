@@ -13,6 +13,10 @@ public class PageResult<T> {
      */
     private Boolean flag;
     /**
+     * 返回信息
+     */
+    private String msg;
+    /**
      * 返回的列表
      */
     private List<T> data = new ArrayList<T>(0);
@@ -39,5 +43,13 @@ public class PageResult<T> {
 
     public void setData(List<T> data) {
         this.data = data;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }
