@@ -56,8 +56,8 @@ public class ConditionMap extends HashMap<String, Object>{
 
 		String [] conditionArr =  new String[1];
 
-		if (conditionStr.contains("-")) {
-			conditionArr = conditionStr.split("-");
+		if (conditionStr.contains("^")) {
+			conditionArr = conditionStr.split("\\^");
 		}else{
 			conditionArr[0] = conditionStr;
 		}

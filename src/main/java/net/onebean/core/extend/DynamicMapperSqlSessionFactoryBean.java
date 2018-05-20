@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -26,12 +27,12 @@ import net.onebean.util.ClassUtils;
  * 	在一般系统中，每个Model都会有部分基本操作，这些操作模式基本相同，所以在我们系统内部将其抽象出来，通过动态的生成Mapper的形式注入到Mybatis中。
  * 	对于生成的mapper文件，在setMapperLocations(Resource[])方法中加入到Factory map locations中，让Ibatis自行处理。
  * @see SqlSessionFactoryBean
- * @see ScanBaseModelUtil
+ * @see 'ScanBaseModelUtil'
  */
 public class DynamicMapperSqlSessionFactoryBean extends SqlSessionFactoryBean {
 	
 
-	private static final Logger LOGGER = Logger.getLogger(DynamicMapperSqlSessionFactoryBean.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DynamicMapperSqlSessionFactoryBean.class);
 	/**
 	 * 再此方法中加入了动态mapper 文件插入
 	 * 

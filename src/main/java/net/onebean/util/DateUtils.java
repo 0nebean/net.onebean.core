@@ -294,7 +294,7 @@ public class DateUtils {
 	/**
 	 * 按 {@value #PATTERN_YYYY_MM_DD}格式格式化日期对象
 	 * 
-	 * @param source
+	 * @param obj
 	 *            日期对象
 	 * @return 格式化值
 	 */
@@ -487,8 +487,9 @@ public class DateUtils {
 
 	/**
 	 * 给定时间计算从20140401到今天的整数值
-	 * 
-	 * @param date
+	 * @param year
+	 * @param month
+	 * @param day
 	 * @return
 	 */
 	public static int dayInDate20140401(int year, int month, int day) {
@@ -530,11 +531,28 @@ public class DateUtils {
 	public static String getNowYyyyMMdd(){
 		return sdf_yyyyMMdd.format(Calendar.getInstance().getTime());
 	}
-	
+
+	public static String getNowYyyy_MM_dd(){
+		return sdfSimple.format(Calendar.getInstance().getTime());
+	}
+
+	public static String getDateStrByTimestamp(Timestamp timestamp){
+		return sdf.format(new Date(timestamp.getTime()));
+	}
+
+	public static String getDateStrByTimestampNextDay(Timestamp timestamp){
+		Date date = new Date(timestamp.getTime());
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),23, 59, 59);
+		return sdf.format(calendar.getTime());
+	}
+
+
 	public static String getUserSetYyyyMMdd(int press_date){
 		return sdf_yyyyMMdd.format(dayIn20140401(press_date));
 	}
-	
+
 	public static String getMonth_ch(String month) {
 		String[] month_ch = { "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月",
 				"九月", "十月", "十一月", "十二月" };
