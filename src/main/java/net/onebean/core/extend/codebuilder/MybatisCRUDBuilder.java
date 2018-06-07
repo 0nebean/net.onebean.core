@@ -18,6 +18,7 @@ import net.onebean.core.extend.TableName;
 import net.onebean.core.metadata.ModelMappingManager;
 import net.onebean.core.metadata.PropertyInfo;
 import net.onebean.core.model.BaseIncrementIdModel;
+import net.onebean.util.PropUtil;
 import net.onebean.util.StringUtils;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.velocity.Template;
@@ -55,7 +56,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		templateFile = "META-INF/mybatis/createSql.vm";
+		templateFile = PropUtil.getConfig("org.mybaits.creatsql.vm.file.path");
 	}
 
 	public String mergeTemplate(VelocityContext context) {

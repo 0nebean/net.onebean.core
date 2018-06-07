@@ -2,19 +2,30 @@ package net.onebean.core;
 
 public class Pagination implements java.io.Serializable {
 	private static final long serialVersionUID = -6047376008743214596L;
-	private int DEFAULT_PAGE_SIZE = 10;
-	private int DEFAULT_CURRENTPAGE = 1;
+	private final static int DEFAULT_PAGE_SIZE = 10;
+	private final static  int DEFAULT_CURRENTPAGE = 1;
 
-	private int pageSize; // 每页默认10条数据
-	private int currentPage; // 当前页
-	private int totalPages; // 总页数
-	private int totalCount; // 总数据数
+	/**
+	 * 每页默认10条数据
+	 */
+	private int pageSize;
+	/**
+	 * 当前页
+	 */
+	private int currentPage;
+	/**
+	 * 总页数
+	 */
+	private int totalPages;
+	/**
+	 * 总数据数
+	 */
+	private int totalCount;
 
 	public Pagination(int totalCount, int pageSize) {
 		this.init(totalCount, pageSize);
 	}
 
-	// @org.
 	public Pagination() {
 		this.pageSize = DEFAULT_PAGE_SIZE;
 		this.currentPage = DEFAULT_CURRENTPAGE;

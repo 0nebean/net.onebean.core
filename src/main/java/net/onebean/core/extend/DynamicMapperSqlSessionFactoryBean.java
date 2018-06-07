@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.onebean.util.PropUtil;
 import org.apache.commons.lang.ArrayUtils;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.slf4j.Logger;
@@ -96,9 +97,9 @@ public class DynamicMapperSqlSessionFactoryBean extends SqlSessionFactoryBean {
 		MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resolver);
 		List<Class<?>> classList = new ArrayList<Class<?>>();
 		try {
-			Resource[] rs_model = resolver.getResources("classpath*:net/onebean/**/model/**/*.class");
+			Resource[] rs_model = resolver.getResources(PropUtil.getConfig("org.mybaits.jvm.model.class.classpath"));
 			// by tangmingbao 为了支持移动端数据上报 而添加，此处model的匹配规则应该是可配置
-			Resource[] rs_entity = resolver.getResources("classpath*:net/onebean/**/entity/**/*.class");
+			Resource[] rs_entity = resolver.getResources(PropUtil.getConfig("org.mybaits.jvm.entity.class.classpath"));
 
 			Resource[] rs=(Resource[]) ArrayUtils.addAll(rs_model,rs_entity);
 			
