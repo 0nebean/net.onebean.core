@@ -78,6 +78,23 @@ public class StringUtils {
 		return org.apache.commons.lang.StringUtils.capitalize(result);
 	}
 
+	/***
+	 * 驼峰命名转为下划线命名
+	 * @param para 驼峰命名的字符串
+	 */
+	public static String humpToUnderline(String para){
+		StringBuilder sb=new StringBuilder(para);
+		int temp=0;//定位
+		for(int i=0;i<para.length();i++){
+			if(Character.isUpperCase(para.charAt(i))){
+				sb.insert(i+temp, "_");
+				temp+=1;
+			}
+		}
+		return sb.toString().toLowerCase();
+	}
+
+
 	/**
 	 * 字符串连接时的分隔符
 	 * 

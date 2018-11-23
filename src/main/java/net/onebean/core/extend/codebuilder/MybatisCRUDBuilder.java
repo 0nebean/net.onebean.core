@@ -138,6 +138,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 				FiledName filed = m.getAnnotation(FiledName.class);
 				if(filed!=null){
 					mName = filed.value();
+					mName = StringUtils.humpToUnderline(mName);
 				}else{
 
 					Object cName=ClassUtils.getMethodAnnotationValue(m, "Column", "name");
