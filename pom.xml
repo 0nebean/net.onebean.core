@@ -20,7 +20,7 @@
     <description>core for onebean</description>
 
     <properties>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <druid-version>1.0.31</druid-version>
         <aspectj.version>1.7.2</aspectj.version>
         <MyBatis.version>1.3.2</MyBatis.version>
