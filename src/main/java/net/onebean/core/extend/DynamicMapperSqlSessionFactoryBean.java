@@ -1,12 +1,11 @@
 package net.onebean.core.extend;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
+import net.onebean.core.extend.codebuilder.MybatisCRUDBuilder;
+import net.onebean.core.model.BaseIncrementIdModel;
+import net.onebean.core.model.BaseModel;
+import net.onebean.util.ClassUtils;
 import net.onebean.util.PropUtil;
+import net.onebean.util.StringUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.slf4j.Logger;
@@ -17,10 +16,11 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 
-import net.onebean.core.extend.codebuilder.MybatisCRUDBuilder;
-import net.onebean.core.model.BaseIncrementIdModel;
-import net.onebean.core.model.BaseModel;
-import net.onebean.util.ClassUtils;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -31,6 +31,9 @@ import net.onebean.util.ClassUtils;
  * @see 'ScanBaseModelUtil'
  */
 public class DynamicMapperSqlSessionFactoryBean extends SqlSessionFactoryBean {
+
+	private static final String modelPathKey = "org.mybaits.jvm.model.class.classpath";
+	private static final String entityPathKey = "org.mybaits.jvm.entity.class.classpath";
 	
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DynamicMapperSqlSessionFactoryBean.class);
@@ -97,9 +100,11 @@ public class DynamicMapperSqlSessionFactoryBean extends SqlSessionFactoryBean {
 		MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resolver);
 		List<Class<?>> classList = new ArrayList<Class<?>>();
 		try {
-			Resource[] rs_model = resolver.getResources(PropUtil.getConfig("org.mybaits.jvm.model.class.classpath"));
+			String modelPath = PropUtil.getInstance().getConfig(modelPathKey,PropUtil.PUBLIC_CONF_JDBC);
+			String entityPath = PropUtil.getInstance().getConfig(entityPathKey,PropUtil.PUBLIC_CONF_JDBC);
+			Resource[] rs_model = resolver.getResources(modelPath);
 			// by tangmingbao 为了支持移动端数据上报 而添加，此处model的匹配规则应该是可配置
-			Resource[] rs_entity = resolver.getResources(PropUtil.getConfig("org.mybaits.jvm.entity.class.classpath"));
+			Resource[] rs_entity = resolver.getResources(entityPath);
 
 			Resource[] rs=(Resource[]) ArrayUtils.addAll(rs_model,rs_entity);
 			

@@ -14,12 +14,13 @@ import java.io.IOException;
  */
 public class FreeMarkerTemplateUtils {
 
+    private final static String FREEMARKER_FTL_KEY = "apache.freemarker.ftl.path";
     private FreeMarkerTemplateUtils(){}
     private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_22);
 
     static{
         //这里比较重要，用来指定加载模板所在的路径
-        CONFIGURATION.setTemplateLoader(new ClassTemplateLoader(FreeMarkerTemplateUtils.class, PropUtil.getConfig("apache.freemarker.ftl.path")));
+        CONFIGURATION.setTemplateLoader(new ClassTemplateLoader(FreeMarkerTemplateUtils.class, PropUtil.getInstance().getConfig(FREEMARKER_FTL_KEY,PropUtil.PUBLIC_CONF_FREEMARKER)));
         CONFIGURATION.setDefaultEncoding("UTF-8");
         CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         CONFIGURATION.setCacheStorage(NullCacheStorage.INSTANCE);

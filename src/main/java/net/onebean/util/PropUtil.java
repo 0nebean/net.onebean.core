@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -15,76 +16,88 @@ import java.util.Properties;
  */
 public class PropUtil {
 
+    public final static String DEFLAULT_NAME_SPACE = "application";
+    public final static String PUBLIC_CONF_JDBC = "public-conf.jdbc";
+    public final static String PUBLIC_CONF_REDIS = "public-conf.redis";
+    public final static String PUBLIC_CONF_MONGODB = "public-conf.mongdb";
+    public final static String PUBLIC_CONF_FREEMARKER = "public-conf.freemarker";
+    public final static String PUBLIC_CONF_EUREKA = "public-conf.eureka";
+    public final static String PUBLIC_CONF_HYSTRIX = "public-conf.hystrix";
+    public final static String PUBLIC_CONF_SPRING = "public-conf.spring";
+    public final static String PUBLIC_CONF_LOG = "public-conf.log";
+    public final static String PUBLIC_CONF_ALIYUN_OSS = "public-conf.aliyun-oss";
+
+    private PropUtil() {
+        initPropertiesLoader();
+    }
+
+    /**
+     * 初始化配置文件
+     */
+    private void initPropertiesLoader(){
+        loaderMap = new HashMap<>();
+        loaderMap.put(DEFLAULT_NAME_SPACE,new PropertiesLoader(DEFLAULT_NAME_SPACE));
+    }
+
     /**
      * 当前对象实例
      */
     private static PropUtil propUtil = new PropUtil();
-    /**
-     *  文件名
-     */
-    private static String fileName = "application.properties";
-    /**
-     * 属性文件加载对象
-     */
-    private static PropertiesLoader loader = new PropertiesLoader(fileName);
-    /**
-     * 保存全局属性值
-     */
-    private static Map<String, String> map = new HashMap<String, String>();
-
     /**
      * 获取当前对象实例
      */
     public static PropUtil getInstance() {
         return propUtil;
     }
+    /**
+     *  文件名
+     */
+    private final static String suffix = ".properties";
+    /**
+     * 属性文件加载对象map
+     */
+    private Map<String,PropertiesLoader> loaderMap = null;
+
+    /**
+     * 性配置文件获取配置
+     * @param key 键
+     * @param nameSpace 配置文件名
+     * @return 配置
+     */
+    private String getConfigInLoader(String key,String nameSpace) {
+        PropertiesLoader propertiesLoader;
+        String value;
+        if (null == loaderMap.get(nameSpace)){
+            propertiesLoader = new PropertiesLoader(nameSpace+suffix);
+            loaderMap.put(nameSpace,propertiesLoader);
+        }else{
+            propertiesLoader = loaderMap.get(nameSpace);
+        }
+        value = propertiesLoader.getProperty(key);
+        return StringUtils.isEmpty(value)?StringUtils.EMPTY:value;
+    }
 
     /**
      * 获取配置
      */
-    public static String getConfig(String key) {
-        String value = map.get(key);
-        if (value == null){
-            value = loader.getProperty(key);
-            map.put(key, value != null ? value : StringUtils.EMPTY);
+    public String getConfig(String key,String nameSpace) {
+        String value = getConfigInLoader(key,nameSpace);
+        if (StringUtils.isEmpty(value)){
+            value = ApolloPropUtils.getString(key,nameSpace);
         }
         return value;
     }
 
-    /**
-     * 写入properties信息
-     *
-     * @param key 名称
-     * @param value 值
-     */
-    public static void modifyConfig(String key, String value) {
-        try {
-            // 从输入流中读取属性列表（键和元素对）
-            Properties prop = getProperties();
-            prop.setProperty(key, value);
-            String path = PropUtil.class.getResource("/"+fileName).getPath();
-            FileOutputStream outputFile = new FileOutputStream(path);
-            prop.store(outputFile, "modify");
-            outputFile.close();
-            outputFile.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    /**
+//     * 获取配置
+//     */
+//    public static String getConfig(String key) {
+//        String value = getConfigInCache(key,DEFLAULT_NAME_SPACE);
+//        if (StringUtils.isEmpty(value)){
+//            value = ApolloPropUtils.getString(key);
+//        }
+//        return value;
+//    }
 
-    /**
-     * 返回　Properties
-     * @param
-     * @return
-     */
-    public static Properties getProperties(){
-        Properties prop = new Properties();
-        try {
-            Reader reader = Resources.getResourceAsReader("/"+fileName);
-            prop.load(reader);
-        } catch (Exception e) {
-            return null;
-        }
-        return prop;
-    }
+
 }

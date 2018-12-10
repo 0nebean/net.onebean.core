@@ -1,16 +1,5 @@
 package net.onebean.core.extend.codebuilder;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import net.onebean.core.extend.FiledName;
 import net.onebean.core.extend.IgnoreColumn;
 import net.onebean.core.extend.NullUpdatable;
@@ -18,6 +7,8 @@ import net.onebean.core.extend.TableName;
 import net.onebean.core.metadata.ModelMappingManager;
 import net.onebean.core.metadata.PropertyInfo;
 import net.onebean.core.model.BaseIncrementIdModel;
+import net.onebean.core.model.Deleted;
+import net.onebean.util.ClassUtils;
 import net.onebean.util.PropUtil;
 import net.onebean.util.StringUtils;
 import org.apache.ibatis.annotations.CacheNamespace;
@@ -27,14 +18,19 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
-import net.onebean.core.model.Deleted;
-import net.onebean.util.ClassUtils;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * 根据类名生成BaseDao中定义的Mybatis的映射SQL语句
  * 
  */
 public class MybatisCRUDBuilder extends UniversalCodeBuilder {
+
+	private static final String templateFileKey = "org.mybaits.creatsql.vm.file.path";
 
 	@Override
 	public <T> String buildByClass(Class<T> clazz) {
@@ -56,7 +52,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		templateFile = PropUtil.getConfig("org.mybaits.creatsql.vm.file.path");
+		templateFile = PropUtil.getInstance().getConfig(templateFileKey,PropUtil.PUBLIC_CONF_JDBC);
 	}
 
 	public String mergeTemplate(VelocityContext context) {
@@ -96,7 +92,6 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	 * <p>
 	 * 
 	 * @param clazz 要转换的实体类
-	 * @param type 类型 file代表文件，否则代表字符串
 	 * @return 如果type=file返回xml文件绝对路径，否则返回生成的xml内容
 	 */
 	public <T> String createSqlByEntity(Class<T> clazz) {
@@ -290,11 +285,12 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		return insertSql.toString();
 	}
 
+
 	/**
 	 * 功能:生成update语句
-	 * @param tableName
-	 * @param columns
-	 * @return
+	 * @param tableName 表
+	 * @param columnMap 行
+	 * @return sql
 	 */
 	private String updateSql(String tableName, Map<String,String> columnMap) {
 		// <set>元素会动态前置 SET关键字,而且也会消除任意无关的逗号
@@ -363,9 +359,9 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 
 	/**
 	 * 功能:生成findById语句
-	 * @param tableName
-	 * @param columns
-	 * @return
+	 * @param tableName 表名
+	 * @param columnMap 行
+	 * @return sql
 	 */
 	private String findByIdSql(String tableName, Map<String,String> columnMap) {
 		StringBuilder findByIdSql = new StringBuilder();
