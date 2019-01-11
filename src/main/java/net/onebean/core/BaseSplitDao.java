@@ -1,7 +1,7 @@
 package net.onebean.core;
 
-import com.eakay.core.extend.Sort;
-import com.eakay.core.extend.SqlMapper;
+import net.onebean.core.extend.Sort;
+import net.onebean.core.extend.SqlMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
