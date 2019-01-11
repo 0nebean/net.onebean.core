@@ -22,11 +22,13 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.*;
+
 
 /**
  * 根据类名生成BaseDao中定义的Mybatis的映射SQL语句
- * 
+ *
  */
 public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 
@@ -90,18 +92,18 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	/**
 	 * 功能:初始化类字段属性
 	 * <p>
-	 * 
+	 *
 	 * @param clazz 要转换的实体类
 	 * @return 如果type=file返回xml文件绝对路径，否则返回生成的xml内容
 	 */
 	public <T> String createSqlByEntity(Class<T> clazz) {
 		String tableName = null;
-	
+
 		TableName table =  clazz.getAnnotation(TableName.class);
 		if(table!=null){
 			tableName = table.value();
-			
-		}else					
+
+		}else
 		{
 			Object tName= ClassUtils.getAnnotationValue(clazz, "Table", "name");
 			if(tName!=null)
@@ -110,11 +112,11 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 			}
 			if(tableName==null)
 			{
-			tableName = ClassUtils.getLowerFirstLetterSimpleClassName(clazz
-				.getSimpleName());
+				tableName = ClassUtils.getLowerFirstLetterSimpleClassName(clazz
+						.getSimpleName());
 			}
 		}
-		
+
 		pkList.clear();
 		List<String> columns = new ArrayList<String>();
 		Map<String,String> columnMap = new HashMap<String,String>();
@@ -140,7 +142,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 					if(cName!=null)
 					{
 						mName=cName.toString();
-					}				
+					}
 					if(mName==null)
 					{
 						mName = ClassUtils.getPropertyName(m);
@@ -165,7 +167,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 			{
 				Field field=propertyinfo.getField();
 				Object cName=ClassUtils.getFieldAnnotationValue(field, "Column", "name");
-				
+
 				if(cName!=null)
 				{
 					String mName=cName.toString();
@@ -180,9 +182,9 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 						idIsString=String.class.isAssignableFrom(field.getType());
 					}
 				}
-				
+
 			}
-			
+
 		}
 		String entityClassName = clazz.getName();
 		String findByIdSql = findByIdSql(tableName, columnMap);
@@ -214,7 +216,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		context.put("delete", deleteSql);
 		context.put("deleteById", deleteSql);
 		context.put("deleteByIdsSql", deleteByIdsSql);
-		
+
 		context.put("getMaxIdSql", "select id from "+tableName+" order by id desc limit 1");
 
 		context.put("findById", findByIdSql);
@@ -251,18 +253,18 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 			updateSql
 					.append("update ")
 					.append(tableName)
-					.append(" set deleted_state=1 where id in <include refid=\"common.idsForEach\"/>");
+					.append(" set is_deleted=1 where id in <include refid=\"common.idsForEach\"/>");
 		} else {
 			updateSql.append("update ").append(tableName)
-					.append(" set deleted_state=1 where id=#{id}");
+					.append(" set is_deleted=1 where id=#{id}");
 		}
 		return updateSql.toString();
 	}
-	
+
 	private String selectKeySql(String tableName){
 		return "SELECT LAST_INSERT_ID() AS ID";
 	}
-	
+
 
 	/**
 	 * 功能:生成insert语句
@@ -273,17 +275,32 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	private String insertSql(String tableName, List<String> columns,List<String> paramColumn) {
 		StringBuilder insertSql = new StringBuilder();
 		StringBuilder valueSql = new StringBuilder();
-		insertSql.append("insert into ").append(tableName).append("(");
+		insertSql.append("insert into ").append(tableName).append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\" >");
+		valueSql.append("<trim prefix=\"values (\" suffix=\")\" suffixOverrides=\",\" >");
 		for (int i=0;i<columns.size();i++) {
-			if(columns.get(i).toLowerCase().equals("id"))continue;
+		    String field = paramColumn.get(i);
+            field = field.substring(0,field.indexOf(","));
+			if(columns.get(i).toLowerCase().equals("id") || columns.get(i).toLowerCase().equals("create_time"))continue;
+			/*空值默认不插入数据库*/
+
+			insertSql.append(" <if test=\"").append(field).append(" != null\"> ");
 			insertSql.append(columns.get(i)).append(",");
+			insertSql.append(" </if> ");
+
+			valueSql.append(" <if test=\"").append(field).append(" != null\"> ");
 			valueSql.append("#{").append(paramColumn.get(i)).append("},");
+			valueSql.append(" </if> ");
+
 		}
-		insertSql.deleteCharAt(insertSql.length() - 1);
-		valueSql.deleteCharAt(valueSql.length() - 1);
-		insertSql.append(") values (").append(valueSql).append(")");
+
+
+		insertSql.append("</trim>");
+		valueSql.append("</trim>");
+		insertSql.append(valueSql);
 		return insertSql.toString();
 	}
+
+
 
 
 	/**
@@ -302,7 +319,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	}
 
 	private StringBuilder updateFields(String tableName, Map<String,String> columnMap,
-			boolean useAlias) {
+									   boolean useAlias) {
 		StringBuilder updateSql = new StringBuilder();
 		updateSql.append("update ").append(tableName).append(" <set> ");
 		for(Iterator<String> itor = columnMap.keySet().iterator();itor.hasNext();){
@@ -310,45 +327,42 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 			String value = columnMap.get(key);
 			//String columnAlias = useAlias ? "entity." + value : key;
 			// if(useAlias) column = ;
-			updateSql.append(" <if test=\"").append(value)
-					.append(" != null\"> ");
-			updateSql.append(key).append("=#{").append(value)
-					.append("},");
+			updateSql.append(" <if test=\"").append(value).append(" != null\"> ");
+			updateSql.append(key).append("=#{").append(value).append("},");
 			updateSql.append(" </if> ");
-			
+
 			//20140821修改， 如果为null，update时可将字段置空
 			if(nullUpdatableList.get(key) != null){
-				updateSql.append(" <if test=\"").append(value)
-				.append(" == null\"> ");
+				updateSql.append(" <if test=\"").append(value).append(" == null\"> ");
 				updateSql.append(key).append("=null,");
 				updateSql.append(" </if> ");
 			}
-			
-		}		
-		
+
+		}
+
 		updateSql.append(" </set> ");
 		return updateSql;
 	}
-	
+
 	private StringBuilder updateFields2(String tableName, Map<String,String> columnMap,
-      boolean useAlias) {
-    StringBuilder updateSql = new StringBuilder();
-    updateSql.append("update ").append(tableName).append(" <set> ");
-    for(Iterator<String> itor = columnMap.keySet().iterator();itor.hasNext();){
-      String key = itor.next();
-      String value = columnMap.get(key);
-      //String columnAlias = useAlias ? "entity." + value : key;
-      // if(useAlias) column = ;
-      updateSql.append(" <if test=\"entity.").append(value)
-          .append(" != null\"> ");
-      updateSql.append(key).append("=#{entity.").append(value)
-          .append("},");
-      updateSql.append(" </if> ");
-    }   
-    
-    updateSql.append(" </set> ");
-    return updateSql;
-  }
+										boolean useAlias) {
+		StringBuilder updateSql = new StringBuilder();
+		updateSql.append("update ").append(tableName).append(" <set> ");
+		for(Iterator<String> itor = columnMap.keySet().iterator();itor.hasNext();){
+			String key = itor.next();
+			String value = columnMap.get(key);
+			//String columnAlias = useAlias ? "entity." + value : key;
+			// if(useAlias) column = ;
+			updateSql.append(" <if test=\"entity.").append(value)
+					.append(" != null\"> ");
+			updateSql.append(key).append("=#{entity.").append(value)
+					.append("},");
+			updateSql.append(" </if> ");
+		}
+
+		updateSql.append(" </set> ");
+		return updateSql;
+	}
 
 	private String updateBatchSql(String tableName, Map<String,String> columnMap) {
 		StringBuilder updateSql = updateFields2(tableName, columnMap, true);
@@ -392,7 +406,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		findSql.append(NEW_LINE_BREAK).append("<where>");
 		findSql.append(NEW_LINE_BREAK).append("<include refid=\"common.dynamicConditionsNoWhere\"/>");
 		if (Deleted.class.isAssignableFrom(clazz)) {
-			findSql.append(NEW_LINE_BREAK).append("AND deleted_state = 0");
+			findSql.append(NEW_LINE_BREAK).append("AND is_deleted = 0");
 		}
 
 		findSql.append(NEW_LINE_BREAK).append("</where>");
@@ -412,7 +426,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	 * 功能:生成delete语句
 	 * <p>
 	 * 作者文齐辉 2012-11-16 下午5:57:48
-	 * 
+	 *
 	 * @param tableName
 	 * @param columns
 	 * @return
@@ -426,7 +440,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 
 	/**
 	 * 主键where条件拼接
-	 * 
+	 *
 	 * @return
 	 */
 	private String pkWhereSqlStr() {
@@ -441,7 +455,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 
 		return pkStr.delete(pkStr.length() - 4, pkStr.length()).toString();
 	}
-	
+
 	/**
 	 * 根据get方法名称生成基于mybatis的列名
 	 * @param m
@@ -456,8 +470,10 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		}else if(Float.class.isAssignableFrom(m.getReturnType())){
 			mName +=",jdbcType=FLOAT";
 		}else if(Double.class.isAssignableFrom(m.getReturnType())){
-			mName +=",jdbcType=DOUBLE";
-		}else if(Integer.class.isAssignableFrom(m.getReturnType())){
+            mName +=",jdbcType=DOUBLE";
+        }else if(BigDecimal.class.isAssignableFrom(m.getReturnType())){
+            mName +=",jdbcType=DECIMAL";
+        }else if(Integer.class.isAssignableFrom(m.getReturnType())){
 			mName +=",jdbcType=INTEGER";
 		}else if(Byte.class.isAssignableFrom(m.getReturnType())){
 			mName +=",jdbcType=BINARY";
@@ -470,7 +486,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		}else if(Date.class.isAssignableFrom(m.getReturnType())){
 			mName +=",jdbcType=DATE";
 		}else if(BaseIncrementIdModel.class.isAssignableFrom(m.getReturnType())){
-		  mName +=".id,jdbcType=NUMERIC";
+			mName +=".id,jdbcType=NUMERIC";
 		}
 		return mName;
 	}
@@ -484,8 +500,10 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		}else if(Float.class.isAssignableFrom(t)){
 			mName +=",jdbcType=FLOAT";
 		}else if(Double.class.isAssignableFrom(t)){
-			mName +=",jdbcType=DOUBLE";
-		}else if(Integer.class.isAssignableFrom(t)){
+            mName +=",jdbcType=DOUBLE";
+        }else if(BigDecimal.class.isAssignableFrom(t)){
+            mName +=",jdbcType=DECIMAL";
+        }else if(Integer.class.isAssignableFrom(t)){
 			mName +=",jdbcType=INTEGER";
 		}else if(Byte.class.isAssignableFrom(t)){
 			mName +=",jdbcType=BINARY";
@@ -498,7 +516,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		}else if(Date.class.isAssignableFrom(t)){
 			mName +=",jdbcType=DATE";
 		}else if(BaseIncrementIdModel.class.isAssignableFrom(t)){
-		  mName +=".id,jdbcType=NUMERIC";
+			mName +=".id,jdbcType=NUMERIC";
 		}
 		return mName;
 	}

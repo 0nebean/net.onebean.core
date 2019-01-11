@@ -24,8 +24,9 @@ public class PropUtil {
     public final static String PUBLIC_CONF_EUREKA = "public-conf.eureka";
     public final static String PUBLIC_CONF_HYSTRIX = "public-conf.hystrix";
     public final static String PUBLIC_CONF_SPRING = "public-conf.spring";
-    public final static String PUBLIC_CONF_LOG = "public-conf.log";
+    public final static String PUBLIC_CONF_LOG = "public-conf.logging";
     public final static String PUBLIC_CONF_ALIYUN_OSS = "public-conf.aliyun-oss";
+    public final static String PUBLIC_CONF_APOLLO_INITIALIZER = "public-conf.apollo-initializer";
 
     private PropUtil() {
         initPropertiesLoader();

@@ -1,16 +1,21 @@
 package net.onebean.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.sun.xml.internal.txw2.IllegalAnnotationException;
 /**
  * 集合工具类
  */
 public class CollectionUtil {
+
+	/**
+	 * 字符串数组转list
+	 * @param stringArr 数组
+	 * @return list
+	 */
+	public static final List<String> stringArr2List(String[] stringArr) {
+		return (stringArr.length > 0)? Arrays.asList(stringArr):Collections.EMPTY_LIST;
+	}
 	
 	/**
 	 * 判断集合是否为空

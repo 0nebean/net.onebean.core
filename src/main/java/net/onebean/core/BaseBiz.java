@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import net.onebean.util.CollectionUtil;
 
-
 /**
  * service 层的基类，所有service类必须继承自此类，该类不能直接使用。
  * 将service层一些通用的操作给抽离出来，封装到此类中，其他service类必须继承此类，子类可以直接使用此类中的方法。
@@ -40,8 +39,8 @@ public abstract class BaseBiz<T extends BaseIncrementIdModel, K extends BaseDao<
 	}
 
 	@Override
-	public void deleteById(Object id) {
-		baseDao.deleteById(id);
+	public Integer deleteById(Object id) {
+		return baseDao.deleteById(id);
 
 	}
 
@@ -55,8 +54,8 @@ public abstract class BaseBiz<T extends BaseIncrementIdModel, K extends BaseDao<
 	}
 
 	@Override
-	public void delete(T entity) {
-		baseDao.delete(entity);
+	public Integer delete(T entity) {
+		return baseDao.delete(entity);
 	}
 
 	@Override
@@ -158,15 +157,17 @@ public abstract class BaseBiz<T extends BaseIncrementIdModel, K extends BaseDao<
 	}
 
 	@Override
-	public void update(T entity) {
-		baseDao.update(entity);
+	public Integer update(T entity) {
+		return baseDao.update(entity);
 	}
 
 	@Override
-	public void updateBatch(T entity, List<Long> ids) {
+	public Integer updateBatch(T entity, List<Long> ids) {
+		int res = 0;
 		if (!CollectionUtil.isEmpty(ids)) {
-			baseDao.updateBatch(entity, ids);
+			res =  baseDao.updateBatch(entity, ids);
 		}
+		return res;
 	}
 
 	@Override
