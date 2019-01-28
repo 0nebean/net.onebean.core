@@ -1,5 +1,8 @@
 package net.onebean.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -11,9 +14,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 字符串工具类
@@ -206,6 +206,25 @@ public class StringUtils {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 字符串数组转化为 字符串
+	 *
+	 * @param array
+	 * @return
+	 */
+	public static String arrayToString(Object[] array,String split) {
+		if (array == null)
+			return "";
+		StringBuffer result = new StringBuffer();
+		for (Object item : array) {
+			result.append(item).append(split);
+		}
+		if (result.length() > 0) {
+			return result.substring(0, result.length() - 1);
+		}
+		return "";
 	}
 
 	/**

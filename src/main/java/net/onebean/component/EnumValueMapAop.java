@@ -17,7 +17,7 @@ import java.util.List;
 @Aspect
 public class EnumValueMapAop {
 
-    private final String ExpGetResultDataPonit = "execution(* net.onebean..action..*.*(..))) && @annotation(enableEnumDeserialize)";
+    private final String ExpGetResultDataPonit = "(execution(* net.onebean..action..*.*(..))) && @annotation(enableEnumDeserialize)";
 
     /**
      * 环绕aop 设置枚举映射值
@@ -97,6 +97,4 @@ public class EnumValueMapAop {
             }
         }
     }
-
-
 }

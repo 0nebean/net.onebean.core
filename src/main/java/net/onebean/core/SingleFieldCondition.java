@@ -1,11 +1,12 @@
 package net.onebean.core;
 
+import net.onebean.util.DateUtils;
+import net.onebean.util.StringUtils;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-
-import net.onebean.util.DateUtils;
 
 
 public class SingleFieldCondition extends Condition implements Serializable{
@@ -194,7 +195,15 @@ public class SingleFieldCondition extends Condition implements Serializable{
 			return "=";
 		}
 	}
-	
+
+	@Override
+	protected void parseModel(String parameter) {
+		String[] array = parameter.split("@");
+		String field = array[0];
+		array[0] = StringUtils.humpToUnderline(field);
+		parameter = StringUtils.arrayToString(array,"@");
+		this.parse(parameter);
+	}
 
 	@Override
 	protected void parse(String parameter) {

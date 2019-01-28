@@ -7,19 +7,22 @@ import java.io.Serializable;
  * 单个条件传 属性名_类型_比较符 , 多个条件传 属性1-属性2-属性*_类型_比较符。多个条件解析后各条件之间是 or 的关系 
  */
 public abstract class Condition implements Serializable{
-	
-	
+
 	protected abstract void parse(String parameter);
-	
+
+	protected abstract void parseModel(String parameter);
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6323255822270908073L;
+
 	/**
 	 * 
 	 * 设置查询的字段名及查询类型
 	 * 例子 is_root@string@eq$
 	 */
+	@Deprecated
 	public static Condition parseCondition(String parameter){
 		Condition condition ; 
 		int fieldIndex = parameter.indexOf("-");  //是否为多个字段
@@ -31,6 +34,24 @@ public abstract class Condition implements Serializable{
 		condition.parse(parameter);
 		return condition;
 		
+	}
+
+	/**
+	 *
+	 * 设置查询的字段名及查询类型
+	 * 例子 is_root@string@eq$
+	 */
+	public static Condition parseModelCondition(String parameter){
+		Condition condition ;
+		int fieldIndex = parameter.indexOf("-");  //是否为多个字段
+		if(fieldIndex == -1){
+			condition = new SingleFieldCondition();
+		}else{
+			condition = new MultiFieldCondition();
+		}
+		condition.parseModel(parameter);
+		return condition;
+
 	}
 	
 

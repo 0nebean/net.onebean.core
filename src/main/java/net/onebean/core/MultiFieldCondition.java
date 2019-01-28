@@ -1,8 +1,11 @@
 package net.onebean.core;
 
+import net.onebean.util.StringUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * @see Condition#parseCondition(String)
  *
@@ -85,7 +88,10 @@ public class MultiFieldCondition extends Condition implements Serializable {
 	 */	
 	@Override
 	protected void parse(String parameter) {
-		singleConditions = new ArrayList<SingleFieldCondition>();
+		doParse(parameter,false);
+	}
+	private void doParse(String parameter,boolean isParseModel){
+		singleConditions = new ArrayList<>();
 		int fieldIndex = parameter.indexOf("-");  //是否为多个字段
 		if(fieldIndex == -1) {
 			throw new RuntimeException("parameter 如 'name-title@String@eq'");
@@ -99,15 +105,22 @@ public class MultiFieldCondition extends Condition implements Serializable {
 			fields = parameter.substring(0, splitIndex).split("-");
 			suffix = parameter.substring(splitIndex);
 		}
-		
 		for(String field : fields){
 			SingleFieldCondition singleCondition = new SingleFieldCondition();
-			singleCondition.parse(field+suffix);
+			if (isParseModel){
+				singleCondition.parse(StringUtils.humpToUnderline(field+suffix));
+			}else{
+				singleCondition.parse(field+suffix);
+			}
 			singleConditions.add(singleCondition);
 		}
-		
 	}
-	
+
+	@Override
+	protected void parseModel(String parameter) {
+		doParse(parameter,true);
+	}
+
 	public static void main(String[] args) {
 		Condition c = Condition.parseCondition("sex-name");
 		c.setValue("1111");

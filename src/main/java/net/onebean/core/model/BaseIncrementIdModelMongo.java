@@ -1,8 +1,8 @@
 package net.onebean.core.model;
 
-import java.io.Serializable;
-
 import net.onebean.core.extend.OrderBy;
+
+import java.io.Serializable;
 
 
 @OrderBy("id desc")

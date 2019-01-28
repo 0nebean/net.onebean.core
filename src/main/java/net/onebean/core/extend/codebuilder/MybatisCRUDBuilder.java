@@ -7,7 +7,8 @@ import net.onebean.core.extend.TableName;
 import net.onebean.core.metadata.ModelMappingManager;
 import net.onebean.core.metadata.PropertyInfo;
 import net.onebean.core.model.BaseIncrementIdModel;
-import net.onebean.core.model.Deleted;
+import net.onebean.core.model.InterfaceBaseDeletedModel;
+import net.onebean.core.model.InterfaceBaseSplitModel;
 import net.onebean.util.ClassUtils;
 import net.onebean.util.PropUtil;
 import net.onebean.util.StringUtils;
@@ -54,7 +55,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		templateFile = PropUtil.getInstance().getConfig(templateFileKey,PropUtil.PUBLIC_CONF_JDBC);
+		templateFile = PropUtil.getInstance().getConfig(templateFileKey, PropUtil.PUBLIC_CONF_JDBC);
 	}
 
 	public String mergeTemplate(VelocityContext context) {
@@ -187,37 +188,53 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 
 		}
 		String entityClassName = clazz.getName();
-		String findByIdSql = findByIdSql(tableName, columnMap);
+		String findByIdSql = findByIdSql(tableName, columnMap,clazz);
 		String findSql = findSql(tableName, columnMap, clazz);
 		String start_selectKey="";
 		String selectKeySql = "";
 		String end_selectKey="";
 		if(!idIsString)
 		{
-			start_selectKey="<selectKey keyProperty=\"id\" resultType=\"long\">";
+			start_selectKey="<selectKey keyProperty=\"entity.id\" resultType=\"long\">";
 			selectKeySql=selectKeySql(tableName);
 			end_selectKey="</selectKey>";
 		}
-		String inserSql = insertSql(tableName, columns,paramColumns);
-		String updateSql = updateSql(tableName, columnMap);
-		String updateBatchSql = updateBatchSql(tableName, columnMap);
+		String inserSql = insertSql(tableName, columns,paramColumns,clazz);
+		String updateSql = updateSql(tableName, columnMap,clazz);
+		String updateBatchSql = updateBatchSql(tableName, columnMap,clazz);
 		VelocityContext context = new VelocityContext();
 		String deleteSql;
+		String deleteByIdSql;
 		String deleteByIdsSql;
-		if (Deleted.class.isAssignableFrom(clazz)) {
-			deleteSql = deleteDeletedSql(tableName, false);
-			deleteByIdsSql = deleteDeletedSql(tableName, true);
+		String getMaxIdSql;
+		StringBuilder getMaxIdSqlBuild = new StringBuilder();
+		getMaxIdSqlBuild.append("select id from "+tableName);
+		if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+			getMaxIdSqlBuild.append("${suffix}");
+		}
+		getMaxIdSqlBuild.append(" order by id desc limit 1");
+		getMaxIdSql = getMaxIdSqlBuild.toString();
+		if (InterfaceBaseDeletedModel.class.isAssignableFrom(clazz)) {
+			deleteSql = deleteDeletedSql(tableName, false,true,clazz);
+			deleteByIdSql = deleteDeletedSql(tableName, false,false,clazz);
+			deleteByIdsSql = deleteDeletedSql(tableName, true,false,clazz);
 		} else {
-			deleteSql = deleteSql(tableName, columns);
-			deleteByIdsSql = "delete from " + tableName
-					+ " WHERE id in <include refid=\"common.idsForEach\"/>";
+			deleteSql = deleteSql(tableName,true,clazz);
+			deleteByIdSql = deleteSql(tableName,false,clazz);
+			StringBuilder deleteByIdsSqlBuilder =  new StringBuilder();
+			deleteByIdsSqlBuilder.append("delete from " + tableName);
+			if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+				deleteByIdsSqlBuilder.append("${suffix}");
+			}
+			deleteByIdsSqlBuilder.append(" WHERE id in <include refid=\"common.idsForEach\"/>");
+			deleteByIdsSql = deleteByIdsSqlBuilder.toString();
 		}
 
 		context.put("delete", deleteSql);
-		context.put("deleteById", deleteSql);
+		context.put("deleteById", deleteByIdSql);
 		context.put("deleteByIdsSql", deleteByIdsSql);
 
-		context.put("getMaxIdSql", "select id from "+tableName+" order by id desc limit 1");
+		context.put("getMaxIdSql", getMaxIdSql);
 
 		context.put("findById", findByIdSql);
 		context.put("findSql", findSql);
@@ -247,16 +264,24 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 
 	}
 
-	private String deleteDeletedSql(String tableName, boolean batch) {
+	private <T> String deleteDeletedSql(String tableName, boolean batch, boolean useAlias,Class<T> clazz) {
 		StringBuilder updateSql = new StringBuilder();
 		if (batch) {
-			updateSql
-					.append("update ")
-					.append(tableName)
-					.append(" set is_deleted=1 where id in <include refid=\"common.idsForEach\"/>");
+			updateSql.append("update ").append(tableName);
+			if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+				updateSql.append("${suffix}");
+			}
+			updateSql.append(" set is_deleted=1 where id in <include refid=\"common.idsForEach\"/>");
 		} else {
-			updateSql.append("update ").append(tableName)
-					.append(" set is_deleted=1 where id=#{id}");
+			updateSql.append("update ").append(tableName);
+			if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+				updateSql.append("${suffix}");
+			}
+			if (useAlias){
+				updateSql.append(" set is_deleted=1 where id=#{entity.id}");
+			}else{
+				updateSql.append(" set is_deleted=1 where id=#{id}");
+			}
 		}
 		return updateSql.toString();
 	}
@@ -272,10 +297,14 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	 * @param columns
 	 * @return
 	 */
-	private String insertSql(String tableName, List<String> columns,List<String> paramColumn) {
+	private <T> String insertSql(String tableName, List<String> columns,List<String> paramColumn, Class<T> clazz) {
 		StringBuilder insertSql = new StringBuilder();
 		StringBuilder valueSql = new StringBuilder();
-		insertSql.append("insert into ").append(tableName).append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\" >");
+		insertSql.append("insert into ").append(tableName);
+		if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+			insertSql.append("${suffix}");
+		}
+		insertSql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\" >");
 		valueSql.append("<trim prefix=\"values (\" suffix=\")\" suffixOverrides=\",\" >");
 		for (int i=0;i<columns.size();i++) {
 		    String field = paramColumn.get(i);
@@ -283,12 +312,12 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 			if(columns.get(i).toLowerCase().equals("id") || columns.get(i).toLowerCase().equals("create_time"))continue;
 			/*空值默认不插入数据库*/
 
-			insertSql.append(" <if test=\"").append(field).append(" != null\"> ");
+			insertSql.append(" <if test=\"entity.").append(field).append(" != null\"> ");
 			insertSql.append(columns.get(i)).append(",");
 			insertSql.append(" </if> ");
 
-			valueSql.append(" <if test=\"").append(field).append(" != null\"> ");
-			valueSql.append("#{").append(paramColumn.get(i)).append("},");
+			valueSql.append(" <if test=\"entity.").append(field).append(" != null\"> ");
+			valueSql.append("#{entity.").append(paramColumn.get(i)).append("},");
 			valueSql.append(" </if> ");
 
 		}
@@ -309,31 +338,32 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	 * @param columnMap 行
 	 * @return sql
 	 */
-	private String updateSql(String tableName, Map<String,String> columnMap) {
+	private <T> String updateSql(String tableName, Map<String,String> columnMap, Class<T> clazz) {
 		// <set>元素会动态前置 SET关键字,而且也会消除任意无关的逗号
-		StringBuilder updateSql = updateFields(tableName, columnMap, false);
+		StringBuilder updateSql = updateFields(tableName, columnMap,clazz);
 		if (pkList.size() > 0) {
-			updateSql.append(pkWhereSqlStr());
+			updateSql.append(pkWhereSqlStr(true));
 		}
 		return updateSql.toString();
 	}
 
-	private StringBuilder updateFields(String tableName, Map<String,String> columnMap,
-									   boolean useAlias) {
+	private <T> StringBuilder updateFields(String tableName, Map<String,String> columnMap, Class<T> clazz) {
 		StringBuilder updateSql = new StringBuilder();
-		updateSql.append("update ").append(tableName).append(" <set> ");
+		updateSql.append("update ").append(tableName);
+		if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+			updateSql.append("${suffix}");
+		}
+		updateSql.append(" <set> ");
 		for(Iterator<String> itor = columnMap.keySet().iterator();itor.hasNext();){
 			String key = itor.next();
 			String value = columnMap.get(key);
-			//String columnAlias = useAlias ? "entity." + value : key;
-			// if(useAlias) column = ;
-			updateSql.append(" <if test=\"").append(value).append(" != null\"> ");
-			updateSql.append(key).append("=#{").append(value).append("},");
+			updateSql.append(" <if test=\"entity.").append(value).append(" != null\"> ");
+			updateSql.append(key).append("=#{entity.").append(value).append("},");
 			updateSql.append(" </if> ");
 
 			//20140821修改， 如果为null，update时可将字段置空
 			if(nullUpdatableList.get(key) != null){
-				updateSql.append(" <if test=\"").append(value).append(" == null\"> ");
+				updateSql.append(" <if test=\"entity.").append(value).append(" == null\"> ");
 				updateSql.append(key).append("=null,");
 				updateSql.append(" </if> ");
 			}
@@ -344,10 +374,13 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		return updateSql;
 	}
 
-	private StringBuilder updateFields2(String tableName, Map<String,String> columnMap,
-										boolean useAlias) {
+	private <T> StringBuilder updateFields2(String tableName, Map<String,String> columnMap,boolean useAlias, Class<T> clazz) {
 		StringBuilder updateSql = new StringBuilder();
-		updateSql.append("update ").append(tableName).append(" <set> ");
+		updateSql.append("update ").append(tableName);
+		if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+			updateSql.append("${suffix}");
+		}
+		updateSql.append(" <set> ");
 		for(Iterator<String> itor = columnMap.keySet().iterator();itor.hasNext();){
 			String key = itor.next();
 			String value = columnMap.get(key);
@@ -364,8 +397,8 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		return updateSql;
 	}
 
-	private String updateBatchSql(String tableName, Map<String,String> columnMap) {
-		StringBuilder updateSql = updateFields2(tableName, columnMap, true);
+	private <T> String updateBatchSql(String tableName, Map<String,String> columnMap, Class<T> clazz) {
+		StringBuilder updateSql = updateFields2(tableName, columnMap, true,clazz);
 		updateSql.append(NEW_LINE_BREAK).append(" WHERE id in ");
 		updateSql.append("<include refid=\"common.idsForEach\"/>");
 		return updateSql.toString();
@@ -377,7 +410,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	 * @param columnMap 行
 	 * @return sql
 	 */
-	private String findByIdSql(String tableName, Map<String,String> columnMap) {
+	private <T> String findByIdSql(String tableName, Map<String,String> columnMap, Class<T> clazz) {
 		StringBuilder findByIdSql = new StringBuilder();
 		findByIdSql.append("select ");
 		for(Iterator<String> itor = columnMap.keySet().iterator();itor.hasNext();){
@@ -387,7 +420,13 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		}
 		findByIdSql = new StringBuilder(findByIdSql.substring(0, findByIdSql.length()-1));
 		findByIdSql.append(" from ").append(tableName);
-		findByIdSql.append(pkWhereSqlStr());
+		if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+			findByIdSql.append("${suffix}");
+		}
+		findByIdSql.append(pkWhereSqlStr(false));
+		if (InterfaceBaseDeletedModel.class.isAssignableFrom(clazz)) {
+			findByIdSql.append("AND is_deleted = 0");
+		}
 		findByIdSql.append(" limit 1");
 		return findByIdSql.toString();
 	}
@@ -403,9 +442,12 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		}
 		findSql = new StringBuilder(findSql.substring(0, findSql.length()-1));
 		findSql.append(" from ").append(tableName);
+		if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+			findSql.append("${suffix}");
+		}
 		findSql.append(NEW_LINE_BREAK).append("<where>");
 		findSql.append(NEW_LINE_BREAK).append("<include refid=\"common.dynamicConditionsNoWhere\"/>");
-		if (Deleted.class.isAssignableFrom(clazz)) {
+		if (InterfaceBaseDeletedModel.class.isAssignableFrom(clazz)) {
 			findSql.append(NEW_LINE_BREAK).append("AND is_deleted = 0");
 		}
 
@@ -425,16 +467,18 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	/**
 	 * 功能:生成delete语句
 	 * <p>
-	 * 作者文齐辉 2012-11-16 下午5:57:48
+	 *  2012-11-16 下午5:57:48
 	 *
 	 * @param tableName
-	 * @param columns
 	 * @return
 	 */
-	private String deleteSql(String tableName, List<String> columns) {
+	private <T> String deleteSql(String tableName, boolean useAlias, Class<T> clazz) {
 		StringBuilder deleteSql = new StringBuilder();
 		deleteSql.append("delete from ").append(tableName);
-		deleteSql.append(pkWhereSqlStr());
+		if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
+			deleteSql.append("${suffix}");
+		}
+		deleteSql.append(pkWhereSqlStr(useAlias));
 		return deleteSql.toString();
 	}
 
@@ -443,16 +487,18 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 	 *
 	 * @return
 	 */
-	private String pkWhereSqlStr() {
+	private String pkWhereSqlStr(boolean useAlias) {
 		if (pkList.size() == 0)
 			return "";
 		StringBuilder pkStr = new StringBuilder();
 		pkStr.append(" where ");
 		for (String pk : pkList) {
-			pkStr.append(pk).append("=").append("#{").append(pk).append("}")
-					.append(" and ");
+			if (useAlias){
+				pkStr.append(pk).append("=").append("#{entity.").append(pk).append("}").append(" and ");
+			}else{
+				pkStr.append(pk).append("=").append("#{").append(pk).append("}").append(" and ");
+			}
 		}
-
 		return pkStr.delete(pkStr.length() - 4, pkStr.length()).toString();
 	}
 
