@@ -41,7 +41,6 @@ public abstract class BaseBiz<T extends BaseIncrementIdModel, K extends BaseDao<
 	@Override
 	public Integer deleteById(Object id) {
 		return baseDao.deleteById(id);
-
 	}
 
 	@Override

@@ -69,6 +69,30 @@ public class ConditionMap extends HashMap<String, Object>{
 		}
 	}
 
+	/**
+	 * 根据表达式格式化查询条件
+	 * @param conditionStr
+	 */
+	public void parseModelCondition(String conditionStr){
+		if(StringUtils.isEmpty(conditionStr)){
+			return;
+		}
+
+		String [] conditionArr =  new String[1];
+
+		if (conditionStr.contains("^")) {
+			conditionArr = conditionStr.split("\\^");
+		}else{
+			conditionArr[0] = conditionStr;
+		}
+
+		for (String s:conditionArr) {
+			Condition temp = Condition.parseModelCondition(s.substring(0,s.indexOf("$")));
+			temp.setValue(s.substring(s.indexOf("$")+1,s.length()));
+			this.put(s,temp);
+		}
+	}
+
 	
 //	private 
 	

@@ -28,27 +28,27 @@ public interface BaseDao<T> extends SqlMapper {
 	 * @param id 主键
 	 * @return 泛型对象
 	 */
-	public T findById(Object id);
+	public T findById(@Param(value = "id") Object id);
 	/**
 	 * 新增一条泛型实体对象数据
 	 * @param entity 泛型的实体对象
 	 */
-	public void add(T entity);
+	public void add(@Param("entity") T entity);
 	/**
 	 * 更新 泛型的实体对象的数据
 	 * @param entity 泛型的实体对象
 	 */
-	public Integer update(T entity);
+	public Integer update(@Param("entity") T entity);
 	/**
 	 * 删除 泛型的实体对象的数据
 	 * @param entity 泛型的实体对象
 	 */
-	public Integer delete(T entity);
+	public Integer delete(@Param("entity") T entity);
 	/**
 	 * 根据id删除
 	 * @param id 主键
 	 */
-	public Integer deleteById(Object id);
+	public Integer deleteById(@Param(value = "id") Object id);
 	/**
 	 * 获取最大的ID
 	 * @return long型id

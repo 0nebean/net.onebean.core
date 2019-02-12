@@ -1,11 +1,14 @@
 package net.onebean.core;
 
+import net.onebean.component.SpringUtil;
 import net.onebean.core.extend.Sort;
 import net.onebean.core.model.BaseIncrementIdModel;
 import net.onebean.util.CollectionUtil;
+import net.onebean.util.PropUtil;
 import net.onebean.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +31,8 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 	 * dao原型属性
 	 */
 	protected K baseDao;
+	@Autowired
+	protected SpringUtil springUtil;
 
 	/**
 	 * 根据K泛型自动装载BaseDao
@@ -39,13 +44,13 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 	}
 
 	@Override
-	public Integer deleteById(Object id, String suffix) {
-		return baseDao.deleteById(id, suffix);
+	public Integer deleteById(Object id) {
+		return baseDao.deleteById(id, getTenantId());
 	}
 
 	@Override
-	public Long getMaxId(String suffix){
-		Long id = baseDao.getMaxId(suffix);
+	public Long getMaxId(){
+		Long id = baseDao.getMaxId(getTenantId());
 		if (null == id){
 			return 0L;
 		}
@@ -53,133 +58,133 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 	}
 
 	@Override
-	public Integer delete(T entity, String suffix) {
-		return baseDao.delete(entity, suffix);
+	public Integer delete(T entity) {
+		return baseDao.delete(entity, getTenantId());
 	}
 
 	@Override
-	public T findById(Object id, String suffix) {
+	public T findById(Object id) {
 		if (StringUtils.isEmpty(id)){
 			return null;
 		}
-		return baseDao.findById(id, suffix);
+		return baseDao.findById(id, getTenantId());
 	}
 
 	@Override
-	public List<T> find(Pagination pagination, Condition condition, String suffix) {
+	public List<T> find(Pagination pagination, Condition condition) {
 		List<Condition> conditions = null;
 		if (condition != null) {
 			conditions = new ArrayList<Condition>();
 			conditions.add(condition);
 		}
-		return find(pagination, conditions, suffix);
+		return find(pagination, conditions);
 	}
 
 	@Override
-	public List<T> find(Pagination pagination, ConditionMap conditions, String suffix) {
+	public List<T> find(Pagination pagination, ConditionMap conditions) {
 		List<Condition> conditionList = null;
 		if (conditions != null) {
 			conditionList = conditions.getItems();
 		}
-		return baseDao.find(pagination, conditionList,null, suffix);
+		return baseDao.find(pagination, conditionList,null, getTenantId());
 	}
 
 
 	@Override
-	public List<T> find(Pagination pagination, ConditionMap conditions, Sort sort, String suffix) {
+	public List<T> find(Pagination pagination, ConditionMap conditions, Sort sort) {
 		List<Condition> conditionList = null;
 		if (conditions != null) {
 			conditionList = conditions.getItems();
 		}
-		return baseDao.find(pagination, conditionList,sort, suffix);
+		return baseDao.find(pagination, conditionList,sort, getTenantId());
 	}
 
 	@Override
-	public List<T> find(ListPageQuery query, String suffix) {
-		return baseDao.find(query.getPagination(),query.getConditions().getItems(),query.getSort(), suffix);
+	public List<T> find(ListPageQuery query) {
+		return baseDao.find(query.getPagination(),query.getConditions().getItems(),query.getSort(), getTenantId());
 	}
 
 	@Override
-	public List<T> findAll(String suffix) {
-		return baseDao.find(null, null,null, suffix);
+	public List<T> findAll() {
+		return baseDao.find(null, null,null, getTenantId());
 	}
 
 	@Override
-	public List<T> findAll(Sort sort, String suffix) {
-		return baseDao.find(null, null,sort, suffix);
+	public List<T> findAll(Sort sort) {
+		return baseDao.find(null, null,sort, getTenantId());
 	}
 
 	@Override
-	public List<T> find(Pagination pagination, List<Condition> conditions,Sort sort, String suffix) {
-		return baseDao.find(pagination, conditions,sort, suffix);
+	public List<T> find(Pagination pagination, List<Condition> conditions,Sort sort) {
+		return baseDao.find(pagination, conditions,sort, getTenantId());
 
 	}
 
 	@Override
-	public List<T> find(Pagination pagination, List<Condition> conditions, String suffix) {
-		return baseDao.find(pagination, conditions,null, suffix);
+	public List<T> find(Pagination pagination, List<Condition> conditions) {
+		return baseDao.find(pagination, conditions,null, getTenantId());
 	}
 
 	@Override
-	public List<T> find(Pagination pagination,Sort sort, String suffix) {
-		return baseDao.find(pagination, null,sort, suffix);
+	public List<T> find(Pagination pagination,Sort sort) {
+		return baseDao.find(pagination, null,sort, getTenantId());
 	}
 
 	@Override
-	public List<T> find(Pagination pagination, String suffix) {
-		return baseDao.find(pagination, null,null, suffix);
+	public List<T> find(Pagination pagination) {
+		return baseDao.find(pagination, null,null, getTenantId());
 	}
 
 	@Override
-	public void save(T entity, String suffix) {
+	public void save(T entity) {
 		if (entity.getId() == null) {
-			baseDao.add(entity, suffix);
+			baseDao.add(entity, getTenantId());
 		} else {
-			baseDao.update(entity, suffix);
+			baseDao.update(entity, getTenantId());
 		}
 	}
 
 	@Override
-	public void saveBatch(List<T> entities, String suffix) {
+	public void saveBatch(List<T> entities) {
 		if (!CollectionUtil.isEmpty(entities)) {
 			for (T entity : entities) {
-				save(entity, suffix);
+				save(entity);
 			}
 		}
 	}
 
 	@Override
-	public void deleteByIds(List<Long> ids, String suffix) {
+	public void deleteByIds(List<Long> ids) {
 		if (!CollectionUtil.isEmpty(ids)) {
-			baseDao.deleteByIds(ids, suffix);
+			baseDao.deleteByIds(ids, getTenantId());
 		}
 	}
 
 	@Override
-	public Integer update(T entity, String suffix) {
-		return baseDao.update(entity, suffix);
+	public Integer update(T entity) {
+		return baseDao.update(entity, getTenantId());
 	}
 
 	@Override
-	public Integer updateBatch(T entity, List<Long> ids, String suffix) {
+	public Integer updateBatch(T entity, List<Long> ids) {
 		int res = 0;
 		if (!CollectionUtil.isEmpty(ids)) {
-			res =  baseDao.updateBatch(entity, ids, suffix);
+			res =  baseDao.updateBatch(entity, ids, getTenantId());
 		}
 		return res;
 	}
 
 	@Override
-	public void updateBatch(List<T> entities, String suffix) {
+	public void updateBatch(List<T> entities) {
 		if (!CollectionUtil.isEmpty(entities)) {
 			for (T entity : entities) {
-				save(entity, suffix);
+				save(entity);
 			}
 		}
 	}
 
 	@Override
-	public List<T> findByIds(List<Long> ids, String suffix) {
+	public List<T> findByIds(List<Long> ids) {
 		StringBuffer sb = new StringBuffer();
 		int i = 0;
 		int length = ids.size();
@@ -190,31 +195,47 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 			}
 			i++;
 		}
-		return findByIds(sb.toString(), suffix);
+		return findByIds(sb.toString());
 	}
 
 	@Override
-	public List<T> findByIds(String ids, String suffix) {
+	public List<T> findByIds(String ids) {
 		Condition con = Condition.parseCondition("ID@int@in");
 		con.setValue(ids);
-		return find(null, con, suffix);
+		return find(null, con);
 	}
 
 	@Override
-	public Integer searchCount(Map<String, Object> param, String suffix) {
+	public Integer searchCount(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		return baseDao.searchCount(param, suffix);
+		return baseDao.searchCount(param, getTenantId());
 	}
 
 	@Override
-	public List<Map<String, Object>> search(Map<String, Object> param, String suffix) {
+	public List<Map<String, Object>> search(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		return baseDao.search(param, suffix);
+		return baseDao.search(param, getTenantId());
 	}
 
 	@Override
-	public List<T> searchEntity(Map<String, Object> param, String suffix) {
+	public List<T> searchEntity(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		return baseDao.searchEntity(param, suffix);
+		return baseDao.searchEntity(param, getTenantId());
+	}
+
+	@Override
+	public String getTenantId(){
+		String tenantId = null;
+		try {
+			HttpServletRequest request = springUtil.getHttpServletRequest();
+			String tenantIdHeaderKey = PropUtil.getInstance().getConfig("uag.tenant.id.header.key", PropUtil.DEFLAULT_NAME_SPACE);
+			tenantId = request.getHeader(tenantIdHeaderKey);
+			if (StringUtils.isEmpty(tenantId)){
+				return tenantId;
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("get tenantId From request header failure");
+		}
+		return tenantId;
 	}
 }

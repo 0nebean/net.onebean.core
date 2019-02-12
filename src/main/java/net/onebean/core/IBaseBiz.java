@@ -178,4 +178,5 @@ public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	public List<T> searchEntity(@Param("param") Map<String, Object> param);
 
 
+
 }
