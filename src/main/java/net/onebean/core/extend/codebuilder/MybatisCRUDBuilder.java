@@ -9,15 +9,13 @@ import net.onebean.core.metadata.PropertyInfo;
 import net.onebean.core.model.BaseIncrementIdModel;
 import net.onebean.core.model.InterfaceBaseDeletedModel;
 import net.onebean.core.model.InterfaceBaseSplitModel;
+import net.onebean.core.velocity.VelocityEngineFactory;
 import net.onebean.util.ClassUtils;
 import net.onebean.util.PropUtil;
 import net.onebean.util.StringUtils;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -40,38 +38,16 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		return this.createSqlByEntity(clazz);
 	}
 
-	private static String templateFile = null;
-	private static VelocityEngine ve = null;
-
-	static {
-		ve = new VelocityEngine();
-		// 可选值："class"--从classpath中读取，"file"--从文件系统中读取
-		ve.setProperty("resource.loader", "class");
-		// 如果从文件系统中读取模板，那么属性值为org.apache.velocity.runtime.resource.loader.FileResourceLoader
-		ve.setProperty("class.resource.loader.class",
-				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-		try {
-			ve.init();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		templateFile = PropUtil.getInstance().getConfig(templateFileKey, PropUtil.PUBLIC_CONF_JDBC);
-	}
-
-	public String mergeTemplate(VelocityContext context) {
+	private String mergeTemplate(VelocityContext context) {
+		String templateFile = PropUtil.getInstance().getConfig(templateFileKey, PropUtil.PUBLIC_CONF_JDBC);
 		Template template = null;
 		StringWriter writer = null;
 		try {
-			template = ve.getTemplate(templateFile, "UTF-8");
+			template = VelocityEngineFactory.getInstance().getEngine().getTemplate(templateFile, "UTF-8");
 			writer = new StringWriter();
 			if (template != null)
 				template.merge(context, writer);
 			writer.flush();
-
-		} catch (ResourceNotFoundException rnfe) {
-			rnfe.printStackTrace();
-		} catch (ParseErrorException pee) {
-			pee.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -438,18 +414,28 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		for(Iterator<String> itor = columnMap.keySet().iterator();itor.hasNext();){
 			String key = itor.next();
 			String value = columnMap.get(key);
-			findSql.append(key).append(" as ").append(value).append(",");
+			findSql.append("t.").append(key).append(" as ").append(value).append(",");
 		}
 		findSql = new StringBuilder(findSql.substring(0, findSql.length()-1));
 		findSql.append(" from ").append(tableName);
 		if (InterfaceBaseSplitModel.class.isAssignableFrom(clazz)) {
 			findSql.append("${suffix}");
 		}
+		findSql.append(" t");
+		findSql.append(NEW_LINE_BREAK).append("<if test=\"null != dp and null != dp.hasDatePerm and dp.hasDatePerm and null != dp.join and '' != dp.join\">");
+		findSql.append(NEW_LINE_BREAK).append(" ${dp.join}");
+		findSql.append(NEW_LINE_BREAK).append("</if>");
+
 		findSql.append(NEW_LINE_BREAK).append("<where>");
 		findSql.append(NEW_LINE_BREAK).append("<include refid=\"common.dynamicConditionsNoWhere\"/>");
+
 		if (InterfaceBaseDeletedModel.class.isAssignableFrom(clazz)) {
-			findSql.append(NEW_LINE_BREAK).append("AND is_deleted = 0");
+			findSql.append(NEW_LINE_BREAK).append("AND t.is_deleted = 0");
 		}
+
+		findSql.append(NEW_LINE_BREAK).append("<if test=\"null != dp and null != dp.hasDatePerm and dp.hasDatePerm and null != dp.sql and '' != dp.sql\">");
+		findSql.append(NEW_LINE_BREAK).append("${dp.sql}");
+		findSql.append(NEW_LINE_BREAK).append("</if>");
 
 		findSql.append(NEW_LINE_BREAK).append("</where>");
 		String orderBy = ModelMappingManager.getBeanInfo(clazz).getOrderBy();

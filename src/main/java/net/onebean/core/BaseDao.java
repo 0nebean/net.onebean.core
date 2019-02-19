@@ -20,9 +20,10 @@ public interface BaseDao<T> extends SqlMapper {
 	 * @param page 分页参数
 	 * @param conditions 条件参数
 	 * @param sort 排序字段
+	 * @param dp 权限sql
 	 * @return 返回泛型的实体对象的list
 	 */
-	public List<T> find(Pagination page,@Param(value = "conditions") List<Condition> conditions,@Param(value = "sort") Sort sort);
+	public List<T> find(Pagination page, @Param(value = "conditions") List<Condition> conditions, @Param(value = "sort") Sort sort,@Param(value = "dp") Map <String,Object>dp);
 	/**
 	 * 根据id查找对象
 	 * @param id 主键

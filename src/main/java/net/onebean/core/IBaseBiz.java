@@ -65,6 +65,13 @@ public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	 */
 	public List<T> find(ListPageQuery query);
 	/**
+	 * 根据分页条件查询一批实体
+	 * @param query 分页排序查询条件封装对象
+	 * @param dp 权限sql
+	 * @return 泛型实体对象的list
+	 */
+	public List<T> find(ListPageQuery query,Map<String,Object> dp);
+	/**
 	 * 查找所有的记录
 	 *
 	 * @return 泛型实体对象的list
@@ -72,7 +79,13 @@ public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	public List<T> findAll();
 
 	/**
-	 *
+	 * 查找所有的记录
+	 * @param dp 权限sql
+	 * @return 泛型实体对象的list
+	 */
+	public List<T> findAll(Map<String,Object> dp);
+	/**
+	 * 查找所有的记录
 	 * @param sort 排序字段条件
 	 * @return 泛型实体对象的list
 	 */

@@ -81,7 +81,7 @@ public abstract class BaseBiz<T extends BaseIncrementIdModel, K extends BaseDao<
 		if (conditions != null) {
 			conditionList = conditions.getItems();
 		}
-		return baseDao.find(pagination, conditionList,null);
+		return baseDao.find(pagination, conditionList,null,null);
 	}
 
 
@@ -91,43 +91,53 @@ public abstract class BaseBiz<T extends BaseIncrementIdModel, K extends BaseDao<
 		if (conditions != null) {
 			conditionList = conditions.getItems();
 		}
-		return baseDao.find(pagination, conditionList,sort);
+		return baseDao.find(pagination, conditionList,sort,null);
 	}
 
 	@Override
 	public List<T> find(ListPageQuery query) {
-		return baseDao.find(query.getPagination(),query.getConditions().getItems(),query.getSort());
+		return baseDao.find(query.getPagination(),query.getConditions().getItems(),query.getSort(),null);
 	}
 
 	@Override
 	public List<T> findAll() {
-		return baseDao.find(null, null,null);
+		return baseDao.find(null, null,null,null);
+	}
+
+	@Override
+	public List<T> find(ListPageQuery query, Map<String, Object> dp) {
+		return baseDao.find(null, null,null,dp);
+	}
+
+	@Override
+	public List<T> findAll(Map<String, Object> dp) {
+		return baseDao.find(null, null,null,dp);
 	}
 
 	@Override
 	public List<T> findAll(Sort sort) {
-		return baseDao.find(null, null,sort);
+		return baseDao.find(null, null,sort,null);
 	}
 
 	@Override
 	public List<T> find(Pagination pagination, List<Condition> conditions,Sort sort) {
-		return baseDao.find(pagination, conditions,sort);
+		return baseDao.find(pagination, conditions,sort,null);
 
 	}
 
 	@Override
 	public List<T> find(Pagination pagination, List<Condition> conditions) {
-		return baseDao.find(pagination, conditions,null);
+		return baseDao.find(pagination, conditions,null,null);
 	}
 
 	@Override
 	public List<T> find(Pagination pagination,Sort sort) {
-		return baseDao.find(pagination, null,sort);
+		return baseDao.find(pagination, null,sort,null);
 	}
 
 	@Override
 	public List<T> find(Pagination pagination) {
-		return baseDao.find(pagination, null,null);
+		return baseDao.find(pagination, null,null,null);
 	}
 
 	@Override

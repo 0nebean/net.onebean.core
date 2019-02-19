@@ -1,6 +1,7 @@
 package net.onebean.core;
 
 import net.onebean.component.SpringUtil;
+import net.onebean.core.error.GetTenantInfoException;
 import net.onebean.core.extend.Sort;
 import net.onebean.core.model.BaseIncrementIdModel;
 import net.onebean.util.CollectionUtil;
@@ -86,7 +87,7 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 		if (conditions != null) {
 			conditionList = conditions.getItems();
 		}
-		return baseDao.find(pagination, conditionList,null, getTenantId());
+		return baseDao.find(pagination, conditionList,null, getTenantId(),null);
 	}
 
 
@@ -96,43 +97,52 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 		if (conditions != null) {
 			conditionList = conditions.getItems();
 		}
-		return baseDao.find(pagination, conditionList,sort, getTenantId());
+		return baseDao.find(pagination, conditionList,sort, getTenantId(),null);
 	}
 
 	@Override
 	public List<T> find(ListPageQuery query) {
-		return baseDao.find(query.getPagination(),query.getConditions().getItems(),query.getSort(), getTenantId());
+		return baseDao.find(query.getPagination(),query.getConditions().getItems(),query.getSort(), getTenantId(),null);
+	}
+
+	@Override
+	public List<T> find(ListPageQuery query, Map<String, Object> dp) {
+		return baseDao.find(query.getPagination(),query.getConditions().getItems(),query.getSort(), getTenantId(),dp);
+	}
+
+	@Override
+	public List<T> findAll(Map<String, Object> dp) {
+		return baseDao.find(null, null,null, getTenantId(),dp);
 	}
 
 	@Override
 	public List<T> findAll() {
-		return baseDao.find(null, null,null, getTenantId());
+		return baseDao.find(null, null,null, getTenantId(),null);
 	}
 
 	@Override
 	public List<T> findAll(Sort sort) {
-		return baseDao.find(null, null,sort, getTenantId());
+		return baseDao.find(null, null,sort, getTenantId(),null);
 	}
 
 	@Override
 	public List<T> find(Pagination pagination, List<Condition> conditions,Sort sort) {
-		return baseDao.find(pagination, conditions,sort, getTenantId());
-
+		return baseDao.find(pagination, conditions,sort, getTenantId(),null);
 	}
 
 	@Override
 	public List<T> find(Pagination pagination, List<Condition> conditions) {
-		return baseDao.find(pagination, conditions,null, getTenantId());
+		return baseDao.find(pagination, conditions,null, getTenantId(),null);
 	}
 
 	@Override
 	public List<T> find(Pagination pagination,Sort sort) {
-		return baseDao.find(pagination, null,sort, getTenantId());
+		return baseDao.find(pagination, null,sort, getTenantId(),null);
 	}
 
 	@Override
 	public List<T> find(Pagination pagination) {
-		return baseDao.find(pagination, null,null, getTenantId());
+		return baseDao.find(pagination, null,null, getTenantId(),null);
 	}
 
 	@Override
@@ -225,17 +235,17 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 
 	@Override
 	public String getTenantId(){
-		String tenantId = null;
+		Object tenantId;
 		try {
 			HttpServletRequest request = springUtil.getHttpServletRequest();
 			String tenantIdHeaderKey = PropUtil.getInstance().getConfig("uag.tenant.id.header.key", PropUtil.DEFLAULT_NAME_SPACE);
-			tenantId = request.getHeader(tenantIdHeaderKey);
+			tenantId = request.getSession().getAttribute(tenantIdHeaderKey);
 			if (StringUtils.isEmpty(tenantId)){
-				return tenantId;
+				throw new GetTenantInfoException("get tenantId From request header failure");
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("get tenantId From request header failure");
+			throw new GetTenantInfoException("get tenantId From request header failure");
 		}
-		return tenantId;
+		return tenantId.toString();
 	}
 }
