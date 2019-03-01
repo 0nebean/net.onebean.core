@@ -1,12 +1,11 @@
 package net.onebean.core;
 
-import java.util.List;
-import java.util.Map;
-
 import net.onebean.core.extend.Sort;
+import net.onebean.core.extend.SqlMapper;
 import org.apache.ibatis.annotations.Param;
 
-import net.onebean.core.extend.SqlMapper;
+import java.util.List;
+import java.util.Map;
 
 /**
  * mybatis接口
@@ -70,29 +69,5 @@ public interface BaseDao<T> extends SqlMapper {
 	 * @param ids list的id
 	 */
 	public Integer updateBatch(@Param("entity") T entity,@Param("ids") List<Long> ids);
-
-	/**
-	 * 根据mybatis中的配置提供数据搜索功能，调用此方法传入参数返回搜索结果的条数
-	 *
-	 * @param param map类型参数
-	 * @return Integer
-	 */
-	public Integer searchCount(@Param("param") Map<String, Object> param);
-
-	/**
-	 * 提供统一的搜索功能
-	 *
-	 * @param param map类型参数
-	 * @return List<Map<String, Object>>
-	 */
-	public List<Map<String, Object>> search(@Param("param") Map<String, Object> param);
-
-	/**
-	 * 提供统一的搜索功能
-	 *
-	 * @param param map类型参数
-	 * @return List<T> 泛型对象的list
-	 */
-	public List<T> searchEntity(@Param("param") Map<String, Object> param);
 
 }

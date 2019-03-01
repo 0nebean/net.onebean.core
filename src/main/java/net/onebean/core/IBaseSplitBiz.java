@@ -2,11 +2,7 @@ package net.onebean.core;
 
 import net.onebean.core.extend.Sort;
 import net.onebean.core.model.BaseIncrementIdModel;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -174,24 +170,6 @@ public interface IBaseSplitBiz<T extends BaseIncrementIdModel> {
 	 * @return list 泛型实体对象的list
 	 */
 	public List<T> findByIds(String ids);
-	/**
-	 * 根据mybatis中的配置提供数据搜索功能，调用此方法传入参数返回搜索结果的条数
-	 * @param param map类型参数
-	 * @return Integer
-	 */
-	public Integer searchCount(@Param("param") Map<String, Object> param);
-	/**
-	 * 提供统一的搜索功能
-	 * @param param map类型参数
-	 * @return List<Map<String, Object>>
-	 */
-	public List<Map<String, Object>> search(@Param("param") Map<String, Object> param);
-	/**
-	 * 提供统一的搜索功能
-	 * @param param map类型参数
-	 * @return 泛型实体对象的list
-	 */
-	public List<T> searchEntity(@Param("param") Map<String, Object> param);
 	/**
 	 * 获取租户ID
 	 * @return 租户ID

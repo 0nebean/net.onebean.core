@@ -1,15 +1,14 @@
 package net.onebean.core;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import net.onebean.core.extend.Sort;
 import net.onebean.core.model.BaseIncrementIdModel;
+import net.onebean.util.CollectionUtil;
 import net.onebean.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import net.onebean.util.CollectionUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * service 层的基类，所有service类必须继承自此类，该类不能直接使用。
@@ -210,21 +209,4 @@ public abstract class BaseBiz<T extends BaseIncrementIdModel, K extends BaseDao<
 		return find(null, con);
 	}
 
-	@Override
-	public Integer searchCount(Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		return baseDao.searchCount(param);
-	}
-
-	@Override
-	public List<Map<String, Object>> search(Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		return baseDao.search(param);
-	}
-
-	@Override
-	public List<T> searchEntity(Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		return baseDao.searchEntity(param);
-	}
 }

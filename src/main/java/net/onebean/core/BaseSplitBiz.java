@@ -215,23 +215,6 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 		return find(null, con);
 	}
 
-	@Override
-	public Integer searchCount(Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		return baseDao.searchCount(param, getTenantId());
-	}
-
-	@Override
-	public List<Map<String, Object>> search(Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		return baseDao.search(param, getTenantId());
-	}
-
-	@Override
-	public List<T> searchEntity(Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		return baseDao.searchEntity(param, getTenantId());
-	}
 
 	@Override
 	public String getTenantId(){
