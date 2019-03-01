@@ -288,11 +288,11 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 			if(columns.get(i).toLowerCase().equals("id") || columns.get(i).toLowerCase().equals("create_time"))continue;
 			/*空值默认不插入数据库*/
 
-			insertSql.append(" <if test=\"entity.").append(field).append(" != null and entity.").append(field).append(" != '' \"> ");
+			insertSql.append(" <if test=\"entity.").append(field).append(" != null\"> ");
 			insertSql.append(columns.get(i)).append(",");
 			insertSql.append(" </if> ");
 
-			valueSql.append(" <if test=\"entity.").append(field).append(" != null and entity.").append(field).append(" != '' \"> ");
+			valueSql.append(" <if test=\"entity.").append(field).append(" != null\"> ");
 			valueSql.append("#{entity.").append(paramColumn.get(i)).append("},");
 			valueSql.append(" </if> ");
 
@@ -333,7 +333,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		for(Iterator<String> itor = columnMap.keySet().iterator();itor.hasNext();){
 			String key = itor.next();
 			String value = columnMap.get(key);
-			updateSql.append(" <if test=\"entity.").append(value).append(" != null and entity.").append(value).append(" != '' \"> ");
+			updateSql.append(" <if test=\"entity.").append(value).append(" != null\"> ");
 			updateSql.append(key).append("=#{entity.").append(value).append("},");
 			updateSql.append(" </if> ");
 
@@ -362,8 +362,10 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 			String value = columnMap.get(key);
 			//String columnAlias = useAlias ? "entity." + value : key;
 			// if(useAlias) column = ;
-			updateSql.append(" <if test=\"entity.").append(value).append(" != null and entity.").append(value).append(" != '' \"> ");
-			updateSql.append(key).append("=#{entity.").append(value).append("},");
+			updateSql.append(" <if test=\"entity.").append(value)
+					.append(" != null\"> ");
+			updateSql.append(key).append("=#{entity.").append(value)
+					.append("},");
 			updateSql.append(" </if> ");
 		}
 
