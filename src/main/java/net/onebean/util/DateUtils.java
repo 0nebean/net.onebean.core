@@ -905,4 +905,9 @@ public class DateUtils {
             retStr = "" + i;
         return retStr;
     }
+
+	public static final String getTimeStamp() {
+		Date now = new Date();
+		return String.valueOf(now.getTime());
+	}
 }

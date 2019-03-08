@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
  * 
  */
 public class StringUtils {
+
+	public static final String EMPTY = "";
 	/**
 	 * 获得mapping str
 	 * @param str
@@ -961,4 +963,10 @@ public class StringUtils {
 		str = StringUtils.filterSpecial(str);
 		System.err.println(filterWrongChars(str));
 	}
+
+
+	public static String toStrTrim(Object obj) {
+		return obj == null ? "" : obj.toString().trim();
+	}
+
 }

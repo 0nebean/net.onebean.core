@@ -26,6 +26,7 @@ public class PropUtil {
     public final static String PUBLIC_CONF_SPRING = "public-conf.spring";
     public final static String PUBLIC_CONF_LOG = "public-conf.logging";
     public final static String PUBLIC_CONF_ALIYUN_OSS = "public-conf.aliyun-oss";
+    public final static String PUBLIC_CONF_REDISSON = "public-conf.redisson";
     public final static String PUBLIC_CONF_APOLLO_INITIALIZER = "public-conf.apollo-initializer";
 
     private PropUtil() {
@@ -89,16 +90,6 @@ public class PropUtil {
         return value;
     }
 
-//    /**
-//     * 获取配置
-//     */
-//    public static String getConfig(String key) {
-//        String value = getConfigInCache(key,DEFLAULT_NAME_SPACE);
-//        if (StringUtils.isEmpty(value)){
-//            value = ApolloPropUtils.getString(key);
-//        }
-//        return value;
-//    }
 
 
 }
