@@ -1,11 +1,13 @@
 package net.onebean.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -22,7 +24,6 @@ import java.util.regex.Pattern;
  * 
  */
 public class StringUtils {
-
 	public static final String EMPTY = "";
 	/**
 	 * 获得mapping str
@@ -769,6 +770,14 @@ public class StringUtils {
 		return false;
 	}
 
+	public static String encodeUtf8(String str) {
+		try {
+			return URLEncoder.encode(str,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		}
+	}
+
 	/**
 	 * 生成随机字符串
 	 * 
@@ -969,4 +978,13 @@ public class StringUtils {
 		return obj == null ? "" : obj.toString().trim();
 	}
 
+
+	public static boolean isJson(String content) {
+		try {
+			JSONObject.parseObject(content);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 }

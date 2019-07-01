@@ -1,5 +1,9 @@
 package net.onebean.core;
 
+import com.eakay.core.extend.Sort;
+
+import javax.validation.Valid;
+
 /**
  * @author 0neBean
  * @param <M> 泛型data对象class
@@ -18,8 +22,18 @@ public class BasePaginationRequest<M> {
         this.page = page;
     }
 
+    @Valid
     private M data = null;
     private Pagination page = null;
+    private Sort sort = null;
+
+    public Sort getSort() {
+        return sort;
+    }
+
+    public void setSort(Sort sort) {
+        this.sort = sort;
+    }
 
     public M getData() {
         return data;

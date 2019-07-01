@@ -1,5 +1,6 @@
 package net.onebean.util;
 
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -7,7 +8,12 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author 0neBean
+ */
 public class ClassUtils {
+
+
 	public static String getLowerFirstLetterSimpleClassName(String className) {
 		if (StringUtils.isEmpty(className))
 			return "";

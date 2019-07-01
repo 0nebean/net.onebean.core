@@ -6,10 +6,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -29,7 +27,7 @@ public class SpringUtil implements ApplicationContextAware {
     }
 
     //获取HttpServletRequest
-    public HttpServletRequest getHttpServletRequest() {
+    public static HttpServletRequest getHttpServletRequest() {
         HttpServletRequest request = null;
         try {
             request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -38,7 +36,6 @@ public class SpringUtil implements ApplicationContextAware {
         }
         return request;
     }
-
 
     //获取applicationContext
     public static ApplicationContext getApplicationContext() {

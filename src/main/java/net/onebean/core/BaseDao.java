@@ -1,7 +1,7 @@
 package net.onebean.core;
 
-import net.onebean.core.extend.Sort;
-import net.onebean.core.extend.SqlMapper;
+import com.eakay.core.extend.Sort;
+import com.eakay.core.extend.SqlMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface BaseDao<T> extends SqlMapper {
 	 * @param dp 权限sql
 	 * @return 返回泛型的实体对象的list
 	 */
-	public List<T> find(Pagination page, @Param(value = "conditions") List<Condition> conditions, @Param(value = "sort") Sort sort,@Param(value = "dp") Map <String,Object>dp);
+	public List<T> find(Pagination page, @Param(value = "conditions") List<Condition> conditions, @Param(value = "sort") Sort sort, @Param(value = "dp") Map<String, Object> dp);
 	/**
 	 * 根据id查找对象
 	 * @param id 主键
@@ -68,6 +68,6 @@ public interface BaseDao<T> extends SqlMapper {
 	 * @param entity 泛型实体
 	 * @param ids list的id
 	 */
-	public Integer updateBatch(@Param("entity") T entity,@Param("ids") List<Long> ids);
+	public Integer updateBatch(@Param("entity") T entity, @Param("ids") List<Long> ids);
 
 }

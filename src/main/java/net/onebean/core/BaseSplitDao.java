@@ -1,7 +1,7 @@
 package net.onebean.core;
 
-import net.onebean.core.extend.Sort;
-import net.onebean.core.extend.SqlMapper;
+import com.eakay.core.extend.Sort;
+import com.eakay.core.extend.SqlMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public interface BaseSplitDao<T> extends SqlMapper {
 	 * @return 返回泛型的实体对象的list
 	 */
 	public List<T> find(Pagination page, @Param(value = "conditions") List<Condition> conditions, @Param(value = "sort") Sort sort
-			,@Param(value = "suffix") String suffix,@Param(value = "dp") Map <String,Object>dp);
+            , @Param(value = "suffix") String suffix, @Param(value = "dp") Map<String, Object> dp);
 	/**
 	 * 根据id查找对象
 	 * @param id 主键

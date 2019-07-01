@@ -39,6 +39,24 @@ public class Parse {
 	}
 
 	/**
+	 * 无损转换
+	 * @param d
+	 * @return
+	 */
+	public static BigDecimal toBigDecimal(Double d) {
+		return new BigDecimal(d.toString());
+	}
+
+	/**
+	 * 无损转换
+	 * @param d
+	 * @return
+	 */
+	public static BigDecimal toBigDecimal(Integer d) {
+		return new BigDecimal(d.toString());
+	}
+
+	/**
 	 * 转换成double
 	 * 
 	 * @param value

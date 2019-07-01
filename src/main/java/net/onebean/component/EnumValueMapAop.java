@@ -1,9 +1,10 @@
 package net.onebean.component;
 
-import net.onebean.core.Json.EnableEnumDeserialize;
-import net.onebean.core.Json.EnumDeserialize;
-import net.onebean.util.CollectionUtil;
-import net.onebean.util.ReflectionUtils;
+import com.eakay.core.Json.EnableEnumDeserialize;
+import com.eakay.core.Json.EnumDeserialize;
+import com.eakay.util.CollectionUtil;
+import com.eakay.util.ReflectionUtils;
+import com.eakay.util.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,7 +18,7 @@ import java.util.List;
 @Aspect
 public class EnumValueMapAop {
 
-    private final String ExpGetResultDataPonit = "(execution(* net.onebean..action..*.*(..))) && @annotation(enableEnumDeserialize)";
+    private final String ExpGetResultDataPonit = "(execution(* com.eakay..action..*.*(..))) && @annotation(enableEnumDeserialize)";
 
     /**
      * 环绕aop 设置枚举映射值
@@ -69,6 +70,21 @@ public class EnumValueMapAop {
             String value = ReflectionUtils.invokeGetterMethod(target,field.getName()).toString();
             Method getValueByKeyMethod = enumClz.getMethod("getValueByKey",String.class);
             Object enumValue = getValueByKeyMethod.invoke(null,value);
+            if (StringUtils.isEmpty(enumValue)){
+                enumValue = "-";
+            }
+            ReflectionUtils.setFieldValue(target,field.getName(),enumValue);
+        }
+        if (field.isAnnotationPresent(com.eakay.common.json.EnumDeserialize.class)) {
+            // 获取注解
+            com.eakay.common.json.EnumDeserialize fieldAnnotation = field.getAnnotation(com.eakay.common.json.EnumDeserialize.class);
+            Class<?> enumClz = fieldAnnotation.using();
+            String value = ReflectionUtils.invokeGetterMethod(target,field.getName()).toString();
+            Method getValueByKeyMethod = enumClz.getMethod("getValueByKey",String.class);
+            Object enumValue = getValueByKeyMethod.invoke(null,value);
+            if (StringUtils.isEmpty(enumValue)){
+                enumValue = "-";
+            }
             ReflectionUtils.setFieldValue(target,field.getName(),enumValue);
         }
     }

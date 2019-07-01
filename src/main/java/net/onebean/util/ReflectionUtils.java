@@ -1,17 +1,20 @@
 package net.onebean.util;
 
 
-import java.lang.reflect.Field;  
-import java.lang.reflect.InvocationTargetException;  
-import java.lang.reflect.Method;  
-import java.lang.reflect.ParameterizedType;  
-import java.lang.reflect.Type;  
-  
-import org.apache.commons.lang.StringUtils;  
-import org.slf4j.Logger;  
-import org.slf4j.LoggerFactory;  
-import org.springframework.util.Assert;  
-  
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 /** 
  * 反射工具类. 
  *  
@@ -280,5 +283,87 @@ public abstract class ReflectionUtils {
         }
 
         return null;
+    }
+
+
+    /**
+     *
+     * 从request中取出请求参数，把这些参数对应反射为JavaBean对象
+     *
+     * @param request
+     * @param cls
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws UnsupportedEncodingException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     */
+    public static <T> T getParamFromRequest(HttpServletRequest request, Class<T> cls) throws InstantiationException, IllegalAccessException, UnsupportedEncodingException, IllegalArgumentException, InvocationTargetException {
+        request.setCharacterEncoding("utf-8");//设置请求(request)的编码集
+        T t=cls.newInstance();
+        Map<String, String[]> parameterMap=request.getParameterMap();//获取所有请求参数
+        List<Method> objectSetMethods=getObjectSetMethods(cls);//获取JavaBean中所有的set方法
+        String key="";
+        String value="";
+        for(Map.Entry<String,String[]> parameter:parameterMap.entrySet()){
+            key="set"+parameter.getKey();
+            String values[]=parameter.getValue();
+            if(values!=null && values.length>0){
+                value=values[0];
+            }
+            for(Method method:objectSetMethods){
+                if(key.equalsIgnoreCase(method.getName())){
+                    Class c=method.getParameterTypes()[0];
+                    String parameterType=c.getTypeName();
+                    if (!"".equals(value)) {
+                        if ("int".equals(parameterType) || "java.lang.Integer".equals(parameterType)) {
+                            int v = Integer.parseInt(value);
+                            method.invoke(t, v);
+                        } else if ("float".equals(parameterType) || "java.lang.Float".equals(parameterType)) {
+                            float v = Float.parseFloat(value);
+                            method.invoke(t, v);
+                        } else if ("double".equals(parameterType) || "java.lang.Double".equals(parameterType)) {
+                            double v = Double.parseDouble(value);
+                            method.invoke(t, v);
+                        } else if("short".equals(parameterType) || "java.lang.Short".equals(parameterType)){
+                            short v = Short.parseShort(value);
+                            method.invoke(t, v);
+                        } else if("long".equals(parameterType) || "java.lang.Long".equals(parameterType)){
+                            long v = Long.parseLong(value);
+                            method.invoke(t, v);
+                        } else if("BigDecimal".equals(parameterType) || "java.math.BigDecimal".equals(parameterType)){
+                            Number v = new BigDecimal(value+"");
+                            method.invoke(t, v);
+                        } else if("Timestamp".equals(parameterType) || "java.sql.Timestamp".equals(parameterType)){
+                            Date v = DateUtils.stringToTimeStamp(value);
+                            method.invoke(t, v);
+                        }else {
+                            method.invoke(t, value);
+                        }
+                    }
+                }
+            }
+        }
+        return t;
+    }
+
+
+    /**
+     *
+     * 获取对象(JavaBean)的全部set方法
+     *
+     * @param cls 对象(JavaBean)
+     * @return List<Method>
+     */
+    private static <T> List<Method> getObjectSetMethods(Class<T> cls){
+        List<Method> setMethods = new ArrayList<>();
+        Method[] methods = cls.getMethods();
+        for (Method method : methods) {
+            if (method.getName().startsWith("set")) {
+                setMethods.add(method);
+            }
+        }
+        return setMethods;
     }
 } 

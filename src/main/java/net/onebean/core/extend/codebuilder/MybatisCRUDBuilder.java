@@ -1,18 +1,18 @@
 package net.onebean.core.extend.codebuilder;
 
-import net.onebean.core.extend.FiledName;
-import net.onebean.core.extend.IgnoreColumn;
-import net.onebean.core.extend.NullUpdatable;
-import net.onebean.core.extend.TableName;
-import net.onebean.core.metadata.ModelMappingManager;
-import net.onebean.core.metadata.PropertyInfo;
-import net.onebean.core.model.BaseIncrementIdModel;
-import net.onebean.core.model.InterfaceBaseDeletedModel;
-import net.onebean.core.model.InterfaceBaseSplitModel;
-import net.onebean.core.velocity.VelocityEngineFactory;
-import net.onebean.util.ClassUtils;
-import net.onebean.util.PropUtil;
-import net.onebean.util.StringUtils;
+import com.eakay.core.extend.FiledName;
+import com.eakay.core.extend.IgnoreColumn;
+import com.eakay.core.extend.NullUpdatable;
+import com.eakay.core.extend.TableName;
+import com.eakay.core.metadata.ModelMappingManager;
+import com.eakay.core.metadata.PropertyInfo;
+import com.eakay.core.model.BaseIncrementIdModel;
+import com.eakay.core.model.InterfaceBaseDeletedModel;
+import com.eakay.core.model.InterfaceBaseSplitModel;
+import com.eakay.core.velocity.VelocityEngineFactory;
+import com.eakay.util.ClassUtils;
+import com.eakay.util.PropUtil;
+import com.eakay.util.StringUtils;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -283,8 +283,8 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		insertSql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\" >");
 		valueSql.append("<trim prefix=\"values (\" suffix=\")\" suffixOverrides=\",\" >");
 		for (int i=0;i<columns.size();i++) {
-		    String field = paramColumn.get(i);
-            field = field.substring(0,field.indexOf(","));
+			String field = paramColumn.get(i);
+			field = field.substring(0,field.indexOf(","));
 			if(columns.get(i).toLowerCase().equals("id") || columns.get(i).toLowerCase().equals("create_time"))continue;
 			/*空值默认不插入数据库*/
 
@@ -502,10 +502,10 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		}else if(Float.class.isAssignableFrom(m.getReturnType())){
 			mName +=",jdbcType=FLOAT";
 		}else if(Double.class.isAssignableFrom(m.getReturnType())){
-            mName +=",jdbcType=DOUBLE";
-        }else if(BigDecimal.class.isAssignableFrom(m.getReturnType())){
-            mName +=",jdbcType=DECIMAL";
-        }else if(Integer.class.isAssignableFrom(m.getReturnType())){
+			mName +=",jdbcType=DOUBLE";
+		}else if(BigDecimal.class.isAssignableFrom(m.getReturnType())){
+			mName +=",jdbcType=DECIMAL";
+		}else if(Integer.class.isAssignableFrom(m.getReturnType())){
 			mName +=",jdbcType=INTEGER";
 		}else if(Byte.class.isAssignableFrom(m.getReturnType())){
 			mName +=",jdbcType=BINARY";
@@ -532,10 +532,10 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 		}else if(Float.class.isAssignableFrom(t)){
 			mName +=",jdbcType=FLOAT";
 		}else if(Double.class.isAssignableFrom(t)){
-            mName +=",jdbcType=DOUBLE";
-        }else if(BigDecimal.class.isAssignableFrom(t)){
-            mName +=",jdbcType=DECIMAL";
-        }else if(Integer.class.isAssignableFrom(t)){
+			mName +=",jdbcType=DOUBLE";
+		}else if(BigDecimal.class.isAssignableFrom(t)){
+			mName +=",jdbcType=DECIMAL";
+		}else if(Integer.class.isAssignableFrom(t)){
 			mName +=",jdbcType=INTEGER";
 		}else if(Byte.class.isAssignableFrom(t)){
 			mName +=",jdbcType=BINARY";

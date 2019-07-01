@@ -1,10 +1,11 @@
 package net.onebean.core;
 
-import net.onebean.core.extend.Sort;
-import net.onebean.core.model.BaseIncrementIdModel;
+import com.eakay.core.extend.Sort;
+import com.eakay.core.model.BaseIncrementIdModel;
 
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * 所有service接口的父接口
@@ -69,7 +70,7 @@ public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	 * @param dp 权限sql
 	 * @return 泛型实体对象的list
 	 */
-	public List<T> find(ListPageQuery query,Map<String,Object> dp);
+	public List<T> find(ListPageQuery query, Map<String, Object> dp);
 	/**
 	 * 查找所有的记录
 	 *
@@ -82,7 +83,7 @@ public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	 * @param dp 权限sql
 	 * @return 泛型实体对象的list
 	 */
-	public List<T> findAll(Map<String,Object> dp);
+	public List<T> findAll(Map<String, Object> dp);
 	/**
 	 * 查找所有的记录
 	 * @param sort 排序字段条件

@@ -1,10 +1,10 @@
 package net.onebean.core.metadata;
 
+import com.eakay.core.model.BaseIncrementIdModel;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
-import net.onebean.core.model.BaseIncrementIdModel;
 
 
 public class PropertyInfo implements Serializable{

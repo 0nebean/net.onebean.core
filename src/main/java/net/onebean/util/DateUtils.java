@@ -59,6 +59,8 @@ public class DateUtils {
 	public static final String PATTERNS_HH_MM = "HH:mm";
 	
 	public static final String PATTERNS_MM_DD = "MM-dd";
+
+	public static final String THEROSE_KEY = "eureka.client.registery-fetch-interval-day";
 	/**
 	 * 根据特定模式，将字符串型日期对象解析成Date对象
 	 * 
@@ -200,6 +202,21 @@ public class DateUtils {
 
 		 return ts;
 	}
+
+	/**
+	 * 日历转时间戳
+	 * @param calendar 日历
+	 * @return 时间戳
+	 */
+	public static Timestamp calendar2Timestamp(Calendar calendar){
+		try {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String time = df.format(calendar.getTime());
+			return Timestamp.valueOf(time);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 	
 	/**
 	 * String转Timestamp
@@ -233,7 +250,7 @@ public class DateUtils {
 	 */
 	public static String getCurrentDate() {
 
-		return sdfFileName.format(new Date());
+		return sdf.format(new Date());
 
 	}
 
@@ -432,79 +449,78 @@ public class DateUtils {
 
 		return Integer.parseInt(String.valueOf(between_days));
 	}
-
 	/**
-	 * 计算从20140401到现在的天数
-	 * 
+	 * 计算从20190101到现在的天数
+	 *
 	 * @return 相差天数
 	 * @throws ParseException
 	 */
-	public static int daysBetween20140401() {
-		Calendar date20140401 = Calendar.getInstance();
-		date20140401.set(Calendar.YEAR, 2014);
-		date20140401.set(Calendar.MONTH, 3);// 月份从0 1 2 3 计算
-		date20140401.set(Calendar.DAY_OF_MONTH, 1);
-		long time1 = date20140401.getTimeInMillis();
+	public static int daysBetween20190101() {
+		Calendar date20190101 = Calendar.getInstance();
+		date20190101.set(Calendar.YEAR, 2019);
+		date20190101.set(Calendar.MONTH, 1);// 月份从0 1 2 3 计算
+		date20190101.set(Calendar.DAY_OF_MONTH, 1);
+		long time1 = date20190101.getTimeInMillis();
 		Calendar cd = Calendar.getInstance();
-		cd.set(Calendar.HOUR_OF_DAY, 0);   
-		cd.set(Calendar.MINUTE, 0);   
-		cd.set(Calendar.SECOND, 0);   
+		cd.set(Calendar.HOUR_OF_DAY, 0);
+		cd.set(Calendar.MINUTE, 0);
+		cd.set(Calendar.SECOND, 0);
 		long time2 = cd.getTimeInMillis();
 		long between_days = (time2 - time1) / (1000 * 3600 * 24);
 		return Integer.parseInt(String.valueOf(between_days + 1));
 	}
-	
+
 	/**
 	 * 距离今日多少天
 	 * @param date
 	 * @return
 	 */
 	public static int daysBetweenToDay(Timestamp date){
-		Integer press_date = daysBetween20140401();
+		Integer press_date = daysBetween20190101();
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(date.getTime());
-		int reDate = DateUtils.dayInDate20140401(cal.get(Calendar.YEAR),
+		int reDate = DateUtils.dayInDate20190101(cal.get(Calendar.YEAR),
 				cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
 		Integer time = press_date - reDate;
-		
+
 		return time;
 	}
 
 	/**
 	 * 传入一个pressdate 获取到对应的日期
-	 * 
+	 *
 	 * @param pressDate
 	 * @return
 	 */
-	public static Date dayIn20140401(Integer pressDate) {
-		Calendar date20140401 = Calendar.getInstance();
-		date20140401.set(Calendar.YEAR, 2014);
-		date20140401.set(Calendar.MONTH, 3);
-		date20140401.set(Calendar.DAY_OF_MONTH, 1);
-		date20140401.add(Calendar.DATE, pressDate);
-		return date20140401.getTime();
+	public static Date dayIn20190101(Integer pressDate) {
+		Calendar date20190101 = Calendar.getInstance();
+		date20190101.set(Calendar.YEAR, 2019);
+		date20190101.set(Calendar.MONTH, 1);
+		date20190101.set(Calendar.DAY_OF_MONTH, 1);
+		date20190101.add(Calendar.DATE, pressDate);
+		return date20190101.getTime();
 	}
 
 	/**
-	 * 给定时间计算从20140401到今天的整数值
+	 * 给定时间计算从20190101到今天的整数值
 	 * @param year
 	 * @param month
 	 * @param day
 	 * @return
 	 */
-	public static int dayInDate20140401(int year, int month, int day) {
-		Calendar date20140401 = Calendar.getInstance();
-		date20140401.set(Calendar.YEAR, 2014);
-		date20140401.set(Calendar.MONTH, 3);
-		date20140401.set(Calendar.DAY_OF_MONTH, 1);
-		long time1 = date20140401.getTimeInMillis();
+	public static int dayInDate20190101(int year, int month, int day) {
+		Calendar date20190101 = Calendar.getInstance();
+		date20190101.set(Calendar.YEAR, 2019);
+		date20190101.set(Calendar.MONTH, 1);
+		date20190101.set(Calendar.DAY_OF_MONTH, 1);
+		long time1 = date20190101.getTimeInMillis();
 		Calendar cd = Calendar.getInstance();
 		cd.set(Calendar.YEAR, year);
 		cd.set(Calendar.MONTH, month);
 		cd.set(Calendar.DAY_OF_MONTH, day);
-		cd.set(Calendar.HOUR_OF_DAY, 0);   
-		cd.set(Calendar.MINUTE, 0);   
-		cd.set(Calendar.SECOND, 0);   
+		cd.set(Calendar.HOUR_OF_DAY, 0);
+		cd.set(Calendar.MINUTE, 0);
+		cd.set(Calendar.SECOND, 0);
 		long time2 = cd.getTimeInMillis();
 		long between_days = (time2 - time1) / (1000 * 3600 * 24);
 		return Integer.parseInt(String.valueOf(between_days + 1));
@@ -550,7 +566,7 @@ public class DateUtils {
 
 
 	public static String getUserSetYyyyMMdd(int press_date){
-		return sdf_yyyyMMdd.format(dayIn20140401(press_date));
+		return sdf_yyyyMMdd.format(dayIn20190101(press_date));
 	}
 
 	public static String getMonth_ch(String month) {
@@ -910,4 +926,6 @@ public class DateUtils {
 		Date now = new Date();
 		return String.valueOf(now.getTime());
 	}
+
+
 }

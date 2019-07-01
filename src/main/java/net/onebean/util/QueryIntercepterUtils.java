@@ -1,11 +1,11 @@
-package net.onebean.core.extend;
-
-import java.util.List;
+package net.onebean.util;
 
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.MappedStatement.Builder;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.SqlSource;
+
+import java.util.List;
 
 public class QueryIntercepterUtils {
     public static MappedStatement copyFromMappedStatement(MappedStatement ms, SqlSource newSqlSource) {

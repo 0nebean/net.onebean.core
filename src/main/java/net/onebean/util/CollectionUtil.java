@@ -1,21 +1,14 @@
 package net.onebean.util;
 
+import com.sun.xml.internal.txw2.IllegalAnnotationException;
+
+import java.io.*;
 import java.util.*;
 
-import com.sun.xml.internal.txw2.IllegalAnnotationException;
 /**
  * 集合工具类
  */
 public class CollectionUtil {
-
-	/**
-	 * 字符串数组转list
-	 * @param stringArr 数组
-	 * @return list
-	 */
-	public static final List<String> stringArr2List(String[] stringArr) {
-		return (stringArr.length > 0)? Arrays.asList(stringArr):Collections.EMPTY_LIST;
-	}
 	
 	/**
 	 * 判断集合是否为空
@@ -34,7 +27,17 @@ public class CollectionUtil {
 	public static boolean isNotEmpty(Collection<?> obj) {
 		return (obj == null || obj.size() == 0) ? false : true;
 	}
-	
+
+	/**
+	 * 字符串数组转list
+	 * @param stringArr 数组
+	 * @return list
+	 */
+	public static final List<String> stringArr2List(String[] stringArr) {
+		return (stringArr.length > 0)? Arrays.asList(stringArr):Collections.EMPTY_LIST;
+	}
+
+
 	/**
 	 * 返回List<Long>类型集合
 	 * @param list
@@ -137,5 +140,50 @@ public class CollectionUtil {
 		}catch (Exception e) {
 			throw new IllegalAnnotationException("arrayType 必须是Collection子类",e);
 		}
+	}
+
+
+	/**
+	 * 对象深度克隆---使用序列化进行深拷贝
+	 *
+	 * @param obj
+	 * 要克隆的对象
+	 * @return
+	 * 注意：
+	 * 使用序列化的方式来实现对象的深拷贝，但是前提是，对象必须是实现了 Serializable接口才可以，Map本身没有实现
+	 * Serializable 这个接口，所以这种方式不能序列化Map，也就是不能深拷贝Map。但是HashMap是可以的，因为它实现了Serializable。
+	 */
+	public static <T extends Serializable> T deepCloneHashMap(T obj) {
+		T clonedObj = null;
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(obj);
+			oos.close();
+			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(bais);
+			clonedObj = (T) ois.readObject();
+			ois.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return clonedObj;
+	}
+
+	/**
+	 * 是否包含改元素
+	 * @param arr 数组
+	 * @param item 元素
+	 * @return bool
+	 */
+	public static Boolean isTargetContainsArrItem(String[] arr,String item){
+		boolean flag =  false;
+		for (String s : arr) {
+			if (item.contains(s)){
+				flag = true;
+			}
+		}
+		return flag;
 	}
 }

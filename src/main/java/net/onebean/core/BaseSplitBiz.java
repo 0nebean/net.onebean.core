@@ -1,12 +1,12 @@
 package net.onebean.core;
 
-import net.onebean.component.SpringUtil;
-import net.onebean.core.error.GetTenantInfoException;
-import net.onebean.core.extend.Sort;
-import net.onebean.core.model.BaseIncrementIdModel;
-import net.onebean.util.CollectionUtil;
-import net.onebean.util.PropUtil;
-import net.onebean.util.StringUtils;
+import com.eakay.component.SpringUtil;
+import com.eakay.core.error.GetTenantInfoException;
+import com.eakay.core.extend.Sort;
+import com.eakay.core.model.BaseIncrementIdModel;
+import com.eakay.util.CollectionUtil;
+import com.eakay.util.PropUtil;
+import com.eakay.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -210,11 +210,10 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 
 	@Override
 	public List<T> findByIds(String ids) {
-		Condition con = Condition.parseCondition("ID@int@in");
+		Condition con = Condition.parseModelCondition("id@string@in");
 		con.setValue(ids);
 		return find(null, con);
 	}
-
 
 	@Override
 	public String getTenantId(){
@@ -230,5 +229,17 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 			throw new GetTenantInfoException("get tenantId From request header failure");
 		}
 		return tenantId.toString();
+	}
+
+
+	@Override
+	public void setTenantId(String tenantId) {
+		try {
+			HttpServletRequest request = springUtil.getHttpServletRequest();
+			String tenantIdHeaderKey = PropUtil.getInstance().getConfig("uag.tenant.id.header.key", PropUtil.DEFLAULT_NAME_SPACE);
+			request.getSession().setAttribute(tenantIdHeaderKey,tenantId);
+		} catch (Exception e) {
+			throw new GetTenantInfoException("set tenantId to request header failure");
+		}
 	}
 }

@@ -1,6 +1,6 @@
 package net.onebean.core.extend;
 
-import net.onebean.util.PropUtil;
+import com.eakay.util.PropUtil;
 
 /**
  * 从配置中心初始化logback配置类

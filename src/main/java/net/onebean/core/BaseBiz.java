@@ -1,14 +1,15 @@
 package net.onebean.core;
 
-import net.onebean.core.extend.Sort;
-import net.onebean.core.model.BaseIncrementIdModel;
-import net.onebean.util.CollectionUtil;
-import net.onebean.util.StringUtils;
+import com.eakay.core.extend.Sort;
+import com.eakay.core.model.BaseIncrementIdModel;
+import com.eakay.util.CollectionUtil;
+import com.eakay.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * service 层的基类，所有service类必须继承自此类，该类不能直接使用。
@@ -204,9 +205,8 @@ public abstract class BaseBiz<T extends BaseIncrementIdModel, K extends BaseDao<
 
 	@Override
 	public List<T> findByIds(String ids) {
-		Condition con = Condition.parseCondition("ID@int@in");
+		Condition con = Condition.parseModelCondition("id@string@in");
 		con.setValue(ids);
 		return find(null, con);
 	}
-
 }

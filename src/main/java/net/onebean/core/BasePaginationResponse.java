@@ -1,12 +1,14 @@
 package net.onebean.core;
 
+import com.eakay.core.extend.Sort;
+
 import java.util.List;
 
 /**
  * @author 0neBean
  * @param <M> 泛型data对象class
  */
-public class BasePaginationResponse <M> {
+public class BasePaginationResponse<M> {
 
     public BasePaginationResponse() {
     }
@@ -27,6 +29,32 @@ public class BasePaginationResponse <M> {
     private String errMsg = null;
     private List<M> datas = null;
     private Pagination page = null;
+    private Sort sort = null;
+
+    public Sort getSort() {
+        return sort;
+    }
+
+    public void setSort(Sort sort) {
+        this.sort = sort;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static BasePaginationResponse ok(List list){
+        BasePaginationResponse b = new BasePaginationResponse();
+        b.setDatas(list);
+        b.setErrCode("0");
+        return b;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static BasePaginationResponse ok(List list,Pagination page){
+        BasePaginationResponse b = new BasePaginationResponse();
+        b.setDatas(list);
+        b.setPage(page);
+        b.setErrCode("0");
+        return b;
+    }
 
     public String getErrCode() {
         return errCode;

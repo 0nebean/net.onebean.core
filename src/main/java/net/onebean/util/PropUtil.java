@@ -1,14 +1,9 @@
 package net.onebean.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.io.Resources;
 
-import java.io.FileOutputStream;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
 
 /**
  * 配置文件读取类
@@ -25,8 +20,10 @@ public class PropUtil {
     public final static String PUBLIC_CONF_HYSTRIX = "public-conf.hystrix";
     public final static String PUBLIC_CONF_SPRING = "public-conf.spring";
     public final static String PUBLIC_CONF_LOG = "public-conf.logging";
+    public final static String PUBLIC_CONF_RABBIT_MQ = "public-conf.rabbitmq";
     public final static String PUBLIC_CONF_ALIYUN_OSS = "public-conf.aliyun-oss";
     public final static String PUBLIC_CONF_REDISSON = "public-conf.redisson";
+    public final static String PUBLIC_CONF_SSO = "public-conf.sso";
     public final static String PUBLIC_CONF_APOLLO_INITIALIZER = "public-conf.apollo-initializer";
 
     private PropUtil() {
@@ -90,6 +87,16 @@ public class PropUtil {
         return value;
     }
 
+//    /**
+//     * 获取配置
+//     */
+//    public static String getConfig(String key) {
+//        String value = getConfigInCache(key,DEFLAULT_NAME_SPACE);
+//        if (StringUtils.isEmpty(value)){
+//            value = ApolloPropUtils.getString(key);
+//        }
+//        return value;
+//    }
 
 
 }

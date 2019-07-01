@@ -1,6 +1,6 @@
 package net.onebean.core;
 
-import net.onebean.util.StringUtils;
+import com.eakay.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

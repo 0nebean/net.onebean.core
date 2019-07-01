@@ -1,6 +1,6 @@
 package net.onebean.core;
 
-import net.onebean.core.extend.Sort;
+import com.eakay.core.extend.Sort;
 
 import java.io.Serializable;
 

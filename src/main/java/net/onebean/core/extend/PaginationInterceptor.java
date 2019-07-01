@@ -1,29 +1,17 @@
 package net.onebean.core.extend;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.locks.Condition;
-
+import com.eakay.core.Pagination;
+import com.eakay.util.QueryIntercepterUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.plugin.Intercepts;
-import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
-import org.apache.ibatis.plugin.Signature;
+import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-import net.onebean.core.Pagination;
+import java.util.*;
+import java.util.concurrent.locks.Condition;
 
 
 /**
@@ -77,7 +65,7 @@ public class PaginationInterceptor implements Interceptor {
                 ResultMap map = new ResultMap.Builder(mappedStatement.getConfiguration(), "qq" ,Integer.class , new ArrayList<ResultMapping>()).build();
                 List<ResultMap> mapList = new ArrayList<ResultMap>();
                 mapList.add(map);
-                MappedStatement newMs = QueryIntercepterUtils.copyFromMappedStatement(mappedStatement, new BoundSqlSqlSource(newBoundSql),mapList);  
+                MappedStatement newMs = QueryIntercepterUtils.copyFromMappedStatement(mappedStatement, new BoundSqlSqlSource(newBoundSql),mapList);
                 totalCount  = (Integer) ((Executor)invocation.getTarget()).query(newMs, parameterObject, (RowBounds)invocation.getArgs()[2], null).get(0);
             }
             
@@ -123,6 +111,16 @@ public class PaginationInterceptor implements Interceptor {
 			Object parameter, Object parameterObject) {
 		if(parameterObject == null)
 			return null;
+		if (
+            parameter.getClass().equals(Pagination.class) &&
+            parameterObject.getClass().equals(Pagination.class)
+        ){
+            Pagination page = (Pagination) parameter;
+            parameter = new HashMap<>();
+            ((HashMap) parameter).put("arg0",page);
+            ((HashMap) parameter).put("param0",page);
+            parameterObject = parameter;
+        }
 		Map map = (Map)parameterObject;
 		if(!map.containsKey(COUNTSQLID))
 			return null;

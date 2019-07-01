@@ -32,7 +32,7 @@ public class VelocityEngineFactory {
         private static final VelocityEngineFactory INSTANCE = new VelocityEngineFactory();
     }
 
-    private VelocityEngineFactory (){}
+    private VelocityEngineFactory(){}
 
     public static VelocityEngineFactory getInstance() {
         return LazyHolder.INSTANCE;

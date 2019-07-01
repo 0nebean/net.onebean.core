@@ -1,16 +1,21 @@
 package net.onebean.core;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.serializer.ValueFilter;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.eakay.util.ReflectionUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.serializer.ValueFilter;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Configuration
@@ -31,7 +36,8 @@ public class FastJsonHttpMessageConvertersConfiguration {
 			FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
 
 			FastJsonConfig fastJsonConfig = new FastJsonConfig();
-			fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat,
+			fastJsonConfig.setSerializerFeatures(
+					SerializerFeature.PrettyFormat,
 					//    输出key是包含双引号
 					SerializerFeature.QuoteFieldNames,
 					//    是否输出为null的字段,若为null 则显示该字段
@@ -50,19 +56,22 @@ public class FastJsonHttpMessageConvertersConfiguration {
 					SerializerFeature.DisableCircularReferenceDetect
 					);
 			ValueFilter valueFilter = new ValueFilter() {
-				//o 是class
-				//s 是key值
-				//o1 是value值
 				public Object process(Object o, String s, Object o1) {
-					if (null == o1) {
-						o1 = "";
+					Field field = ReflectionUtils.getField(o,s);
+					if (null == o1 && field != null && field.getType().isAssignableFrom(Object.class)){
+						o1 = new Object();
 					}
 					return o1;
 				}
 			};
 			fastJsonConfig.setSerializeFilters(valueFilter);
 			converter.setFastJsonConfig(fastJsonConfig);
+			List<MediaType> supportedMediaTypes = new ArrayList<>();
+			supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+			converter.setSupportedMediaTypes(supportedMediaTypes);
 			return converter;
 		}
 	}
+
+
 }

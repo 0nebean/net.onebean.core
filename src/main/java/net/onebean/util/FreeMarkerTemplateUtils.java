@@ -4,7 +4,6 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.NullCacheStorage;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
 import java.io.IOException;
@@ -47,11 +46,11 @@ public class FreeMarkerTemplateUtils {
      * @return string
      */
     public static String process(String ftlFileName, Object data) {
-        try (StringWriter sw = new StringWriter()) {
-            Template temp = CONFIGURATION.getTemplate(ftlFileName);
-            temp.process(data, sw);
+        try (StringWriter sw = new StringWriter()){
+            Template template = FreeMarkerTemplateUtils.getTemplate(ftlFileName);
+            template.process(data,sw);
             return sw.toString();
-        } catch (IOException | TemplateException e) {
+        } catch (Exception e) {
             throw new RuntimeException("通过模板生成数据失败"+e);
         }
     }
