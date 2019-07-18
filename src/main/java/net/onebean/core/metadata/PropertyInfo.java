@@ -1,6 +1,6 @@
 package net.onebean.core.metadata;
 
-import com.eakay.core.model.BaseIncrementIdModel;
+import net.onebean.core.model.BaseIncrementIdModel;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

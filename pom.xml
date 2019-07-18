@@ -13,7 +13,7 @@
 
     <groupId>net.onebean</groupId>
     <artifactId>net.onebean.core</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>1.0.0-SNAPSHOT</version>
 
 
     <packaging>jar</packaging>
@@ -157,6 +157,12 @@
         </dependency>
 
         <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.8</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>2.9.8</version>
@@ -191,6 +197,7 @@
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-feign</artifactId>
@@ -217,12 +224,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>1.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.onebean</groupId>
-            <artifactId>net.onebean.core.common</artifactId>
-            <version>1.0.0.SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -260,6 +261,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 
 
     <licenses>
@@ -350,49 +352,45 @@
             </build>
             <distributionManagement>
                 <snapshotRepository>
-                    <id>sonatype-nexus-snapshots</id>
+                    <id>repo-central</id>
                     <name>snapshots</name>
                     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
                 </snapshotRepository>
                 <repository>
-                    <id>sonatype-nexus-staging</id>
+                    <id>repo-central</id>
                     <name>release</name>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
         </profile>
-
-        <profile>
-            <id>snapshot</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>${java.version}</source>
-                            <target>${java.version}</target>
-                            <compilerArguments>
-                                <bootclasspath>${JAVA_HOME}/jre/lib/rt.jar</bootclasspath>
-                            </compilerArguments>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <distributionManagement>
-                <repository>
-                    <id>releases</id>
-                    <name>Nexus Release Repository</name>
-                    <url>http://ek-nexus.eakay.cn/nexus/content/repositories/releases/</url>
-                </repository>
-                <snapshotRepository>
-                    <id>snapshots</id>
-                    <name>Nexus Snapshot Repository</name>
-                    <url>http://ek-nexus.eakay.cn/nexus/content/repositories/snapshots/</url>
-                </snapshotRepository>
-            </distributionManagement>
-        </profile>
     </profiles>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArguments>
+                        <bootclasspath>${JAVA_HOME}/jre/lib/rt.jar</bootclasspath>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <distributionManagement>
+        <repository>
+            <id>repo-private</id>
+            <name>Nexus Release Repository</name>
+            <url>http://nexus.onebean.net:8082/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>repo-private</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://nexus.onebean.net:8082/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

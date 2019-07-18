@@ -1,12 +1,12 @@
 package net.onebean.core;
 
-import com.eakay.component.SpringUtil;
-import com.eakay.core.error.GetTenantInfoException;
-import com.eakay.core.extend.Sort;
-import com.eakay.core.model.BaseIncrementIdModel;
-import com.eakay.util.CollectionUtil;
-import com.eakay.util.PropUtil;
-import com.eakay.util.StringUtils;
+import net.onebean.component.SpringUtil;
+import net.onebean.core.error.GetTenantInfoException;
+import net.onebean.core.extend.Sort;
+import net.onebean.core.model.BaseIncrementIdModel;
+import net.onebean.util.CollectionUtil;
+import net.onebean.util.PropUtil;
+import net.onebean.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;

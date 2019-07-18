@@ -1,10 +1,10 @@
 package net.onebean.core.extend;
 
-import com.eakay.core.extend.codebuilder.MybatisCRUDBuilder;
-import com.eakay.core.model.BaseIncrementIdModel;
-import com.eakay.core.model.BaseModel;
-import com.eakay.util.ClassUtils;
-import com.eakay.util.PropUtil;
+import net.onebean.core.extend.codebuilder.MybatisCRUDBuilder;
+import net.onebean.core.model.BaseIncrementIdModel;
+import net.onebean.core.model.BaseModel;
+import net.onebean.util.ClassUtils;
+import net.onebean.util.PropUtil;
 import org.apache.commons.lang.ArrayUtils;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.slf4j.Logger;

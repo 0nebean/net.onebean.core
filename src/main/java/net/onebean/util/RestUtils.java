@@ -1,6 +1,6 @@
 package net.onebean.util;
 
-import com.eakay.component.SpringUtil;
+import net.onebean.component.SpringUtil;
 import org.apache.log4j.Logger;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;

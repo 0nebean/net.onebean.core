@@ -1,6 +1,12 @@
 package net.onebean.core.extend;
 
-import com.eakay.util.PropUtil;
+import ch.qos.logback.classic.Logger;
+import net.onebean.util.PropUtil;
+import net.onebean.util.StringUtils;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * 从配置中心初始化logback配置类
@@ -8,38 +14,50 @@ import com.eakay.util.PropUtil;
  */
 public class ApolloConfInitializer {
 
-    private final static String LOG_CONF_SYSTEM_PROPERTY_KEY = "logging.config";
-    private final static String LOG_PATH_SYSTEM_PROPERTY_KEY = "logging.path";
-    private final static String LOG_LEVEL_SYSTEM_PROPERTY_KEY = "logging.global.level";
-    private final static String APOLLO_ENABLE_SYSTEM_PROPERTY_KEY = "apollo.bootstrap.enabled";
-    private final static String APOLLO_NAMESPACES_SYSTEM_PROPERTY_KEY = "apollo.bootstrap.namespaces";
+    private static Logger logger = (Logger) LoggerFactory.getLogger(ApolloConfInitializer.class);
+
+    private final static String SEPARATOR = System.getProperty("file.separator");
+    private final static String APOLLO_BOOTSTRAP_ENABLED = "apollo.bootstrap.enabled";
+    private final static String APOLLO_BOOTSTRAP_NAMESPACES = "apollo.bootstrap.namespaces";
+    private final static String LOGGING_CONFIG = "logging.config";
+    private final static String APP_ID = "spring.application.name";
+    private final static String APOLLO_META_URL_SUFFIX = ".meta";
+    private final static String APP_ID_KEY = "app.id";
+    private final static String APOLLO_META_KEY = "apollo.meta";
+    private final static String LOGGING_PATH = "logging.path";
+    private final static String EVN_KEY = "env";
 
 
     public static void init(){
-        initApolloConf();
-        initLogBack();
-    }
+        String env = System.getProperty(EVN_KEY);
+        if (StringUtils.isEmpty(env)){
+            env = "dev";
+            System.getProperties().setProperty(EVN_KEY,env);
+        }
+        String apolloBootstrapEnabled = PropUtil.getInstance().getConfig(APOLLO_BOOTSTRAP_ENABLED,PropUtil.PUBLIC_CONF_SYSTEM);
+        String apolloBootstrapNamespaces = PropUtil.getInstance().getConfig(APOLLO_BOOTSTRAP_NAMESPACES,PropUtil.PUBLIC_CONF_SYSTEM);
+        String loggingConfig = PropUtil.getInstance().getConfig(LOGGING_CONFIG,PropUtil.PUBLIC_CONF_SYSTEM);
+        String apolloMeta = PropUtil.getInstance().getConfig(env.toLowerCase()+ APOLLO_META_URL_SUFFIX,PropUtil.PUBLIC_CONF_SYSTEM);
+        String appId = PropUtil.getInstance().getConfig(APP_ID,PropUtil.DEFLAULT_NAME_SPACE);
+        String loggingPath = PropUtil.getInstance().getConfig(LOGGING_PATH,PropUtil.PUBLIC_CONF_SYSTEM);
+        String classPathAbsolutePath = null;
+        try {
+            classPathAbsolutePath = new File("").getCanonicalPath();
+        } catch (IOException e) {
+            logger.error("can not get file path from system,e = ",e);
+        }
 
-    /**
-     * 初始化apollo配置读取
-     */
-    private static void initApolloConf(){
-        String apolloEnable = PropUtil.getInstance().getConfig(APOLLO_ENABLE_SYSTEM_PROPERTY_KEY,PropUtil.PUBLIC_CONF_APOLLO_INITIALIZER);
-        System.setProperty(APOLLO_ENABLE_SYSTEM_PROPERTY_KEY,apolloEnable);
-        String apolloNameSpaces = PropUtil.getInstance().getConfig(APOLLO_NAMESPACES_SYSTEM_PROPERTY_KEY,PropUtil.PUBLIC_CONF_APOLLO_INITIALIZER);
-        System.setProperty(APOLLO_NAMESPACES_SYSTEM_PROPERTY_KEY,apolloNameSpaces);
-    }
-
-    /**
-     * 从配置中心初始化 logback
-     */
-    private static void initLogBack(){
-        String loggingConf = PropUtil.getInstance().getConfig(LOG_CONF_SYSTEM_PROPERTY_KEY,PropUtil.PUBLIC_CONF_LOG);
-        System.setProperty(LOG_CONF_SYSTEM_PROPERTY_KEY,loggingConf);
-        String loggingPath = PropUtil.getInstance().getConfig(LOG_PATH_SYSTEM_PROPERTY_KEY,PropUtil.PUBLIC_CONF_LOG);
-        System.setProperty(LOG_PATH_SYSTEM_PROPERTY_KEY,loggingPath);
-        String loggingGlobalLevel = PropUtil.getInstance().getConfig(LOG_LEVEL_SYSTEM_PROPERTY_KEY,PropUtil.PUBLIC_CONF_LOG);
-        System.setProperty(LOG_LEVEL_SYSTEM_PROPERTY_KEY,loggingGlobalLevel);
+        logger.info("ApolloConfInitializer init classPathAbsolutePath = "+classPathAbsolutePath);
+        /*windows bat startup*/
+        if (classPathAbsolutePath.endsWith(SEPARATOR + "bin")) {
+            loggingPath = "."+loggingPath;
+        }
+        System.getProperties().setProperty(LOGGING_PATH,loggingPath);
+        System.getProperties().setProperty(APOLLO_META_KEY,apolloMeta);
+        System.getProperties().setProperty(APOLLO_BOOTSTRAP_ENABLED,apolloBootstrapEnabled);
+        System.getProperties().setProperty(APOLLO_BOOTSTRAP_NAMESPACES,apolloBootstrapNamespaces);
+        System.getProperties().setProperty(LOGGING_CONFIG,loggingConfig);
+        System.getProperties().setProperty(APP_ID_KEY,appId);
 
     }
 

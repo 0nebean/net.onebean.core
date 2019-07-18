@@ -1,13 +1,15 @@
 package net.onebean.component;
 
-import com.eakay.core.Json.EnableEnumDeserialize;
-import com.eakay.core.Json.EnumDeserialize;
-import com.eakay.util.CollectionUtil;
-import com.eakay.util.ReflectionUtils;
-import com.eakay.util.StringUtils;
+import net.onebean.core.Json.EnableEnumDeserialize;
+import net.onebean.core.Json.EnumDeserialize;
+import net.onebean.util.CollectionUtil;
+import net.onebean.util.ReflectionUtils;
+import net.onebean.util.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import java.lang.reflect.Field;
@@ -18,7 +20,8 @@ import java.util.List;
 @Aspect
 public class EnumValueMapAop {
 
-    private final String ExpGetResultDataPonit = "(execution(* com.eakay..action..*.*(..))) && @annotation(enableEnumDeserialize)";
+    private final String ExpGetResultDataPonit = "(execution(* net.onebean..action..*.*(..))) && @annotation(enableEnumDeserialize)";
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnumValueMapAop.class);
 
     /**
      * 环绕aop 设置枚举映射值
@@ -29,6 +32,7 @@ public class EnumValueMapAop {
      */
     @Around(value = ExpGetResultDataPonit)
     public Object aroundMethod(ProceedingJoinPoint proceedingJoinPoint, EnableEnumDeserialize enableEnumDeserialize) throws Throwable {
+        LOGGER.info("EnumValueMapAop did around ================================================");
         List<String> keys = CollectionUtil.stringArr2List(enableEnumDeserialize.key());
         Object result = proceedingJoinPoint.proceed();
 
@@ -66,18 +70,6 @@ public class EnumValueMapAop {
         if (field.isAnnotationPresent(EnumDeserialize.class)) {
             // 获取注解
             EnumDeserialize fieldAnnotation = field.getAnnotation(EnumDeserialize.class);
-            Class<?> enumClz = fieldAnnotation.using();
-            String value = ReflectionUtils.invokeGetterMethod(target,field.getName()).toString();
-            Method getValueByKeyMethod = enumClz.getMethod("getValueByKey",String.class);
-            Object enumValue = getValueByKeyMethod.invoke(null,value);
-            if (StringUtils.isEmpty(enumValue)){
-                enumValue = "-";
-            }
-            ReflectionUtils.setFieldValue(target,field.getName(),enumValue);
-        }
-        if (field.isAnnotationPresent(com.eakay.common.json.EnumDeserialize.class)) {
-            // 获取注解
-            com.eakay.common.json.EnumDeserialize fieldAnnotation = field.getAnnotation(com.eakay.common.json.EnumDeserialize.class);
             Class<?> enumClz = fieldAnnotation.using();
             String value = ReflectionUtils.invokeGetterMethod(target,field.getName()).toString();
             Method getValueByKeyMethod = enumClz.getMethod("getValueByKey",String.class);

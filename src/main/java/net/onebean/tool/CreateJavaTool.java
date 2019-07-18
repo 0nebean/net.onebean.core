@@ -1,9 +1,9 @@
 package net.onebean.tool;
 
-import com.eakay.util.DateUtils;
-import com.eakay.util.FreeMarkerTemplateUtils;
-import com.eakay.util.PropUtil;
-import com.eakay.util.StringUtils;
+import net.onebean.util.DateUtils;
+import net.onebean.util.FreeMarkerTemplateUtils;
+import net.onebean.util.PropUtil;
+import net.onebean.util.StringUtils;
 import freemarker.template.Template;
 
 import javax.swing.*;
@@ -266,7 +266,7 @@ public class CreateJavaTool {
         dataMap.put("author",author_text.getText());
         dataMap.put("description",description_text.getText());
         dataMap.put("create_time",createTimeStr);
-        generateFileByTemplate("Mapper.ftl",mapperFile,dataMap);
+        generateFileByTemplate("/mysql/Mapper.ftl",mapperFile,dataMap);
     }
 
     private void generateDaoFile() throws Exception{
@@ -281,7 +281,7 @@ public class CreateJavaTool {
         dataMap.put("author",author_text.getText());
         dataMap.put("description",description_text.getText());
         dataMap.put("create_time",createTimeStr);
-        generateFileByTemplate("Dao.ftl",mapperFile,dataMap);
+        generateFileByTemplate("/mysql/Dao.ftl",mapperFile,dataMap);
     }
 
     private void generateServiceFile() throws Exception{
@@ -296,7 +296,7 @@ public class CreateJavaTool {
         dataMap.put("author",author_text.getText());
         dataMap.put("description",description_text.getText());
         dataMap.put("create_time",createTimeStr);
-        generateFileByTemplate("Service.ftl",mapperFile,dataMap);
+        generateFileByTemplate("/mysql/Service.ftl",mapperFile,dataMap);
     }
 
     private void generateServiceImplFile() throws Exception{
@@ -312,7 +312,7 @@ public class CreateJavaTool {
         dataMap.put("author",author_text.getText());
         dataMap.put("description",description_text.getText());
         dataMap.put("create_time",createTimeStr);
-        generateFileByTemplate("ServiceImpl.ftl",mapperFile,dataMap);
+        generateFileByTemplate("/mysql/ServiceImpl.ftl",mapperFile,dataMap);
     }
 
     private void generateModelFile(List<Map<String,Object>> columns) throws Exception{
@@ -330,7 +330,7 @@ public class CreateJavaTool {
         dataMap.put("author",author_text.getText());
         dataMap.put("description",description_text.getText());
         dataMap.put("create_time",createTimeStr);
-        generateFileByTemplate("Model.ftl",mapperFile,dataMap);
+        generateFileByTemplate("/mysql/Model.ftl",mapperFile,dataMap);
     }
 
     private List<Map<String,Object>> coverField(List<Map<String,Object>> columns){

@@ -1,6 +1,6 @@
-package net.onebean.component;//package com.eakay.component;
+//package net.onebean.component;
 //
-//import com.eakay.util.StringUtils;
+//import net.onebean.util.StringUtils;
 //import org.apache.http.HttpStatus;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

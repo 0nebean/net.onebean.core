@@ -1,10 +1,10 @@
 package net.onebean.component;
 
-import com.eakay.core.encryption.Digester;
-import com.eakay.core.encryption.Hex;
-import com.eakay.core.encryption.SecureRandomBytesKeyGenerator;
-import com.eakay.core.encryption.Utf8;
-import com.eakay.util.EncodingUtils;
+import net.onebean.core.encryption.Digester;
+import net.onebean.core.encryption.Hex;
+import net.onebean.core.encryption.SecureRandomBytesKeyGenerator;
+import net.onebean.core.encryption.Utf8;
+import net.onebean.util.EncodingUtils;
 import org.springframework.stereotype.Service;
 
 /**

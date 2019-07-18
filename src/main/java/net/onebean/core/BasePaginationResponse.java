@@ -1,6 +1,6 @@
 package net.onebean.core;
 
-import com.eakay.core.extend.Sort;
+import net.onebean.core.extend.Sort;
 
 import java.util.List;
 

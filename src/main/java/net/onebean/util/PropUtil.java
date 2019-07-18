@@ -12,19 +12,15 @@ import java.util.Map;
 public class PropUtil {
 
     public final static String DEFLAULT_NAME_SPACE = "application";
+    public final static String PUBLIC_CONF_SYSTEM = "system";
     public final static String PUBLIC_CONF_JDBC = "public-conf.jdbc";
     public final static String PUBLIC_CONF_REDIS = "public-conf.redis";
     public final static String PUBLIC_CONF_MONGODB = "public-conf.mongdb";
     public final static String PUBLIC_CONF_FREEMARKER = "public-conf.freemarker";
-    public final static String PUBLIC_CONF_EUREKA = "public-conf.eureka";
-    public final static String PUBLIC_CONF_HYSTRIX = "public-conf.hystrix";
-    public final static String PUBLIC_CONF_SPRING = "public-conf.spring";
-    public final static String PUBLIC_CONF_LOG = "public-conf.logging";
+    public final static String PUBLIC_CONF_SPRING_CLOUD = "public-conf.spring-cloud";
     public final static String PUBLIC_CONF_RABBIT_MQ = "public-conf.rabbitmq";
-    public final static String PUBLIC_CONF_ALIYUN_OSS = "public-conf.aliyun-oss";
-    public final static String PUBLIC_CONF_REDISSON = "public-conf.redisson";
+    public final static String PUBLIC_CONF_ALIYUN = "public-conf.aliyun";
     public final static String PUBLIC_CONF_SSO = "public-conf.sso";
-    public final static String PUBLIC_CONF_APOLLO_INITIALIZER = "public-conf.apollo-initializer";
 
     private PropUtil() {
         initPropertiesLoader();
@@ -35,7 +31,7 @@ public class PropUtil {
      */
     private void initPropertiesLoader(){
         loaderMap = new HashMap<>();
-        loaderMap.put(DEFLAULT_NAME_SPACE,new PropertiesLoader(DEFLAULT_NAME_SPACE));
+        loaderMap.put(DEFLAULT_NAME_SPACE,new PropertiesLoader(DEFLAULT_NAME_SPACE+suffix));
     }
 
     /**

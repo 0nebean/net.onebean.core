@@ -1,6 +1,6 @@
 package net.onebean.core;
 
-import com.eakay.util.StringUtils;
+import net.onebean.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

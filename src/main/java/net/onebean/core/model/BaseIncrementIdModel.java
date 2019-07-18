@@ -1,7 +1,7 @@
 package net.onebean.core.model;
 
-import com.eakay.core.extend.IgnoreColumn;
-import com.eakay.core.extend.OrderBy;
+import net.onebean.core.extend.IgnoreColumn;
+import net.onebean.core.extend.OrderBy;
 
 import java.io.Serializable;
 

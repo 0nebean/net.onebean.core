@@ -33,7 +33,7 @@
 
 	<!-- 事务粒度锁 切面到所有service方法 -->
 	<aop:config proxy-target-class="true">
-		<aop:pointcut expression="execution(public * com.eakay.api.adapter.service..*.*(..))" id="tranPointcut" />
+		<aop:pointcut expression="execution(public * net.onebean.api.adapter.service..*.*(..))" id="tranPointcut" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="tranPointcut" order="2" />
 	</aop:config>
 

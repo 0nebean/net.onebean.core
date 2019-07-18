@@ -1,9 +1,9 @@
 package net.onebean.core.metadata;
 
-import com.eakay.core.extend.NotLogged;
-import com.eakay.core.extend.OrderBy;
-import com.eakay.core.extend.TableName;
-import com.eakay.util.ClassUtils;
+import net.onebean.core.extend.NotLogged;
+import net.onebean.core.extend.OrderBy;
+import net.onebean.core.extend.TableName;
+import net.onebean.util.ClassUtils;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ReflectionUtils;

@@ -1,8 +1,8 @@
 package net.onebean.util;
 
-import com.eakay.component.SpringUtil;
-import com.eakay.core.form.Parse;
-import com.eakay.core.model.UagLoginSessionInfo;
+import net.onebean.component.SpringUtil;
+import net.onebean.core.form.Parse;
+import net.onebean.core.model.UagLoginSessionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

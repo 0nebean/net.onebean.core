@@ -1,6 +1,11 @@
 package net.onebean.util;
 
 
+import ch.qos.logback.classic.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +18,13 @@ import java.util.Map;
  */
 public class ClassUtils {
 
+
+	private static Logger logger = (Logger) LoggerFactory.getLogger(ClassUtils.class);
+	public final static String CURRENT_OPERATING_SYSTEM_SEPARATOR = System.getProperty("file.separator");
+	public final static String WINDOWS_SEPARATOR = "\\";
+	public final static String LINUX_SEPARATOR = "/";
+	public final static String OPERATING_SYSTEM_PLATFORM_WINDOWS = "0";
+	public final static String OPERATING_SYSTEM_PLATFORM_LINUX = "1";
 
 	public static String getLowerFirstLetterSimpleClassName(String className) {
 		if (StringUtils.isEmpty(className))
@@ -307,4 +319,54 @@ public class ClassUtils {
 		return rs;
 	}
 
+	/**
+	 * 获取classpath 的绝对路径 需要配合启动脚本启动
+	 * 如果该方法运行在classpath内 返回 '.'
+	 * @return path
+	 */
+	public static String getAbsoluteClassPath(){
+		String absoluteClassPath = "";
+		try {
+			/*linux sh startup*/
+			absoluteClassPath = new File("").getCanonicalPath();
+		} catch (IOException e) {
+			logger.error("Could not load properties from path");
+		}
+		/*windows bat startup*/
+		if (absoluteClassPath.endsWith(CURRENT_OPERATING_SYSTEM_SEPARATOR + "bin")) {
+			absoluteClassPath = absoluteClassPath.substring(0, absoluteClassPath.lastIndexOf(CURRENT_OPERATING_SYSTEM_SEPARATOR));
+		}
+		/*idea startup*/
+		if (!absoluteClassPath.endsWith(CURRENT_OPERATING_SYSTEM_SEPARATOR + "bin") && !absoluteClassPath.endsWith(CURRENT_OPERATING_SYSTEM_SEPARATOR + "server")) {
+			absoluteClassPath = ".";
+		}
+		return absoluteClassPath;
+	}
+
+	/**
+	 * 传入路径，返回是否是绝对路径，是绝对路径返回true，反之
+	 * @param path 路径
+	 * @return bool
+	 */
+	public static boolean isAbsolutePath(String path) {
+		return path.startsWith("/") || path.indexOf(":") > 0;
+	}
+
+
+	/**
+	 * 获取作业系统平台
+	 * @return string
+	 */
+	public static String getOperatingSystemPlatform(){
+		if (CURRENT_OPERATING_SYSTEM_SEPARATOR.equals(WINDOWS_SEPARATOR)){
+			return OPERATING_SYSTEM_PLATFORM_WINDOWS;
+		}else if(CURRENT_OPERATING_SYSTEM_SEPARATOR.equals(LINUX_SEPARATOR)){
+			return OPERATING_SYSTEM_PLATFORM_LINUX;
+		}
+		return null;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getOperatingSystemPlatform());
+	}
 }

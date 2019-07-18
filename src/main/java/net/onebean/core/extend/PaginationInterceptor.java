@@ -1,7 +1,7 @@
 package net.onebean.core.extend;
 
-import com.eakay.core.Pagination;
-import com.eakay.util.QueryIntercepterUtils;
+import net.onebean.core.Pagination;
+import net.onebean.util.QueryIntercepterUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.*;

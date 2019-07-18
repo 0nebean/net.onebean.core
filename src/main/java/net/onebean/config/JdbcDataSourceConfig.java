@@ -6,27 +6,39 @@ import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.alibaba.druid.wall.WallConfig;
 import com.alibaba.druid.wall.WallFilter;
-import com.eakay.core.form.Parse;
-import com.eakay.util.PropUtil;
+import net.onebean.core.extend.DynamicMapperSqlSessionFactoryBean;
+import net.onebean.core.extend.LogSQLExcutionTimeInterceptor;
+import net.onebean.core.extend.PaginationInterceptor;
+import net.onebean.core.form.Parse;
+import net.onebean.util.PropUtil;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.ibatis.plugin.Interceptor;
+import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * druid数据库连接池配置
- * @author 0neBean
- */
 @Configuration
-public class DataSourceConfig {
+@ConditionalOnProperty(name = "bootstrap.without.jdbc.datasource", havingValue = "false")
+@ImportResource(locations={"classpath*:META-INF/spring/*.xml"})
+public class JdbcDataSourceConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataSourceConfig.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcDataSourceConfig.class);
+
 
     /**
      * 配置监控服务器
@@ -108,6 +120,64 @@ public class DataSourceConfig {
             logger.error("druid configuration initialization filter", e);
         }
         return datasource;
+    }
+
+    /**
+     * mybatis的扫描配置实例
+     * @param sqlSessionFactory DynamicMapperSqlSessionFactoryBean
+     * @return 返回一个mybatis扫描配置实例
+     */
+    @Bean
+    public MapperScannerConfigurer mapperScannerConfigurer(@Qualifier("net.onebean.core.extend.DynamicMapperSqlSessionFactoryBean") DynamicMapperSqlSessionFactoryBean sqlSessionFactory){
+        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
+        //设置mybatis接口的扫描路径
+        mapperScannerConfigurer.setBasePackage(PropUtil.getInstance().getConfig("org.mybatis.base.package", PropUtil.PUBLIC_CONF_JDBC));
+        //设置mybatis接口的抽象接口
+        mapperScannerConfigurer.setMarkerInterface(net.onebean.core.extend.SqlMapper.class);
+        //指定sqlSessionFactory
+        mapperScannerConfigurer.setSqlSessionFactoryBeanName(sqlSessionFactory.getClass().getName());
+        return  mapperScannerConfigurer;
+    }
+
+
+    /**
+     * 实例化自定义的sqlSessionFactory
+     * @param dataSource 数据源
+     * @return 返回一个sqlSessionFactory实例
+     * @throws Exception 抛出异常
+     */
+    @Bean(name = "net.onebean.core.extend.DynamicMapperSqlSessionFactoryBean")
+    public DynamicMapperSqlSessionFactoryBean sqlSessionFactory(@Qualifier("dataSource") DruidDataSource dataSource) throws Exception{
+        DynamicMapperSqlSessionFactoryBean sqlSessionFactory = new DynamicMapperSqlSessionFactoryBean();
+        //设置数据源
+        sqlSessionFactory.setDataSource(dataSource);
+        sqlSessionFactory.setConfigLocation(new PathMatchingResourcePatternResolver().getResources(PropUtil.getInstance().getConfig("org.mybaits.config.path", PropUtil.PUBLIC_CONF_JDBC))[0]);
+        //设置扫描业务Mapper和抽象Mapper的路径
+        Resource[] mls1 = new PathMatchingResourcePatternResolver().getResources(PropUtil.getInstance().getConfig("org.mybaits.base.mapper.path", PropUtil.PUBLIC_CONF_JDBC));
+        Resource [] mls2 = new PathMatchingResourcePatternResolver().getResources(PropUtil.getInstance().getConfig("org.mybaits.bussines.mapper.path", PropUtil.PUBLIC_CONF_JDBC));
+        sqlSessionFactory.setMapperLocations((Resource []) ArrayUtils.addAll(mls1,mls2));
+        //设置自定的'mbatis'的自定义插件
+        Interceptor[] plugins = new Interceptor[2];
+        //增加'mbatis'的sql执行施加统计插件
+        Interceptor plg1 = new LogSQLExcutionTimeInterceptor();
+        //增加'mbatis'的分页插件
+        Interceptor plg2 = new PaginationInterceptor();
+        plugins[0] = plg1;
+        plugins[1] = plg2;
+        sqlSessionFactory.setPlugins(plugins);
+        return sqlSessionFactory;
+    }
+
+    /**
+     * 指定自定义的数据源事务管理者
+     * @param dataSource 数据源
+     * @return 返回一个数据源事务管理者
+     */
+    @Bean(name = "transactionManager")
+    public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DruidDataSource dataSource){
+        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
+        dataSourceTransactionManager.setDataSource(dataSource);
+        return dataSourceTransactionManager;
     }
 
 }

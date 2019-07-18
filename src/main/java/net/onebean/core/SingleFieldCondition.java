@@ -1,7 +1,7 @@
 package net.onebean.core;
 
-import com.eakay.util.DateUtils;
-import com.eakay.util.StringUtils;
+import net.onebean.util.DateUtils;
+import net.onebean.util.StringUtils;
 
 import java.io.Serializable;
 import java.text.ParseException;

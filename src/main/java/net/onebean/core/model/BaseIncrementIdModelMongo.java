@@ -1,6 +1,6 @@
 package net.onebean.core.model;
 
-import com.eakay.core.extend.OrderBy;
+import net.onebean.core.extend.OrderBy;
 
 import java.io.Serializable;
 

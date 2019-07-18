@@ -966,14 +966,6 @@ public class StringUtils {
 		return new String(buffer.array(), "utf-8");
 	}
 
-	public static void main(String[] args) throws UnsupportedEncodingException {
-		String str = "Source:	吊炸天了：这个节奏，胆小别看！����";
-		str = "顶戴顶替基本原则😃🙈🙉塔顶地▶fasdf";
-		str = StringUtils.filterSpecial(str);
-		System.err.println(filterWrongChars(str));
-	}
-
-
 	public static String toStrTrim(Object obj) {
 		return obj == null ? "" : obj.toString().trim();
 	}
@@ -987,4 +979,5 @@ public class StringUtils {
 			return false;
 		}
 	}
+
 }

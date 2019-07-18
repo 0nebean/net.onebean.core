@@ -1,7 +1,7 @@
 package net.onebean.config;
 
-import com.eakay.core.form.Parse;
-import com.eakay.util.PropUtil;
+import net.onebean.core.form.Parse;
+import net.onebean.util.PropUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

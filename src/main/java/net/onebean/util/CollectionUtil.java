@@ -68,6 +68,7 @@ public class CollectionUtil {
 	public static <T extends Collection<Long>> T toLongCollection(String[] collection){
 		return toLongCollection(collection,ArrayList.class);
 	}
+
 	/**
 	 * 将字符串数组转换成Long集合
 	 * @param collection 字符串数组
