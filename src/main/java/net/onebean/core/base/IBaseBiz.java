@@ -1,5 +1,9 @@
-package net.onebean.core;
+package net.onebean.core.base;
 
+import net.onebean.core.query.Condition;
+import net.onebean.core.query.ConditionMap;
+import net.onebean.core.query.ListPageQuery;
+import net.onebean.core.query.Pagination;
 import net.onebean.core.extend.Sort;
 import net.onebean.core.model.BaseIncrementIdModel;
 
@@ -12,7 +16,7 @@ import java.util.Map;
  * @author 0neBean
  * @param <T>
  */
-public interface IBaseSplitBiz<T extends BaseIncrementIdModel> {
+public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	/**
 	 * 根据ID删除实体
 	 * @param id 主键
@@ -85,7 +89,7 @@ public interface IBaseSplitBiz<T extends BaseIncrementIdModel> {
 	 */
 	public List<T> findAll(Map<String, Object> dp);
 	/**
-	 *
+	 * 查找所有的记录
 	 * @param sort 排序字段条件
 	 * @return 泛型实体对象的list
 	 */
@@ -171,14 +175,7 @@ public interface IBaseSplitBiz<T extends BaseIncrementIdModel> {
 	 * @return list 泛型实体对象的list
 	 */
 	public List<T> findByIds(String ids);
-	/**
-	 * 获取租户ID
-	 * @return 租户ID
-	 */
-	public abstract String getTenantId();
-	/**
-	 * 设置租户ID
-	 * @return 租户ID
-	 */
-	public abstract void setTenantId(String tenantId);
+
+
+
 }

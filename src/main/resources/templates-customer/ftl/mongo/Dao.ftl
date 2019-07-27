@@ -1,7 +1,7 @@
 package ${dao_package_name}.mongo;
 
 import org.springframework.stereotype.Component;
-import net.onebean.core.mongo.BaseMongoDao;
+import net.onebean.core.mongo.base.BaseMongoDao;
 import ${model_package_name}.mongo.${model_name};
 
 /**

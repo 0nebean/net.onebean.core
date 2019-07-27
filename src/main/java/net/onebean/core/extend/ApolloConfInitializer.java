@@ -37,9 +37,9 @@ public class ApolloConfInitializer {
         String apolloBootstrapEnabled = PropUtil.getInstance().getConfig(APOLLO_BOOTSTRAP_ENABLED,PropUtil.PUBLIC_CONF_SYSTEM);
         String apolloBootstrapNamespaces = PropUtil.getInstance().getConfig(APOLLO_BOOTSTRAP_NAMESPACES,PropUtil.PUBLIC_CONF_SYSTEM);
         String loggingConfig = PropUtil.getInstance().getConfig(LOGGING_CONFIG,PropUtil.PUBLIC_CONF_SYSTEM);
+        String loggingPath = PropUtil.getInstance().getConfig(LOGGING_PATH,PropUtil.PUBLIC_CONF_SYSTEM);
         String apolloMeta = PropUtil.getInstance().getConfig(env.toLowerCase()+ APOLLO_META_URL_SUFFIX,PropUtil.PUBLIC_CONF_SYSTEM);
         String appId = PropUtil.getInstance().getConfig(APP_ID,PropUtil.DEFLAULT_NAME_SPACE);
-        String loggingPath = PropUtil.getInstance().getConfig(LOGGING_PATH,PropUtil.PUBLIC_CONF_SYSTEM);
         String classPathAbsolutePath = null;
         try {
             classPathAbsolutePath = new File("").getCanonicalPath();
@@ -58,7 +58,6 @@ public class ApolloConfInitializer {
         System.getProperties().setProperty(APOLLO_BOOTSTRAP_NAMESPACES,apolloBootstrapNamespaces);
         System.getProperties().setProperty(LOGGING_CONFIG,loggingConfig);
         System.getProperties().setProperty(APP_ID_KEY,appId);
-
     }
 
 

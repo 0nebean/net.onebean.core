@@ -1,4 +1,4 @@
-package net.onebean.core;
+package net.onebean.core.query;
 
 import java.io.Serializable;
 

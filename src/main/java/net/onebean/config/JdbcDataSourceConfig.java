@@ -107,7 +107,11 @@ public class JdbcDataSourceConfig {
         datasource.setPoolPreparedStatements(Parse.toBoolean(PropUtil.getInstance().getConfig("spring.datasource.poolPreparedStatements", PropUtil.PUBLIC_CONF_JDBC)));
         datasource.setMaxPoolPreparedStatementPerConnectionSize(Parse.toInt(PropUtil.getInstance().getConfig("spring.datasource.maxPoolPreparedStatementPerConnectionSize", PropUtil.PUBLIC_CONF_JDBC)));
         WallConfig wallConfig = new WallConfig();
+
+        wallConfig.setCreateFunctionAllow(true);
         wallConfig.setMultiStatementAllow(true);
+        wallConfig.setSetAllow(true);
+
         WallFilter wallFilter = new WallFilter();
         wallFilter.setConfig(wallConfig);
         List<Filter> filters = new ArrayList<>();

@@ -1,6 +1,6 @@
 package net.onebean.core.extend;
 
-import net.onebean.core.Pagination;
+import net.onebean.core.query.Pagination;
 import net.onebean.util.QueryIntercepterUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.Executor;

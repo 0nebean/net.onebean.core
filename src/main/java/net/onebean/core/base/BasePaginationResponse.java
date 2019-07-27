@@ -1,5 +1,6 @@
-package net.onebean.core;
+package net.onebean.core.base;
 
+import net.onebean.core.query.Pagination;
 import net.onebean.core.extend.Sort;
 
 import java.util.List;

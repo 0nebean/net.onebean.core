@@ -1,8 +1,12 @@
-package net.onebean.core;
+package net.onebean.core.base;
 
 import net.onebean.component.SpringUtil;
 import net.onebean.core.extend.Sort;
 import net.onebean.core.model.BaseIncrementIdModel;
+import net.onebean.core.query.Condition;
+import net.onebean.core.query.ConditionMap;
+import net.onebean.core.query.ListPageQuery;
+import net.onebean.core.query.Pagination;
 import net.onebean.util.CollectionUtil;
 import net.onebean.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +73,7 @@ public abstract class BaseSplitBizManual<T extends BaseIncrementIdModel, K exten
 	}
 
 	@Override
-	public List<T> find(Pagination pagination, Condition condition,String suffix) {
+	public List<T> find(Pagination pagination, Condition condition, String suffix) {
 		List<Condition> conditions = null;
 		if (condition != null) {
 			conditions = new ArrayList<Condition>();
@@ -79,7 +83,7 @@ public abstract class BaseSplitBizManual<T extends BaseIncrementIdModel, K exten
 	}
 
 	@Override
-	public List<T> find(Pagination pagination, ConditionMap conditions,String suffix) {
+	public List<T> find(Pagination pagination, ConditionMap conditions, String suffix) {
 		List<Condition> conditionList = null;
 		if (conditions != null) {
 			conditionList = conditions.getItems();
@@ -98,7 +102,7 @@ public abstract class BaseSplitBizManual<T extends BaseIncrementIdModel, K exten
 	}
 
 	@Override
-	public List<T> find(ListPageQuery query,String suffix) {
+	public List<T> find(ListPageQuery query, String suffix) {
 		return baseDao.find(query.getPagination(),query.getConditions().getItems(),query.getSort(), suffix,null);
 	}
 

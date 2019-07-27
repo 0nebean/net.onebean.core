@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <springProperty scope="context" name="log_path" source="logging.path"/>
+    <springProperty scope="context" name="log_level" source="logging.level"/>
     <!--spring-boot-admin-->
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <jmxConfigurator/>
@@ -43,7 +44,7 @@
     </appender>
     <!-- 控制台输出日志级别 -->
     <!-- 级别依次为【从高到低】：FATAL > ERROR > WARN > INFO > DEBUG > TRACE  -->
-    <root level="INFO">
+    <root level="${log_level}">
         <appender-ref ref="FILEOUT" />
     </root>
 

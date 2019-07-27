@@ -1,4 +1,4 @@
-package net.onebean.core;
+package net.onebean.core.query;
 
 public class Pagination implements java.io.Serializable {
 	private static final long serialVersionUID = -6047376008743214596L;

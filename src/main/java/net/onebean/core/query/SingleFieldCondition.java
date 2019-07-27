@@ -1,4 +1,4 @@
-package net.onebean.core;
+package net.onebean.core.query;
 
 import net.onebean.util.DateUtils;
 import net.onebean.util.StringUtils;

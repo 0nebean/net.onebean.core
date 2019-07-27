@@ -1,4 +1,4 @@
-package net.onebean.core;
+package net.onebean.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;

@@ -1,6 +1,6 @@
 package ${service_package_name}.mongo;
 
-import net.onebean.core.mongo.IBaseMongoBiz;
+import net.onebean.core.mongo.base.IBaseMongoBiz;
 import ${model_package_name}.mongo.${model_name};
 
 /**

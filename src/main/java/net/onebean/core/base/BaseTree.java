@@ -1,4 +1,4 @@
-package net.onebean.core;
+package net.onebean.core.base;
 
 
 import java.util.Map;
