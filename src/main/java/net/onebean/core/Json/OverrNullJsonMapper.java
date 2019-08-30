@@ -1,4 +1,4 @@
-package net.onebean.util;
+package net.onebean.core.Json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class OverrNullJsonMapper extends ObjectMapper {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

@@ -1,6 +1,8 @@
-package net.onebean.util;
+package net.onebean.core.metadata;
 
 import ch.qos.logback.classic.Logger;
+import net.onebean.util.ClassUtils;
+import net.onebean.util.IOUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;

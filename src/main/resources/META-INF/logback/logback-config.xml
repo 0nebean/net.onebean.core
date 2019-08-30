@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <springProperty scope="context" name="log_path" source="logging.path"/>
-    <springProperty scope="context" name="log_level" source="logging.level"/>
+    <springProperty scope="context" name="log_level" source="logging.level.root"/>
     <!--spring-boot-admin-->
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <jmxConfigurator/>

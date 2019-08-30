@@ -3,6 +3,7 @@ package net.onebean.util;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.onebean.core.Json.OverrNullJsonMapper;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -855,6 +856,8 @@ public class StringUtils {
 			return null;
 		}
 	}
+
+
 
 	/**
 	 * 截断显示在首页文章内容的数据

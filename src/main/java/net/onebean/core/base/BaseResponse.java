@@ -13,6 +13,12 @@ public class BaseResponse<T> {
         return b;
     }
 
+    public static BaseResponse ok(){
+        BaseResponse b = new BaseResponse();
+        b.setErrCode("0");
+        return b;
+    }
+
     public T getDatas() {
         return datas;
     }

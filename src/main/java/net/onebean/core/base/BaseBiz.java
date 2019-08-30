@@ -109,7 +109,7 @@ public abstract class BaseBiz<T extends BaseIncrementIdModel, K extends BaseDao<
 	}
 
 	@Override
-	public List<T> find(ListPageQuery query, Map<String, Object> dp) {
+	public List<T> find(Map<String, Object> dp,ListPageQuery query) {
 		return baseDao.find(query.getPagination(),query.getConditions().getItems(),query.getSort(),dp);
 	}
 

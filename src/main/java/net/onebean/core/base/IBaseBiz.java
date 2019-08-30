@@ -74,7 +74,7 @@ public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	 * @param dp 权限sql
 	 * @return 泛型实体对象的list
 	 */
-	public List<T> find(ListPageQuery query, Map<String, Object> dp);
+	public List<T> find(Map<String, Object> dp,ListPageQuery query);
 	/**
 	 * 查找所有的记录
 	 *

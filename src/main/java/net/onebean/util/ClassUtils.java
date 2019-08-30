@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * class类操作工具类
  * @author 0neBean
  */
 public class ClassUtils {

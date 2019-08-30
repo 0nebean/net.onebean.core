@@ -1,5 +1,6 @@
 package net.onebean.util;
 
+import net.onebean.core.metadata.PropertiesLoader;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;

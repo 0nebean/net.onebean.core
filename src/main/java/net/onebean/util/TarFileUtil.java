@@ -15,7 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by 01116117 on 2016/12/29.
+ * 文件压缩工具类
+ * @author 0neBean
  */
 public class TarFileUtil {
 

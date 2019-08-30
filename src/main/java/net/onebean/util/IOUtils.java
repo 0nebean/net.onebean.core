@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 
 /**
+ * IO操作工具类
  * @author 0neBean
  */
 public class IOUtils {

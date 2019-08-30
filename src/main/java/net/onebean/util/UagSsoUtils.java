@@ -30,8 +30,8 @@ public class UagSsoUtils {
 
     public static UagLoginSessionInfo getCurrentUagLoginHeaderInfo(){
         UagLoginSessionInfo uagLoginInfo = null;
-        String uagHeaderUserInfoStr =  SpringUtil.getHttpServletRequest().getHeader("uagHeaderUserInfo");
         try {
+            String uagHeaderUserInfoStr =  SpringUtil.getHttpServletRequest().getHeader("uagHeaderUserInfo");
             uagHeaderUserInfoStr = URLDecoder.decode(uagHeaderUserInfoStr, "utf-8");
             uagLoginInfo = JSONUtil.toBean(uagHeaderUserInfoStr,UagLoginSessionInfo.class);
         } catch (Exception e) {

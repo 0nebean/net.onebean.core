@@ -20,6 +20,7 @@ public class ApolloConfInitializer {
     private final static String APOLLO_BOOTSTRAP_ENABLED = "apollo.bootstrap.enabled";
     private final static String APOLLO_BOOTSTRAP_NAMESPACES = "apollo.bootstrap.namespaces";
     private final static String LOGGING_CONFIG = "logging.config";
+    private final static String LOGGING_LEVEL = "logging.level.root";
     private final static String APP_ID = "spring.application.name";
     private final static String APOLLO_META_URL_SUFFIX = ".meta";
     private final static String APP_ID_KEY = "app.id";
@@ -58,6 +59,10 @@ public class ApolloConfInitializer {
         System.getProperties().setProperty(APOLLO_BOOTSTRAP_NAMESPACES,apolloBootstrapNamespaces);
         System.getProperties().setProperty(LOGGING_CONFIG,loggingConfig);
         System.getProperties().setProperty(APP_ID_KEY,appId);
+        String loggingLevel = PropUtil.getInstance().getConfig(LOGGING_LEVEL,PropUtil.DEFLAULT_NAME_SPACE);
+        if (StringUtils.isNotEmpty(loggingLevel)){
+            System.getProperties().setProperty(LOGGING_LEVEL,loggingLevel);
+        }
     }
 
 

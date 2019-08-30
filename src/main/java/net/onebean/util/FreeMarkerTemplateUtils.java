@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * @author 0neBean
- * FreeMarker配置类
+ * FreeMarker 操作工具类
  */
 public class FreeMarkerTemplateUtils {
 

@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * 类型转换
  * 
- * @author Admin
+ * @author 0neBean
  * 
  */
 public class Parse {
