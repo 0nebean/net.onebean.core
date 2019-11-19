@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.onebean.core.Json.OverrNullJsonMapper;
+import net.onebean.core.form.Parse;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
@@ -982,5 +984,72 @@ public class StringUtils {
 			return false;
 		}
 	}
+
+
+
+	/**
+	 * 版本号比较
+	 * @param v1 版本1
+	 * @param v2 版本2
+	 * @return 0代表相等，1代表左边大，-1代表右边大
+	 */
+	public static int compareVersion(String v1, String v2) {
+		if (v1.equals(v2)) {
+			return 0;
+		}
+		String[] version1Array = v1.split("[._]");
+		String[] version2Array = v2.split("[._]");
+		int index = 0;
+		int minLen = Math.min(version1Array.length, version2Array.length);
+		long diff = 0;
+
+		while (index < minLen
+				&& (diff = Long.parseLong(version1Array[index])
+				- Long.parseLong(version2Array[index])) == 0) {
+			index++;
+		}
+		if (diff == 0) {
+			for (int i = index; i < version1Array.length; i++) {
+				if (Long.parseLong(version1Array[i]) > 0) {
+					return 1;
+				}
+			}
+
+			for (int i = index; i < version2Array.length; i++) {
+				if (Long.parseLong(version2Array[i]) > 0) {
+					return -1;
+				}
+			}
+			return 0;
+		} else {
+			return diff > 0 ? 1 : -1;
+		}
+	}
+
+	/**
+	 * 从uag的tag标签中获取版本号
+	 * @param tagStr tag标签
+	 * @return 版本号
+	 */
+	public static String getUagVersionFromTagStr(String tagStr){
+		final String temp = "_v.";
+		tagStr = tagStr.substring(tagStr.indexOf(temp)+temp.length());
+		return tagStr;
+	}
+
+	/**
+	 * 目标字符串中包含多少次字符串
+	 * @param tagStr tag标签
+	 * @return 版本号
+	 */
+	public static Integer containsCount(String tagStr,String containsStr){
+		int i = 0;
+		while (tagStr.indexOf(containsStr) > 0) {
+			i++;
+			tagStr = tagStr.replaceFirst(containsStr,"");
+		}
+		return i;
+	}
+
 
 }

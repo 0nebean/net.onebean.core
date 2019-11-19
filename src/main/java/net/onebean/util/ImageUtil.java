@@ -1,5 +1,8 @@
 package net.onebean.util;
 
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGEncodeParam;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.http.Header;
@@ -448,17 +451,30 @@ public class ImageUtil {
 		return ret;
 	}
 
+	public static String zipImageFileWithCustomHeight(File oldFile,File newFile,int height,float quality){
+		return zipWidthHeightImageFile(oldFile,newFile,0,height,quality);
+	}
 
+	public static String zipImageFileWithCustomWidth(File oldFile,File newFile,int width,float quality){
+		return zipWidthHeightImageFile(oldFile,newFile,width,0,quality);
+	}
+	public static String zipImageFileWithCustomHeightAndWidth(File oldFile,File newFile,int width,int height,float quality){
+		return zipImageFile(oldFile,newFile,width,height,quality);
+	}
+
+	public static String zipImageFileWithKeepOriginalSize(File oldFile,File newFile,float quality){
+		return zipImageFile(oldFile,newFile,getImgWidth(oldFile),getImgHeight(oldFile),quality);
+	}
 
 	/**
-	 * 根据设置的宽高等比例压缩图片文件<br> 先保存原文件，再压缩、上传
+	 * 根据设置的宽高等比例压缩图片文件 先保存原文件，再压缩、上传
 	 * @param oldFile  要进行压缩的文件
 	 * @param newFile  新文件
 	 * @param width  宽度 //设置宽度时（高度传入0，等比例缩放）
 	 * @param height 高度 //设置高度时（宽度传入0，等比例缩放）
 	 * @return 返回压缩后的文件的全路径
 	 */
-	public static String zipImageFile(File oldFile,File newFile,int width,int height) {
+	private static String zipWidthHeightImageFile(File oldFile,File newFile,int width,int height,float quality) {
 		if (oldFile == null) {
 			return null;
 		}
@@ -496,7 +512,14 @@ public class ImageUtil {
 			graphics.fillRect(0, 0, width, height);
 			graphics.drawImage(srcFile.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
 
-			ImageIO.write(buffImg, suffix, new File(srcImgPath));
+			/*压缩之后临时存放位置 */
+			FileOutputStream out = new FileOutputStream(newFile);
+			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+			JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(buffImg);
+			/*压缩质量*/
+			jep.setQuality(quality, true);
+			encoder.encode(buffImg, jep);
+			out.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -505,14 +528,14 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 按设置的宽度高度压缩图片文件<br> 先保存原文件，再压缩、上传
+	 * 按设置的宽度高度压缩图片文件 先保存原文件，再压缩、上传
 	 * @param oldFile  要进行压缩的文件全路径
 	 * @param newFile  新文件
 	 * @param width  宽度
 	 * @param height 高度
 	 * @return 返回压缩后的文件的全路径
 	 */
-	public static String zipWidthHeightImageFile(File oldFile,File newFile, int width, int height) {
+	private static String zipImageFile(File oldFile,File newFile, int width, int height,float quality) {
 		if (oldFile == null) {
 			return null;
 		}
@@ -520,11 +543,8 @@ public class ImageUtil {
 		try {
 			/** 对服务器上的临时文件进行处理 */
 			Image srcFile = ImageIO.read(oldFile);
-
 			String srcImgPath = newFile.getAbsoluteFile().toString();
-			System.out.println(srcImgPath);
 			String subfix = srcImgPath.substring(srcImgPath.lastIndexOf(".")+1);
-
 			BufferedImage buffImg;
 			if(subfix.equals("png")){
 				buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -538,10 +558,20 @@ public class ImageUtil {
 			graphics.fillRect(0, 0, width, height);
 			graphics.drawImage(srcFile.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
 
-			ImageIO.write(buffImg, subfix, new File(srcImgPath));
+
+			/*压缩之后临时存放位置 */
+			FileOutputStream out = new FileOutputStream(newFile);
+			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+			JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(buffImg);
+			/*压缩质量*/
+			jep.setQuality(quality, true);
+			encoder.encode(buffImg, jep);
+			out.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return newImage;
+		return newFile.getAbsolutePath();
 	}
+
 }

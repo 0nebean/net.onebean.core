@@ -216,13 +216,8 @@ public class Parse {
 
 	/**
 	 * 字符串转换成日期 如果转换格式为空，则利用默认格式进行转换操作
-	 * 
-	 * @param str
-	 *            字符串
-	 * @param format
-	 *            日期格式
+	 * @param str 字符串
 	 * @return 日期
-	 * @throws ParseException
 	 */
 	public static Timestamp toTimestamp(String str) {
 		String format = "yyyy-MM-dd";
@@ -291,4 +286,20 @@ public class Parse {
 		return null;
 	}
 
+
+	/**
+	 * 将任意类型强制转换成long型, 如果值为空返回零
+	 *
+	 * @param value
+	 * @return
+	 */
+	public static float toFloat(Object value) {
+		float f = 0;
+		try {
+			f = Float.parseFloat(value.toString());
+		} catch (NumberFormatException e) {
+			return f;
+		}
+		return f;
+	}
 }

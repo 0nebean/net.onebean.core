@@ -27,6 +27,7 @@ public class ApolloConfInitializer {
     private final static String APOLLO_META_KEY = "apollo.meta";
     private final static String LOGGING_PATH = "logging.path";
     private final static String EVN_KEY = "env";
+    private final static String CONFIG_SERVICE = "apollo.configService";
 
 
     public static void init(){
@@ -55,6 +56,8 @@ public class ApolloConfInitializer {
         }
         System.getProperties().setProperty(LOGGING_PATH,loggingPath);
         System.getProperties().setProperty(APOLLO_META_KEY,apolloMeta);
+        System.getProperties().setProperty(CONFIG_SERVICE,apolloMeta);
+        logger.info(CONFIG_SERVICE + " = "+System.getProperty(CONFIG_SERVICE));
         System.getProperties().setProperty(APOLLO_BOOTSTRAP_ENABLED,apolloBootstrapEnabled);
         System.getProperties().setProperty(APOLLO_BOOTSTRAP_NAMESPACES,apolloBootstrapNamespaces);
         System.getProperties().setProperty(LOGGING_CONFIG,loggingConfig);

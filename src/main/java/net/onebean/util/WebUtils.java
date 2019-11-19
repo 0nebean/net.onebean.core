@@ -1,6 +1,10 @@
 package net.onebean.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 /**
  * web 工具类
@@ -33,5 +37,29 @@ public class WebUtils {
             //电脑
             return TYPE_OF_OTHER;
         }
+    }
+
+
+    /**
+     * 从HttpServletRequest中获取参数对象
+     * @param request req
+     * @param clazz 类型
+     * @return obj
+     */
+    public static  <T> T getParamVoFromHttpServletRequest(HttpServletRequest request,Class<T> clazz) {
+        JSONObject jsonObject = new JSONObject();
+        Enumeration paramNames = request.getParameterNames();
+        while (paramNames.hasMoreElements()) {
+            String paramName = (String) paramNames.nextElement();
+
+            String[] paramValues = request.getParameterValues(paramName);
+            if (paramValues.length >0) {
+                String paramValue = paramValues[0];
+                if (paramValue.length() != 0) {
+                    jsonObject.put(paramName, paramValue);
+                }
+            }
+        }
+        return JSONObject.parseObject(jsonObject.toJSONString(),clazz);
     }
 }
