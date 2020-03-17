@@ -224,7 +224,7 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 		Object tenantId;
 		try {
 			HttpServletRequest request = springUtil.getHttpServletRequest();
-			String tenantIdHeaderKey = PropUtil.getInstance().getConfig("uag.tenant.id.header.key", PropUtil.DEFLAULT_NAME_SPACE);
+			String tenantIdHeaderKey = PropUtil.getInstance().getConfig("tenant.id.header.key", PropUtil.DEFLAULT_NAME_SPACE);
 			tenantId = request.getSession().getAttribute(tenantIdHeaderKey);
 			if (StringUtils.isEmpty(tenantId)){
 				throw new GetTenantInfoException("get tenantId From request header failure");
@@ -240,7 +240,7 @@ public abstract class BaseSplitBiz<T extends BaseIncrementIdModel, K extends Bas
 	public void setTenantId(String tenantId) {
 		try {
 			HttpServletRequest request = springUtil.getHttpServletRequest();
-			String tenantIdHeaderKey = PropUtil.getInstance().getConfig("uag.tenant.id.header.key", PropUtil.DEFLAULT_NAME_SPACE);
+			String tenantIdHeaderKey = PropUtil.getInstance().getConfig("tenant.id.header.key", PropUtil.DEFLAULT_NAME_SPACE);
 			request.getSession().setAttribute(tenantIdHeaderKey,tenantId);
 		} catch (Exception e) {
 			throw new GetTenantInfoException("set tenantId to request header failure");
