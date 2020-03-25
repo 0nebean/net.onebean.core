@@ -1,5 +1,4 @@
-package net.onebean.component;
-
+package net.onebean.config;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
@@ -8,21 +7,24 @@ import com.ctrip.framework.apollo.spring.annotation.ApolloConfigChangeListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
 
 /**
- * Created by 0neBean on 2018/6/25. Content :动态日志配置
+ * apollo刷新日志级别 配置类
+ * @author 0neBean
  */
-@Service
-public class LoggerLevelRefresher implements ApplicationContextAware {
+@Configuration
+@ConditionalOnProperty(name = "spring.config.active.apollo",havingValue = "true")
+public class ApolloLoggerLevelRefresherConfig implements ApplicationContextAware {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(LoggerLevelRefresher.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ApolloLoggerLevelRefresherConfig.class);
 
     private ApplicationContext applicationContext;
 
@@ -40,8 +42,7 @@ public class LoggerLevelRefresher implements ApplicationContextAware {
     }
 
     private void refreshLoggingLevels(Set<String> changedKeys) {
-        LOGGER.info("Refreshing logging levels");
-
+        LOGGER.info(" o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0  Refreshing logging levels o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0 ");
         /**
          * refresh logging levels
          * @see org.springframework.cloud.logging.LoggingRebinder#onApplicationEvent

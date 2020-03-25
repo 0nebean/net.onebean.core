@@ -6,6 +6,7 @@ import com.ctrip.framework.apollo.ConfigService;
  * @author 0neBean
  * Apollo配置中心工具类
  */
+
 public class ApolloPropUtils {
 
     public static String getString(String key, String namespace){

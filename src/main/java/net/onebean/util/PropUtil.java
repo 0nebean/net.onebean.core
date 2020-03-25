@@ -1,7 +1,7 @@
 package net.onebean.util;
 
+import net.onebean.core.extend.ApolloConfInitializer;
 import net.onebean.core.metadata.PropertiesLoader;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +22,22 @@ public class PropUtil {
     public final static String PUBLIC_CONF_RABBIT_MQ = "public-conf.rabbitmq";
     public final static String PUBLIC_CONF_ALIYUN = "public-conf.aliyun";
     public final static String PUBLIC_CONF_SSO = "public-conf.sso";
+
+    public static String isActiveApolloConfig = null;
+
+
+    /*
+    * 获取apollo注册地址
+    */
+    private static Boolean isActiveRemoteConfig(){
+        if (null == isActiveApolloConfig) {
+            isActiveApolloConfig = System.getProperty(ApolloConfInitializer.SPRING_CONFIG_ACTIVE_APOLLO);
+            if (null == isActiveApolloConfig) {
+                isActiveApolloConfig = "";
+            }
+        }
+        return StringUtils.isEmpty(isActiveApolloConfig) || isActiveApolloConfig.equals("true")  ;
+    }
 
     private PropUtil() {
         initPropertiesLoader();
@@ -78,22 +94,15 @@ public class PropUtil {
      */
     public String getConfig(String key,String nameSpace) {
         String value = getConfigInLoader(key,nameSpace);
-        if (StringUtils.isEmpty(value)){
-            value = ApolloPropUtils.getString(key,nameSpace);
+        if (StringUtils.isEmpty(value) && isActiveRemoteConfig()){
+            try {
+                value = ApolloPropUtils.getString(key,nameSpace);
+            } catch (Exception ignored) {
+            }
         }
         return value;
     }
 
-//    /**
-//     * 获取配置
-//     */
-//    public static String getConfig(String key) {
-//        String value = getConfigInCache(key,DEFLAULT_NAME_SPACE);
-//        if (StringUtils.isEmpty(value)){
-//            value = ApolloPropUtils.getString(key);
-//        }
-//        return value;
-//    }
 
 
 }

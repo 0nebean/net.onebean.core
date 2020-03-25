@@ -19,6 +19,7 @@ public class ApolloConfInitializer {
     private final static String SEPARATOR = System.getProperty("file.separator");
     private final static String APOLLO_BOOTSTRAP_ENABLED = "apollo.bootstrap.enabled";
     private final static String APOLLO_BOOTSTRAP_NAMESPACES = "apollo.bootstrap.namespaces";
+    private final static String SPRING_CONFIG_NAME = "spring.config.name";
     private final static String LOGGING_CONFIG = "logging.config";
     private final static String LOGGING_LEVEL = "logging.level.root";
     private final static String APP_ID = "spring.application.name";
@@ -28,6 +29,10 @@ public class ApolloConfInitializer {
     private final static String LOGGING_PATH = "logging.path";
     private final static String EVN_KEY = "env";
     private final static String CONFIG_SERVICE = "apollo.configService";
+    public final static String SPRING_CONFIG_ACTIVE_APOLLO = "spring.config.active.apollo";
+    public final static String SPRING_CONFIG_ACTIVE_APOLLO_DEFAULT = "true";
+    public final static String SPRING_CONFIG_ACTIVE_APOLLO_LOCAL_DEFAULT = "false";
+
 
 
     public static void init(){
@@ -54,6 +59,7 @@ public class ApolloConfInitializer {
         if (classPathAbsolutePath.endsWith(SEPARATOR + "bin")) {
             loggingPath = "."+loggingPath;
         }
+
         System.getProperties().setProperty(LOGGING_PATH,loggingPath);
         System.getProperties().setProperty(APOLLO_META_KEY,apolloMeta);
         System.getProperties().setProperty(CONFIG_SERVICE,apolloMeta);
@@ -63,10 +69,23 @@ public class ApolloConfInitializer {
         System.getProperties().setProperty(LOGGING_CONFIG,loggingConfig);
         System.getProperties().setProperty(APP_ID_KEY,appId);
         String loggingLevel = PropUtil.getInstance().getConfig(LOGGING_LEVEL,PropUtil.DEFLAULT_NAME_SPACE);
+        String springConfigActiveLocal = PropUtil.getInstance().getConfig(SPRING_CONFIG_ACTIVE_APOLLO,PropUtil.DEFLAULT_NAME_SPACE);
+        if (StringUtils.isEmpty(springConfigActiveLocal)){
+            springConfigActiveLocal = SPRING_CONFIG_ACTIVE_APOLLO_DEFAULT;
+        }
+        System.getProperties().setProperty(SPRING_CONFIG_ACTIVE_APOLLO,springConfigActiveLocal);
         if (StringUtils.isNotEmpty(loggingLevel)){
             System.getProperties().setProperty(LOGGING_LEVEL,loggingLevel);
         }
     }
 
-
+    public static void initLocalConf(){
+        String springConfigActiveLocal = PropUtil.getInstance().getConfig(SPRING_CONFIG_ACTIVE_APOLLO,PropUtil.DEFLAULT_NAME_SPACE);
+        String apolloBootstrapNamespaces = PropUtil.getInstance().getConfig(APOLLO_BOOTSTRAP_NAMESPACES,PropUtil.PUBLIC_CONF_SYSTEM);
+        if (StringUtils.isEmpty(springConfigActiveLocal)){
+            springConfigActiveLocal = SPRING_CONFIG_ACTIVE_APOLLO_LOCAL_DEFAULT;
+        }
+        System.getProperties().setProperty(SPRING_CONFIG_ACTIVE_APOLLO,springConfigActiveLocal);
+        System.getProperties().setProperty(SPRING_CONFIG_NAME,apolloBootstrapNamespaces);
+    }
 }
