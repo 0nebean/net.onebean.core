@@ -42,7 +42,7 @@ public class ApolloLoggerLevelRefresherConfig implements ApplicationContextAware
     }
 
     private void refreshLoggingLevels(Set<String> changedKeys) {
-        LOGGER.info(" o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0  Refreshing logging levels o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0o0 ");
+        LOGGER.info("Refreshing logging levels");
         /**
          * refresh logging levels
          * @see org.springframework.cloud.logging.LoggingRebinder#onApplicationEvent

@@ -32,6 +32,7 @@ public class ApolloConfInitializer {
     public final static String SPRING_CONFIG_ACTIVE_APOLLO = "spring.config.active.apollo";
     public final static String SPRING_CONFIG_ACTIVE_APOLLO_DEFAULT = "true";
     public final static String SPRING_CONFIG_ACTIVE_APOLLO_LOCAL_DEFAULT = "false";
+    public final static String INIT_APOLLO_INITIALIZER = "INIT_APOLLO_INITIALIZER";
 
 
 
@@ -77,6 +78,7 @@ public class ApolloConfInitializer {
         if (StringUtils.isNotEmpty(loggingLevel)){
             System.getProperties().setProperty(LOGGING_LEVEL,loggingLevel);
         }
+        System.getProperties().setProperty(INIT_APOLLO_INITIALIZER,INIT_APOLLO_INITIALIZER);
     }
 
     public static void initLocalConf(){
@@ -87,5 +89,6 @@ public class ApolloConfInitializer {
         }
         System.getProperties().setProperty(SPRING_CONFIG_ACTIVE_APOLLO,springConfigActiveLocal);
         System.getProperties().setProperty(SPRING_CONFIG_NAME,apolloBootstrapNamespaces);
+
     }
 }
