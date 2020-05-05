@@ -108,7 +108,7 @@ public class JdbcDataSourceConfig {
         datasource.setMaxPoolPreparedStatementPerConnectionSize(Parse.toInt(PropUtil.getInstance().getConfig("spring.datasource.maxPoolPreparedStatementPerConnectionSize", PropUtil.PUBLIC_CONF_JDBC)));
         WallConfig wallConfig = new WallConfig();
 
-        wallConfig.setCreateFunctionAllow(true);
+//        wallConfig.setCreateFunctionAllow(true);
         wallConfig.setMultiStatementAllow(true);
         wallConfig.setSetAllow(true);
 

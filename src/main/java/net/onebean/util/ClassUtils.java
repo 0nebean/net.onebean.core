@@ -141,10 +141,10 @@ public class ClassUtils {
 
 				try {
 					Method m = anno.getClass().getDeclaredMethod(annoField,
-							null);
+							(Class<?>) null);
 					try {
 						if (m != null) {
-							return m.invoke(anno, null);
+							return m.invoke(anno, (Object) null);
 						}
 						break;
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
