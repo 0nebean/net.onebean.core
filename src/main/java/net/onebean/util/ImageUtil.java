@@ -87,7 +87,7 @@ public class ImageUtil {
 	 * @param sourceFile 源文件
 	 * @param toFile 目标文件
 	 * @param logoImg logo图片
-	 * @throws IOException
+	 * @throws IOException io异常
 	 */
 	public static void addLogo(String sourceFile, String toFile, String logoImg) throws IOException {
 		// watermark(位置，水印图，透明度)
@@ -142,8 +142,6 @@ public class ImageUtil {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (null != is)
-					is.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -157,12 +155,12 @@ public class ImageUtil {
 	}
 
 
+
 	/**
 	 * 旋转照片
-	 *
-	 * @param sourceFile
-	 * @param toFile
-	 * @param angle
+	 * @param sourceFile 源文件
+	 * @param toFile 目标文件
+	 * @param angle 角度
 	 */
 	public static void rotate(String sourceFile, String toFile, double angle) {
 		try {
@@ -189,6 +187,7 @@ public class ImageUtil {
 		if (formatName == null) {
 			HttpURLConnection urlconnection;
 			try {
+				assert url != null;
 				urlconnection = (HttpURLConnection) url.openConnection();
 				urlconnection.connect();
 				BufferedInputStream bis = new BufferedInputStream(
@@ -209,6 +208,7 @@ public class ImageUtil {
 			}
 			try {
 				BufferedImage img = ImageIO.read(url);
+				assert formatName != null;
 				ImageIO.write(img, formatName, new File(filePath));
 			} catch (Exception e) {
 				logger.error(e);
@@ -222,13 +222,14 @@ public class ImageUtil {
 	 * @param localPath 本地路径
 	 * @param fileName 文件名
 	 * @return fulPath 完整图片本地路径
+	 * @throws MalformedURLException 抛出网络异常
 	 */
-	public static String downLoadImage(String urlPath, String localPath,String fileName) throws  Exception{
+	public static String downLoadImage(String urlPath, String localPath,String fileName) throws MalformedURLException {
 		URL  url = new URL(urlPath);
 		logger.debug("开始从给定URL下载图片" + url.toString());
 		String type = "jpg";
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		if(url.toString().indexOf(" ") != -1){
+		if(url.toString().contains(" ")){
 			return fileName;
 		}
 		HttpGet httpget = new HttpGet(url.toString());
@@ -274,8 +275,6 @@ public class ImageUtil {
 			}
 		} catch (Exception e) {
 			logger.error("图片下载失败", e);
-		} finally {
-
 		}
 		return fileName;
 	}
@@ -305,14 +304,14 @@ public class ImageUtil {
 	public static void savePicToDisk(InputStream in, String dirPath,String filePath) {
 		try {
 			File dir = new File(dirPath);
-			if (dir == null || !dir.exists()) {
+			if (!dir.exists()) {
 				dir.mkdirs();
 			}
 
 			// 文件真实路径
 			String realPath = dirPath.concat(filePath);
 			File file = new File(realPath);
-			if (file == null || !file.exists()) {
+			if (!file.exists()) {
 				file.createNewFile();
 			}
 
@@ -342,12 +341,6 @@ public class ImageUtil {
 	 * @param jpgPath 目标文件路径
 	 */
 	public static void webpToJpg(String webpPath, String jpgPath) {
-//		if (!include) {
-//			IIORegistry r = IIORegistry.getDefaultInstance();
-//			WebPImageReaderSpi s = new WebPImageReaderSpi();
-//			r.registerServiceProvider(s);
-//			include = true;
-//		}
 		BufferedImage bi;
 		try {
 			bi = ImageIO.read(new File(webpPath));
@@ -395,11 +388,8 @@ public class ImageUtil {
 		Image img = null;
 		try {
 			img = ImageIO.read(imageFile);
-			if (img == null || img.getWidth(null) <= 0
-					|| img.getHeight(null) <= 0) {
-				return false;
-			}
-			return true;
+			return img != null && img.getWidth(null) > 0
+					&& img.getHeight(null) > 0;
 		} catch (Exception e) {
 			return false;
 		} finally {
@@ -479,17 +469,17 @@ public class ImageUtil {
 			return null;
 		}
 		try {
-			/** 对服务器上的临时文件进行处理 */
+			//对服务器上的临时文件进行处理
 			Image srcFile = ImageIO.read(oldFile);
 			int w = srcFile.getWidth(null);
 			int h = srcFile.getHeight(null);
 			double bili;
 			if(width>0){
-				width = (width> LIMIT_SIZE)? LIMIT_SIZE :width;
+				width = Math.min(width, LIMIT_SIZE);
 				bili=width/(double)w;
 				height = (int) (h*bili);
 			}else{
-				height = (height> LIMIT_SIZE)? LIMIT_SIZE :height;
+				height = Math.min(height, LIMIT_SIZE);
 				if(height>0){
 					bili=height/(double)h;
 					width = (int) (w*bili);
@@ -541,7 +531,7 @@ public class ImageUtil {
 		}
 		String newImage = null;
 		try {
-			/** 对服务器上的临时文件进行处理 */
+			//对服务器上的临时文件进行处理
 			Image srcFile = ImageIO.read(oldFile);
 			String srcImgPath = newFile.getAbsoluteFile().toString();
 			String subfix = srcImgPath.substring(srcImgPath.lastIndexOf(".")+1);

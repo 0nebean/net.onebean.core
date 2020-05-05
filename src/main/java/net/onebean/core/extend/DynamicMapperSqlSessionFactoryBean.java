@@ -25,9 +25,8 @@ import java.util.List;
 /**
  * 继承自SqlSessionFactoryBean类，实现Mapper基本操作模块化功能
  * 	在一般系统中，每个Model都会有部分基本操作，这些操作模式基本相同，所以在我们系统内部将其抽象出来，通过动态的生成Mapper的形式注入到Mybatis中。
- * 	对于生成的mapper文件，在setMapperLocations(Resource[])方法中加入到Factory map locations中，让Ibatis自行处理。
+ * 	对于生成的mapper文件，在setMapperLocations(Resource[])方法中加入到Factory map locations中，让iBaits自行处理。
  * @see SqlSessionFactoryBean
- * @see 'ScanBaseModelUtil'
  */
 public class DynamicMapperSqlSessionFactoryBean extends SqlSessionFactoryBean {
 

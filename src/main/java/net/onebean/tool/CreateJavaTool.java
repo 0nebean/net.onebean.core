@@ -580,16 +580,13 @@ public class CreateJavaTool {
     }
 
     private void setToggleButtonListenerText(AbstractButton abstractButton,String trueText,String falseText){
-        abstractButton.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                // 获取事件源（即开关按钮本身）
-                JToggleButton toggleBtn = (JToggleButton) e.getSource();
-                if (toggleBtn.isSelected()){
-                    abstractButton.setText(trueText);
-                }else{
-                    abstractButton.setText(falseText);
-                }
+        abstractButton.addChangeListener(e -> {
+            // 获取事件源（即开关按钮本身）
+            JToggleButton toggleBtn = (JToggleButton) e.getSource();
+            if (toggleBtn.isSelected()){
+                abstractButton.setText(trueText);
+            }else{
+                abstractButton.setText(falseText);
             }
         });
     }

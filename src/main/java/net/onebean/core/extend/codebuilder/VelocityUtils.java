@@ -26,6 +26,7 @@ public class VelocityUtils {
 
     /**
      * 获取当前对象实例
+     * @return 返回当前实例
      */
     protected static VelocityUtils getInstance() {
         return velocityUtils;

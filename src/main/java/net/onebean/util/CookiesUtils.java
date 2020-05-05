@@ -31,9 +31,12 @@ public class CookiesUtils {
         }
     }
 
+
     /**
      * 保存Cookies
-     * @param value 保存值
+     * @param name key
+     * @param value val
+     * @param time 失效时间
      */
     public static void setCookie(String name, String value, int time) {
         HttpServletResponse response = SpringUtil.getHttpServletResponse();

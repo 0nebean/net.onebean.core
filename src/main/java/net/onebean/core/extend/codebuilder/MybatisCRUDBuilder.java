@@ -41,9 +41,8 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
 
     /**
      * 功能:初始化类字段属性
-     * <p>
-     *
      * @param clazz 要转换的实体类
+     * @param <T> 泛型实体类型
      * @return 如果type=file返回xml文件绝对路径，否则返回生成的xml内容
      */
     public <T> String createSqlByEntity(Class<T> clazz) {

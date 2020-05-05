@@ -31,10 +31,12 @@ public class Pagination implements java.io.Serializable {
 		this.currentPage = DEFAULT_CURRENTPAGE;
 	}
 
+
 	/**
 	 * 初始化分页参数:需要先设置totalRows
+	 * @param totalCount 总条数
+	 * @param pageSize 每页数量
 	 */
-
 	public void init(int totalCount, int pageSize) {
 		this.pageSize = pageSize;
 		this.totalCount = totalCount;

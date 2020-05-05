@@ -13,7 +13,7 @@ import java.util.Map;
  * mybatis接口
  * 继承了SqlMapper接口，MapperScannerConfigurer配置中指定了markerInterface为该接口
  * @author 0neBean
- * @param <T>
+ * @param <T> 泛型实体类型
  */
 public interface BaseDao<T> extends SqlMapper {
 	/**
@@ -39,16 +39,19 @@ public interface BaseDao<T> extends SqlMapper {
 	/**
 	 * 更新 泛型的实体对象的数据
 	 * @param entity 泛型的实体对象
+	 * @return 操作的行数
 	 */
 	public Integer update(@Param("entity") T entity);
 	/**
 	 * 删除 泛型的实体对象的数据
 	 * @param entity 泛型的实体对象
+	 * @return 操作的行数
 	 */
 	public Integer delete(@Param("entity") T entity);
 	/**
 	 * 根据id删除
 	 * @param id 主键
+	 * @return 操作的行数
 	 */
 	public Integer deleteById(@Param(value = "id") Object id);
 	/**
@@ -69,6 +72,7 @@ public interface BaseDao<T> extends SqlMapper {
 	 *
 	 * @param entity 泛型实体
 	 * @param ids list的id
+	 * @return 操作的行数
 	 */
 	public Integer updateBatch(@Param("entity") T entity, @Param("ids") List<Long> ids);
 

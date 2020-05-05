@@ -18,11 +18,11 @@ public class ModelMappingManager {
 	
 	private static Map<Class<?>, BeanInfo> beanInfoMappings = new HashMap<Class<?>, BeanInfo>();
 		
-	
 	/**
 	 * 得到实体的元数据信息
-	 * @param clazz
-	 * @return
+	 * @param clazz 类型
+	 * @param <T> 泛型实体类型的类型
+	 * @return 泛型实体类型
 	 */
 	public static <T> BeanInfo getBeanInfo(Class<T> clazz){
 		//if(!BaseIncrementIdModel.class.isAssignableFrom(clazz)){

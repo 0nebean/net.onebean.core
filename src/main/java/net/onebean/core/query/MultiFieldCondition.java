@@ -80,12 +80,12 @@ public class MultiFieldCondition extends Condition implements Serializable {
 		}		
 	}
 	
+
 	/**
 	 * 如果输入一个值，查询两个或者多个字段，用这个方法来分解。字段之间用-分隔，其它规则和Condition一样。
 	 * @see Condition
 	 * @param parameter 如 "name-title_String_eq"
-	 * @return
-	 */	
+	 */
 	@Override
 	protected void parse(String parameter) {
 		doParse(parameter,false);

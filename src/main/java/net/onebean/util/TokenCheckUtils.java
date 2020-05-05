@@ -43,40 +43,41 @@ public class TokenCheckUtils {
      * @param sign 签名
      * @param appId 应用ID
      * @param secret 应用秘钥
+     * @param customerId 业务用户ID
      * @param tenantId 租户ID
      * @param deviceToken 设备码
      * @param timestamp 时间戳
      * @return bool
      */
     public static boolean checkSignMd5(String sign,String appId,String secret,String customerId,String tenantId,String deviceToken, String timestamp){
-        StringBuilder sb = new StringBuilder();
-        sb.append(appId);
-        sb.append(secret);
-        sb.append(customerId);
-        sb.append(tenantId);
-        sb.append(deviceToken);
-        sb.append(timestamp);
-        return legalTimeStamp4AccToken(timestamp) && sign.equalsIgnoreCase(DigestUtils.md5Hex(sb.toString()));
+        String sb = appId +
+                secret +
+                customerId +
+                tenantId +
+                deviceToken +
+                timestamp;
+        return legalTimeStamp4AccToken(timestamp) && sign.equalsIgnoreCase(DigestUtils.md5Hex(sb));
     }
+
 
     /**
      * 生成签名
      * @param appId 应用ID
      * @param secret 应用秘钥
+     * @param customerId 业务用户ID
      * @param tenantId 租户ID
      * @param deviceToken 设备码
      * @param timestamp 时间戳
      * @return bool
      */
     public static String sign(String appId,String secret,String customerId,String tenantId,String deviceToken, String timestamp){
-        StringBuilder sb = new StringBuilder();
-        sb.append(appId);
-        sb.append(secret);
-        sb.append(customerId);
-        sb.append(tenantId);
-        sb.append(deviceToken);
-        sb.append(timestamp);
-        return DigestUtils.md5Hex(sb.toString());
+        String sb = appId +
+                secret +
+                customerId +
+                tenantId +
+                deviceToken +
+                timestamp;
+        return DigestUtils.md5Hex(sb);
     }
     /**
      * 生成签名

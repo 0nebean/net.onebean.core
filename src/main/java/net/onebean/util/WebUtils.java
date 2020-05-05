@@ -39,11 +39,11 @@ public class WebUtils {
         }
     }
 
-
     /**
      * 从HttpServletRequest中获取参数对象
      * @param request req
      * @param clazz 类型
+     * @param <T> 泛型类型
      * @return obj
      */
     public static  <T> T getParamVoFromHttpServletRequest(HttpServletRequest request,Class<T> clazz) {

@@ -14,17 +14,19 @@ import java.util.Map;
 /**
  * 所有service接口的父接口
  * @author 0neBean
- * @param <T>
+ * @param <T> 泛型实体类型
  */
 public interface IBaseSplitBiz<T extends BaseIncrementIdModel> {
 	/**
 	 * 根据ID删除实体
 	 * @param id 主键
+	 * @return 操作的行数
 	 */
 	public Integer deleteById(Object id);
 	/**
 	 * 删除实体对象
 	 * @param entity 泛型实体对象
+	 * @return 操作的行数
 	 */
 	public Integer delete(T entity);
 	/**
@@ -146,15 +148,15 @@ public interface IBaseSplitBiz<T extends BaseIncrementIdModel> {
 	public void deleteByIds(List<Long> ids);
 	/**
 	 * 更新实体
-	 *
 	 * @param entity 泛型实体对象
+	 * @return 操作的行数
 	 */
 	public Integer update(T entity);
 	/**
 	 * 把ids对应的实体中的属性值更新成entity中所有非null的属性值
-	 *
 	 * @param entity 泛型实体对象
 	 * @param ids id的list
+	 * @return 操作的行数
 	 */
 	public Integer updateBatch(T entity, List<Long> ids);
 	/**
@@ -182,7 +184,7 @@ public interface IBaseSplitBiz<T extends BaseIncrementIdModel> {
 	public abstract String getTenantId();
 	/**
 	 * 设置租户ID
-	 * @return 租户ID
+	 * @param tenantId 租户ID
 	 */
 	public abstract void setTenantId(String tenantId);
 }

@@ -8,8 +8,14 @@ import java.util.List;
 
 public class ConditionMap extends HashMap<String, Object>{
 
+
+	/**
+	 * 序列号
+	 */
+	private static final long serialVersionUID = 2999593154628884149L;
+
 	
-	List<Condition> items = new ArrayList<Condition>();
+	List<Condition> items = new ArrayList<>();
 	
 	@Override
 	public void clear() {
@@ -46,8 +52,9 @@ public class ConditionMap extends HashMap<String, Object>{
 	}
 
 	/**
-	 * 根据表达式格式化查询条件
-	 * @param conditionStr
+	 * 根据表达式格式化查询条件(字段为数据库字段名)
+	 * 例子: user_type@string@eq$^username@string@like$
+	 * @param conditionStr 查询表达式
 	 */
 	public void parseCondition(String conditionStr){
 		if(StringUtils.isEmpty(conditionStr)){
@@ -70,8 +77,9 @@ public class ConditionMap extends HashMap<String, Object>{
 	}
 
 	/**
-	 * 根据表达式格式化查询条件
-	 * @param conditionStr
+	 * 根据表达式格式化查询条件(字段为变量名)
+	 * 例子: userType@string@eq$^username@string@like$
+	 * @param conditionStr 查询表达式
 	 */
 	public void parseModelCondition(String conditionStr){
 		if(StringUtils.isEmpty(conditionStr)){
@@ -94,12 +102,7 @@ public class ConditionMap extends HashMap<String, Object>{
 	}
 
 	
-//	private 
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2999593154628884149L;
+
 
 	
 	

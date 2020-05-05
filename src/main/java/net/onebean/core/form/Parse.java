@@ -19,97 +19,85 @@ import java.util.Date;
 public class Parse {
 	/**
 	 * 将任意类型强制转换成double型, 如果值为空返回零
-	 * 
-	 * @param value
-	 * @return
+	 * @param value 目标值
+	 * @return double
 	 */
 	public static double toDouble(Object value) {
 		if (value == null)
 			return 0;
 		double d = 0;
-		if (value != null) {
-			String temp = value.toString();
-			value = temp.replace(",", "");
-		}
+		String temp = value.toString();
+		value = temp.replace(",", "");
 		try {
 			d = Double.parseDouble(String.valueOf(value).toString());
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 		return d;
 	}
 
 	/**
 	 * 无损转换
-	 * @param d
-	 * @return
+	 * @param value 目标值
+	 * @return BigDecimal
 	 */
-	public static BigDecimal toBigDecimal(Double d) {
-		return new BigDecimal(d.toString());
+	public static BigDecimal toBigDecimal(Double value) {
+		return new BigDecimal(value.toString());
 	}
-
 	/**
 	 * 无损转换
-	 * @param d
-	 * @return
+	 * @param value 目标值
+	 * @return BigDecimal
 	 */
-	public static BigDecimal toBigDecimal(Integer d) {
-		return new BigDecimal(d.toString());
+	public static BigDecimal toBigDecimal(Integer value) {
+		return new BigDecimal(value.toString());
 	}
-
 	/**
 	 * 转换成double
-	 * 
-	 * @param value
-	 * @param dig
-	 *            指定小数位数
+	 * @param value 目标值
+	 * @param dig 指定小数位数
+	 * @return double
 	 */
 	public static double toDouble(Object value, int dig) {
 		double d = toDouble(value);
 		return toDouble(d, dig);
 	}
-
 	/**
 	 * 四舍五入保留小数
-	 * 
-	 * @param d
-	 * @param dig
-	 * @return
+	 * @param value 目标值
+	 * @param dig 指定小数位数
+	 * @return double
 	 */
-	public static double toDouble(double d, int dig) {
-		BigDecimal bd = new BigDecimal(d);
+	public static double toDouble(double value, int dig) {
+		BigDecimal bd = new BigDecimal(value);
 		BigDecimal bd1 = bd.setScale(dig, BigDecimal.ROUND_HALF_UP);
-		d = bd1.doubleValue();
-		return toBigDecimal(d, dig).doubleValue();
+		value = bd1.doubleValue();
+		return toBigDecimal(value, dig).doubleValue();
 	}
 
 	/**
 	 * 四舍五入保留小数
-	 * 
-	 * @param d
-	 * @param dig
-	 * @return
+	 * @param value 目标值
+	 * @param dig 指定小数位数
+	 * @return BigDecimal
 	 */
-	public static BigDecimal toBigDecimal(double d, int dig) {
-		BigDecimal bd = new BigDecimal(d);
+	public static BigDecimal toBigDecimal(double value, int dig) {
+		BigDecimal bd = new BigDecimal(value);
 		return bd.setScale(dig, BigDecimal.ROUND_HALF_UP);
 	}
 
 	/**
 	 * 四舍五入保留小数
-	 * 
-	 * @param d
-	 * @param dig
-	 * @return
+	 * @param value 目标值
+	 * @param dig 指定小数位数
+	 * @return BigDecimal
 	 */
-	public static BigDecimal toBigDecimal(BigDecimal d, int dig) {
-		return toBigDecimal(d.doubleValue(), dig);
+	public static BigDecimal toBigDecimal(BigDecimal value, int dig) {
+		return toBigDecimal(value.doubleValue(), dig);
 	}
-
 	/**
 	 * 将任意类型强制转换成int型, 如果值为空返回零
-	 * 
-	 * @param value
-	 * @return
+	 * @param value 目标值
+	 * @return int
 	 */
 	public static int toInt(Object value) {
 		if (value == null)
@@ -134,9 +122,8 @@ public class Parse {
 
 	/**
 	 * 字符串转布尔
-	 * 
-	 * @param param
-	 * @return
+	 * @param value 目标值
+	 * @return boolean
 	 */
 	public static boolean toBoolean(Object value) {
 		boolean b = false;
@@ -149,27 +136,25 @@ public class Parse {
 
 	/**
 	 * 转码
-	 * 
-	 * @param str
-	 * @return
+	 * @param value 目标值
+	 * @return String
 	 */
-	public static String transCode(String str) {
-		if (str == null)
+	public static String transCode(String value) {
+		if (value == null)
 			return null;
 		try {
-			str = new String(str.getBytes("ISO-8859-1"), "UTF-8");
+			value = new String(value.getBytes("ISO-8859-1"), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return str.replaceAll(".*([';]+|(--)+).*", " ");// 替换非法字符
+		return value.replaceAll(".*([';]+|(--)+).*", " ");// 替换非法字符
 	}
 
 	/**
 	 * URL参数 解码
-	 * 
-	 * @param keyword
-	 * @return
+	 * @param keyword 目标值
+	 * @return String
 	 */
 	public static String URLDecode(String keyword) {
 		try {
@@ -177,20 +162,18 @@ public class Parse {
 			return URLDecoder.decode(keyword, "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
-			//
 		}
 		return null;
 	}
 
 	/**
 	 * 验证是否为数字
-	 * 
-	 * @param str
-	 * @return
+	 * @param value 目标值
+	 * @return String
 	 */
-	public static boolean isNumber(Object str) {
+	public static boolean isNumber(Object value) {
 		try {
-			Long.parseLong(str.toString());
+			Long.parseLong(value.toString());
 		} catch (Exception e) {
 			return false;
 		}
@@ -199,9 +182,8 @@ public class Parse {
 
 	/**
 	 * 将任意类型强制转换成long型, 如果值为空返回零
-	 * 
-	 * @param value
-	 * @return
+	 * @param value 目标值
+	 * @return long
 	 */
 	public static long toLong(Object value) {
 		if (value == null)
@@ -237,9 +219,8 @@ public class Parse {
 
 	/**
 	 * 格式化为人民币最小单位分，舍弃多余小数位，小数位不进行四舍五入
-	 * 
-	 * @param price
-	 * @return
+	 * @param price 金额
+	 * @return long
 	 */
 	public static Float toMoney(Float price) {
 		if (price == null)
@@ -259,8 +240,8 @@ public class Parse {
 	
 	/**
 	 * 数值格式化为 万单位
-	 * @param num
-	 * @return
+	 * @param value 目标值
+	 * @return String
 	 */
 	public static String formatNumber(Object value) {
 		try {
@@ -289,9 +270,8 @@ public class Parse {
 
 	/**
 	 * 将任意类型强制转换成long型, 如果值为空返回零
-	 *
-	 * @param value
-	 * @return
+	 * @param value 目标值
+	 * @return float
 	 */
 	public static float toFloat(Object value) {
 		float f = 0;

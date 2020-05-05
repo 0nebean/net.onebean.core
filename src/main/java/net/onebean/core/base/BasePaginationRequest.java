@@ -9,6 +9,7 @@ import javax.validation.Valid;
  * @author 0neBean
  * @param <M> 泛型data对象class
  */
+@SuppressWarnings("all")
 public class BasePaginationRequest<M> {
 
     public BasePaginationRequest() {

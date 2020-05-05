@@ -6,18 +6,20 @@ public class BaseResponse<T> {
     private String errMsg = null;
     private T datas = null;
 
-    public static BaseResponse ok(Object datas){
-        BaseResponse b = new BaseResponse();
-        b.setDatas(datas);
+    @SuppressWarnings("unchecked")
+    public BaseResponse<T> ok(Object datas){
+        BaseResponse<T> b = new BaseResponse<>();
+        b.setDatas((T) datas);
         b.setErrCode("0");
         return b;
     }
 
-    public static BaseResponse ok(){
-        BaseResponse b = new BaseResponse();
+    public BaseResponse<T> ok(){
+        BaseResponse<T> b = new BaseResponse<>();
         b.setErrCode("0");
         return b;
     }
+
 
     public T getDatas() {
         return datas;

@@ -9,6 +9,7 @@ import java.util.List;
  * @author 0neBean
  * @param <M> 泛型data对象class
  */
+@SuppressWarnings("all")
 public class BasePaginationResponse<M> {
 
     public BasePaginationResponse() {

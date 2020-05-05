@@ -39,7 +39,7 @@ public class PaginationInterceptor implements Interceptor {
         Pagination pagination = null;
         // 通过参数传递Pagination
         if (parameterObject != null) {
-            pagination = (Pagination) getParameterByType(parameterObject,Pagination.class);
+            pagination = getParameterByType(parameterObject,Pagination.class);
             List<?> conditions = getParameterByType(parameterObject, List.class);
             if(conditions != null && conditions.size() >0){
             	if(Condition.class.isAssignableFrom(conditions.get(0).getClass())){
@@ -54,16 +54,16 @@ public class PaginationInterceptor implements Interceptor {
             // 得到总记录数
             if (totalCount <= 0) {
             	//查询记录总数。
-                StringBuffer countSql = new StringBuffer();
-                String customsql = getCustomCountsql(mappedStatement, parameter, parameterObject);
-                if(customsql != null){
-                	countSql.append("select count(1) as count from (").append(customsql).append(") t");
+                StringBuilder countSql = new StringBuilder();
+                String customSql = getCustomCountSql(mappedStatement, parameter, parameterObject);
+                if(customSql != null){
+                	countSql.append("select count(1) as count from (").append(customSql).append(") t");
                 }else{
                 	countSql.append("select count(1) as count from (").append(originalSql).append(") t");
                 }
                 BoundSqlWrapper newBoundSql = new BoundSqlWrapper(boundSql, countSql.toString() ,mappedStatement.getConfiguration());
-                ResultMap map = new ResultMap.Builder(mappedStatement.getConfiguration(), "qq" ,Integer.class , new ArrayList<ResultMapping>()).build();
-                List<ResultMap> mapList = new ArrayList<ResultMap>();
+                ResultMap map = new ResultMap.Builder(mappedStatement.getConfiguration(), "qq" ,Integer.class , new ArrayList<>()).build();
+                List<ResultMap> mapList = new ArrayList<>();
                 mapList.add(map);
                 MappedStatement newMs = QueryIntercepterUtils.copyFromMappedStatement(mappedStatement, new BoundSqlSqlSource(newBoundSql),mapList);
                 totalCount  = (Integer) ((Executor)invocation.getTarget()).query(newMs, parameterObject, (RowBounds)invocation.getArgs()[2], null).get(0);
@@ -74,24 +74,11 @@ public class PaginationInterceptor implements Interceptor {
 
 
             // 分页查询 本地化对象 修改数据库注意修改实现
-            String pagesql = getPagingString(originalSql, pagination.getPageSize() * (pagination.getCurrentPage() - 1), pagination.getPageSize());
-//            String pagesql = getPagingString2(originalSql);
-//            int offset = pagination.getPageSize() * (pagination.getCurrentPage() - 1);
-//            int limit = pagination.getPageSize();
+            String pageSql = getPagingString(originalSql, pagination.getPageSize() * (pagination.getCurrentPage() - 1), pagination.getPageSize());
             invocation.getArgs()[2] = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-//            ParameterMapping rownuw = new ParameterMapping.Builder(mappedStatement.getConfiguration(),"rownum",Integer.class).build();
-//            ParameterMapping rn = new ParameterMapping.Builder(mappedStatement.getConfiguration(),"rn",Integer.class).build();
-//        	ParameterMapping offset = new ParameterMapping.Builder(mappedStatement.getConfiguration(),"offset",Integer.class).build();
-//        	ParameterMapping limit = new ParameterMapping.Builder(mappedStatement.getConfiguration(),"limit",Integer.class).build();
         	if(boundSql.getParameterMappings().size() <= 0)
-        		boundSql = new BoundSql(mappedStatement.getConfiguration(), pagesql, new ArrayList<ParameterMapping>(), boundSql.getParameterObject());
-//        	boundSql.getParameterMappings().add(rownuw);
-//        	boundSql.getParameterMappings().add(rn);
-//                boundSql.getParameterMappings().add(offset);
-//                boundSql.getParameterMappings().add(limit);
-//                boundSql.setAdditionalParameter("offset",offset);
-//                boundSql.setAdditionalParameter("limit",limit);
-            BoundSqlWrapper newBoundSql = new BoundSqlWrapper(boundSql, pagesql,mappedStatement.getConfiguration());
+        		boundSql = new BoundSql(mappedStatement.getConfiguration(), pageSql, new ArrayList<>(), boundSql.getParameterObject());
+            BoundSqlWrapper newBoundSql = new BoundSqlWrapper(boundSql, pageSql,mappedStatement.getConfiguration());
             MappedStatement newMs = QueryIntercepterUtils.copyFromMappedStatement(mappedStatement, new BoundSqlSqlSource(newBoundSql));            
             invocation.getArgs()[0] = newMs;
             
@@ -102,13 +89,13 @@ public class PaginationInterceptor implements Interceptor {
 
     /**
      * 分頁查詢時，用countSqlId參數值指向的statement來執行count統計總條數
-     * @param mappedStatement
-     * @param parameter
-     * @param parameterObject
-     * @return
+     * @param mappedStatement  sql Statement
+     * @param parameter 查询参数
+     * @param parameterObject 参数对象
+     * @return sql
      */
-	private String getCustomCountsql(MappedStatement mappedStatement,
-			Object parameter, Object parameterObject) {
+    @SuppressWarnings("unchecked")
+	private String getCustomCountSql(MappedStatement mappedStatement, Object parameter, Object parameterObject) {
 		if(parameterObject == null)
 			return null;
 		if (
@@ -201,9 +188,9 @@ public class PaginationInterceptor implements Interceptor {
 
     /**
      * 取参数中的类型
-     * @param parameterObject
-     * @param parameterType
-     * @return
+     * @param parameterObject 参数对象
+     * @param parameterType 参数类型
+     * @return 参数的类型
      */
     @SuppressWarnings("unchecked")
 	private <T> T getParameterByType(Object parameterObject, Class<T> parameterType){
@@ -221,43 +208,22 @@ public class PaginationInterceptor implements Interceptor {
         } 
         return null;
     }
+
     /**
      * 得到分页的SQL
      * @param offset    偏移量
      * @param limit     位置
      * @return  分页SQL
      */
-    @SuppressWarnings("unused")
 	private String getPagingString(String querySelect,int offset, int limit) {
         if(StringUtils.isEmpty(querySelect)){
             return querySelect;
         }
         querySelect = getLineSql(querySelect);
-        //String sql =  querySelect.replaceAll("[^\\s,]+\\.", "") +" limit "+ offset +" ,"+ limit;
-//        String sql = "select * from (select A.*,ROWNUM RN FROM("+querySelect+") A where rownum<="+(offset+limit)+") where RN>"+offset;
-        String sql = "SELECT * FROM ("+querySelect+")A LIMIT "+limit+" OFFSET "+offset;
-        return sql;
-        
-    }
-    
-    /**
-     * 得到分页的SQL
-     * @param offset    偏移量
-     * @param limit     位置
-     * @return  分页SQL
-     */
-    private String getPagingString2(String querySelect) {
-    	if(StringUtils.isEmpty(querySelect)){
-    		return querySelect;
-    	}
-    	querySelect = getLineSql(querySelect);
-//    	String sql = "select * from (select A.*,ROWNUM RN FROM("+querySelect+") A where rownum<="+(offset+limit)+") where RN>"+offset;
-//    	String sql = "select * from (select A.*,ROWNUM RN FROM("+querySelect+") A where rownum<= ?) where RN>?";
-    	String sql = "SELECT * FROM ("+querySelect+")A LIMIT ? OFFSET ?";
-
-    	return sql;
+        return "SELECT * FROM ("+querySelect+")A LIMIT "+limit+" OFFSET "+offset;
 
     }
+
 
     /**
      * 将SQL语句变成一条语句，并且每个单词的间隔都是1个空格

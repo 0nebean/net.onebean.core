@@ -61,11 +61,11 @@ public class ClassUtils {
 		return fullName;
 	}
 
+
 	/**
 	 * 获取 get 方法对应的属性名
-	 * 
-	 * @param readMethod
-	 * @return
+	 * @param readMethod get方法名
+	 * @return 方法对应的属性名
 	 */
 	public static String getPropertyName(Method readMethod) {
 		String methodName = readMethod.getName();
@@ -104,15 +104,14 @@ public class ClassUtils {
 		return fullName;
 	}
 
+
 	/**
 	 * 判断类似否指定名字的注解
-	 * 
-	 * @param clazz
-	 * @param annotationClassName
-	 * @return
+	 * @param clazz 类型
+	 * @param annotationClassName 注解名类型
+	 * @return bool
 	 */
-	public static boolean hasAnnotation(Class<?> clazz,
-			String annotationClassName) {
+	public static boolean hasAnnotation(Class<?> clazz, String annotationClassName) {
 
 		Annotation[] annots = clazz.getAnnotations();
 		for (Annotation anno : annots) {
@@ -128,14 +127,12 @@ public class ClassUtils {
 
 	/**
 	 * 获取指定注解的注解值
-	 * 
-	 * @param clazz
-	 * @param annotationClassName
-	 * @param annoField
-	 * @return
+	 * @param clazz 类型
+	 * @param annotationClassName 注解名类型
+	 * @param annoField 字段
+	 * @return 注解的值
 	 */
-	public static Object getAnnotationValue(Class<?> clazz,
-			String annotationClassName, String annoField) {
+	public static Object getAnnotationValue(Class<?> clazz, String annotationClassName, String annoField) {
 		Annotation[] annots = clazz.getAnnotations();
 		for (Annotation anno : annots) {
 			Class<?> annoclazz = anno.annotationType();
@@ -150,21 +147,50 @@ public class ClassUtils {
 							return m.invoke(anno, null);
 						}
 						break;
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
-				} catch (NoSuchMethodException e) {
+				} catch (NoSuchMethodException | SecurityException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (SecurityException e) {
+				}
+
+			}
+
+		}
+		return null;
+	}
+
+
+	/**
+	 * 获取方法上注解的值
+	 * @param method 方法名
+	 * @param annotationClassName 注解的class
+	 * @param annoField 注解字段
+	 * @return 注解值
+	 */
+	public static Object getMethodAnnotationValue(Method method, String annotationClassName, String annoField) {
+
+		Annotation[] annots = method.getAnnotations();
+		for (Annotation anno : annots) {
+			Class<?> annoclazz = anno.annotationType();
+			String annName = annoclazz.getSimpleName();
+			if (annName.equalsIgnoreCase(annotationClassName)) {
+
+				try {
+					Method m = anno.getClass().getDeclaredMethod(annoField, (Class<?>) null);
+					try {
+						if (m != null) {
+							return m.invoke(anno, (Object) null);
+						}
+						break;
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						e.printStackTrace();
+					}
+
+				} catch (NoSuchMethodException | SecurityException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -176,55 +202,14 @@ public class ClassUtils {
 	}
 
 	/**
-	 * 获取指定注解的注解值
-	 * 
-	 * @param clazz
-	 * @param annotationClassName
-	 * @param annoField
-	 * @return
+	 * 获取属性上注解的值
+	 * @param field 字段
+	 * @param annotationClassName 注解的class
+	 * @param annoField 注解字段
+	 * @return 注解值
 	 */
-	public static Object getMethodAnnotationValue(Method method,
-			String annotationClassName, String annoField) {
-
-		Annotation[] annots = method.getAnnotations();
-		for (Annotation anno : annots) {
-			Class<?> annoclazz = anno.annotationType();
-			String annName = annoclazz.getSimpleName();
-			if (annName.equalsIgnoreCase(annotationClassName)) {
-
-				try {
-					Method m = anno.getClass().getDeclaredMethod(annoField, null);
-					try {
-						if (m != null) {
-							return m.invoke(anno, null);
-						}
-						break;
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						e.printStackTrace();
-					}
-
-				} catch (NoSuchMethodException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-
-		}
-		return null;
-	}
-
-	public static Object getFieldAnnotationValue(Field method,
-			String annotationClassName, String annoField) {
-
-		Annotation[] annots = method.getAnnotations();
+	public static Object getFieldAnnotationValue(Field field, String annotationClassName, String annoField) {
+		Annotation[] annots = field.getAnnotations();
 		for (Annotation anno : annots) {
 			Class<?> annoclazz = anno.annotationType();
 			String annName = annoclazz.getSimpleName();
@@ -232,27 +217,18 @@ public class ClassUtils {
 
 				try {
 					Method m = anno.getClass().getDeclaredMethod(annoField,
-							null);
+							(Class<?>) null);
 					try {
 						if (m != null) {
-							return m.invoke(anno, null);
+							return m.invoke(anno, (Object) null);
 						}
 						break;
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
-				} catch (NoSuchMethodException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
+				} catch (NoSuchMethodException | SecurityException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -263,11 +239,12 @@ public class ClassUtils {
 		return null;
 	}
 
+
+
 	/**
 	 * 将数据对象转换成map
-	 * 
-	 * @param obj
-	 * @return
+	 * @param obj 对象
+	 * @return map
 	 */
 	public static Map<String, Object> toMap(Object obj) {
 		// 创建新map
@@ -275,14 +252,12 @@ public class ClassUtils {
 		return appendMap(rs, obj);
 	}
 
+
 	/**
 	 * 将数据对象合并的map
-	 * 
-	 * @param rs
-	 *            结果map
-	 * @param obj
-	 *            数据对象
-	 * @return
+	 * @param rs 结果map
+	 * @param obj 数据对象
+	 * @return map
 	 */
 	public static Map<String, Object> appendMap(Map<String, Object> rs,
 			Object obj) {
@@ -291,14 +266,10 @@ public class ClassUtils {
 
 	/**
 	 * 将数据对象合并的map
-	 * 
-	 * @param rs
-	 *            结果map
-	 * @param obj
-	 *            数据对象
-	 * @param defaultValue
-	 *            如果对象值为Null，默认填充的值
-	 * @return
+	 * @param rs 结果map
+	 * @param obj 数据对象
+	 * @param defaultValue 如果对象值为Null，默认填充的值
+	 * @return map
 	 */
 	public static Map<String, Object> appendMap(Map<String, Object> rs,
 			Object obj, Object defaultValue) {

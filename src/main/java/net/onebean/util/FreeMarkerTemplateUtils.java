@@ -67,11 +67,11 @@ public class FreeMarkerTemplateUtils {
         CONFIGURATION.setCacheStorage(NullCacheStorage.INSTANCE);
     }
 
+
     /**
      * 获取模板
      * @param templateName 模板路径
      * @return Template
-     * @throws IOException
      */
     public static Template getTemplate(String templateName) {
         try {

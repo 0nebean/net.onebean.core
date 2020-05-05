@@ -14,17 +14,19 @@ import java.util.Map;
 /**
  * 所有service接口的父接口
  * @author 0neBean
- * @param <T>
+ * @param <T> 泛型实体类型
  */
 public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	/**
 	 * 根据ID删除实体
 	 * @param id 主键
+	 * @return 操作的行数
 	 */
 	public Integer deleteById(Object id);
 	/**
 	 * 删除实体对象
 	 * @param entity 泛型实体对象
+	 * @return 操作的行数
 	 */
 	public Integer delete(T entity);
 	/**
@@ -146,8 +148,8 @@ public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	public void deleteByIds(List<Long> ids);
 	/**
 	 * 更新实体
-	 *
 	 * @param entity 泛型实体对象
+	 * @return 操作的行数
 	 */
 	public Integer update(T entity);
 	/**
@@ -155,6 +157,7 @@ public interface IBaseBiz<T extends BaseIncrementIdModel> {
 	 *
 	 * @param entity 泛型实体对象
 	 * @param ids id的list
+	 * @return 操作的行数
 	 */
 	public Integer updateBatch(T entity, List<Long> ids);
 	/**

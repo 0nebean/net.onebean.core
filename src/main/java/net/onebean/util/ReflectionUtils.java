@@ -24,37 +24,49 @@ import java.util.Map;
  */  
 public abstract class ReflectionUtils {
   
-    private static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);  
-  
-    /** 
-     * 调用Getter方法. 
-     */  
+    private static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
+
+    /**
+     * 调用Getter方法.
+     * @param obj 调用对象
+     * @param propertyName 属性名
+     * @return 属性值
+     */
     public static Object invokeGetterMethod(Object obj, String propertyName) {  
         String getterMethodName = "get" + StringUtils.capitalize(propertyName);  
         return invokeMethod(obj, getterMethodName, new Class[] {}, new Object[] {});  
-    }  
-  
-    /** 
-     * 调用Setter方法.使用value的Class来查找Setter方法. 
-     */  
+    }
+
+    /**
+     * 调用Setter方法.使用value的Class来查找Setter方法.
+     * @param obj 调用对象
+     * @param propertyName 属性名
+     * @param value 为空用value的class代替
+     */
     public static void invokeSetterMethod(Object obj, String propertyName, Object value) {  
         invokeSetterMethod(obj, propertyName, value, null);  
     }  
   
-    /** 
-     * 调用Setter方法. 
-     *  
-     * @param propertyType 用于查找Setter方法,为空时使用value的Class替代. 
-     */  
+
+    /**
+     * 调用Setter方法.
+     * @param obj 调用对象
+     * @param propertyName 属性名 用于查找Setter方法,为空时使用value的Class替代.
+     * @param value 为空用value的class代替
+     * @param propertyType 属性类型
+     */
     public static void invokeSetterMethod(Object obj, String propertyName, Object value, Class<?> propertyType) {  
         Class<?> type = propertyType != null ? propertyType : value.getClass();  
         String setterMethodName = "set" + StringUtils.capitalize(propertyName);  
         invokeMethod(obj, setterMethodName, new Class[] { type }, new Object[] { value });  
-    }  
-  
-    /** 
-     * 直接读取对象属性值, 无视private/protected修饰符, 不经过getter函数. 
-     */  
+    }
+
+    /**
+     * 直接读取对象属性值, 无视private/protected修饰符, 不经过getter函数.
+     * @param obj 调用对象
+     * @param fieldName 字段名
+     * @return 属性值
+     */
     public static Object getFieldValue(final Object obj, final String fieldName) {  
         Field field = getAccessibleField(obj, fieldName);  
   
@@ -74,14 +86,20 @@ public abstract class ReflectionUtils {
 
     /**
      * 直接读取对象的成员变量, 无视private/protected修饰符.
+     * @param obj 调用对象
+     * @param fieldName 字段名
+     * @return 字段
      */
     public static Field getField(final Object obj, final String fieldName) {
         return getAccessibleField(obj, fieldName);
     }
 
-    /** 
-     * 直接设置对象属性值, 无视private/protected修饰符, 不经过setter函数. 
-     */  
+    /**
+     * 直接设置对象属性值, 无视private/protected修饰符, 不经过setter函数.
+     * @param obj 调用对象
+     * @param fieldName 字段名
+     * @param value 为空用value的class代替
+     */
     public static void setFieldValue(final Object obj, final String fieldName, final Object value) {  
         Field field = getAccessibleField(obj, fieldName);  
   
@@ -94,13 +112,15 @@ public abstract class ReflectionUtils {
         } catch (IllegalAccessException e) {  
             logger.error("不可能抛出的异常:{}", e.getMessage());  
         }  
-    }  
-  
-    /** 
-     * 循环向上转型, 获取对象的DeclaredField,   并强制设置为可访问. 
-     *  
-     * 如向上转型到Object仍无法找到, 返回null. 
-     */  
+    }
+
+    /**
+     * 循环向上转型, 获取对象的DeclaredField,   并强制设置为可访问.
+     * 如向上转型到Object仍无法找到, 返回null.
+     * @param obj 调用对象
+     * @param fieldName 字段名
+     * @return 字段
+     */
     public static Field getAccessibleField(final Object obj, final String fieldName) {  
         Assert.notNull(obj, "object不能为空");  
         Assert.hasText(fieldName, "fieldName");  
@@ -114,12 +134,17 @@ public abstract class ReflectionUtils {
             }  
         }  
         return null;  
-    }  
-  
-    /** 
-     * 直接调用对象方法, 无视private/protected修饰符. 
-     * 用于一次性调用的情况. 
-     */  
+    }
+
+    /**
+     * 直接调用对象方法, 无视private/protected修饰符.
+     * 用于一次性调用的情况.
+     * @param obj 调用对象
+     * @param methodName 方法名
+     * @param parameterTypes 参数类型
+     * @param args 参数
+     * @return 方法返回值
+     */
     public static Object invokeMethod(final Object obj, final String methodName, final Class<?>[] parameterTypes,  
             final Object[] args) {  
         Method method = getAccessibleMethod(obj, methodName, parameterTypes);  
@@ -132,14 +157,17 @@ public abstract class ReflectionUtils {
         } catch (Exception e) {  
             throw convertReflectionExceptionToUnchecked(e);  
         }  
-    }  
-  
-    /** 
-     * 循环向上转型, 获取对象的DeclaredMethod,并强制设置为可访问. 
-     * 如向上转型到Object仍无法找到, 返回null. 
-     *  
-     * 用于方法需要被多次调用的情况. 先使用本函数先取得Method,然后调用Method.invoke(Object obj, Object... args) 
-     */  
+    }
+
+    /**
+     * 循环向上转型, 获取对象的DeclaredMethod,并强制设置为可访问.
+     * 如向上转型到Object仍无法找到, 返回null.
+     * 用于方法需要被多次调用的情况. 先使用本函数先取得Method,然后调用Method.invoke(Object obj, Object... args)
+     * @param obj 调用对象
+     * @param methodName 方法名
+     * @param parameterTypes 参数类型
+     * @return 方法对象
+     */
     public static Method getAccessibleMethod(final Object obj, final String methodName,  
             final Class<?>... parameterTypes) {  
         Assert.notNull(obj, "object不能为空");  
@@ -159,31 +187,30 @@ public abstract class ReflectionUtils {
         return null;  
     }  
   
-    /** 
-     * 通过反射, 获得Class定义中声明的父类的泛型参数的类型. 
-     * 如无法找到, 返回Object.class. 
-     * eg. 
-     * public UserDao extends HibernateDao<User> 
-     * 
-     * @param clazz The class to introspect 
-     * @return the first generic declaration, or Object.class if cannot be determined 
-     */  
+
+    /**
+     * 通过反射, 获得Class定义中声明的父类的泛型参数的类型.
+     * 如无法找到, 返回Object.class.
+     * eg.
+     * public UserDao extends HibernateDao《User》
+     * @param clazz The class to introspect
+     * @param <T> 泛型类型
+     * @return the first generic declaration, or Object.class if cannot be determined
+     */
     @SuppressWarnings({ "unchecked", "rawtypes" })  
     public static <T> Class<T> getSuperClassGenricType(final Class clazz) {  
         return getSuperClassGenricType(clazz, 0);  
     }  
   
-    /** 
-     * 通过反射, 获得Class定义中声明的父类的泛型参数的类型. 
-     * 如无法找到, 返回Object.class. 
-     *  
-     * 如public UserDao extends HibernateDao<User,Long> 
-     * 
-     * @param clazz clazz The class to introspect 
-     * @param index the Index of the generic ddeclaration,start from 0. 
-     * @return the index generic declaration, or Object.class if cannot be determined 
-     */  
-    @SuppressWarnings("rawtypes")  
+    /**
+     * 通过反射, 获得Class定义中声明的父类的泛型参数的类型.
+     * 如无法找到, 返回Object.class.
+     * 如public UserDao extends HibernateDao《User,Long》
+     * @param clazz clazz The class to introspect
+     * @param index the Index of the generic ddeclaration,start from 0.
+     * @return the index generic declaration, or Object.class if cannot be determined
+     */
+    @SuppressWarnings("rawtypes")
     public static Class getSuperClassGenricType(final Class clazz, final int index) {  
   
         Type genType = clazz.getGenericSuperclass();  
@@ -206,11 +233,13 @@ public abstract class ReflectionUtils {
         }  
   
         return (Class) params[index];  
-    }  
-  
-    /** 
-     * 将反射时的checked exception转换为unchecked exception. 
-     */  
+    }
+
+    /**
+     * 将反射时的checked exception转换为unchecked exception.
+     * @param e 异常
+     * @return 运行异常
+     */
     public static RuntimeException convertReflectionExceptionToUnchecked(Exception e) {  
         if (e instanceof IllegalAccessException || e instanceof IllegalArgumentException  
                 || e instanceof NoSuchMethodException) {  
@@ -225,11 +254,10 @@ public abstract class ReflectionUtils {
 
     /**
      * 得到指定类型的指定位置的泛型实参
-     *
-     * @param clazz
-     * @param index
-     * @param <T>
-     * @return
+     * @param clazz 类型
+     * @param index 下标
+     * @param <T> 泛型类型
+     * @return 实参
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> findParameterizedType(Class<?> clazz, int index) {
@@ -269,15 +297,7 @@ public abstract class ReflectionUtils {
         {
             return Class.forName(className).newInstance();
         }
-        catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        catch (InstantiationException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException e)
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException e)
         {
             e.printStackTrace();
         }
@@ -286,18 +306,18 @@ public abstract class ReflectionUtils {
     }
 
 
+
     /**
-     *
      * 从request中取出请求参数，把这些参数对应反射为JavaBean对象
-     *
-     * @param request
-     * @param cls
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws UnsupportedEncodingException
-     * @throws IllegalArgumentException
-     * @throws InvocationTargetException
+     * @param request 请求
+     * @param cls 类型
+     * @param <T> 泛型对象
+     * @return 参数对象
+     * @throws InstantiationException 抛出各种异常
+     * @throws IllegalAccessException 抛出各种异常
+     * @throws UnsupportedEncodingException 抛出各种异常
+     * @throws IllegalArgumentException 抛出各种异常
+     * @throws InvocationTargetException 抛出各种异常
      */
     public static <T> T getParamFromRequest(HttpServletRequest request, Class<T> cls) throws InstantiationException, IllegalAccessException, UnsupportedEncodingException, IllegalArgumentException, InvocationTargetException {
         request.setCharacterEncoding("utf-8");//设置请求(request)的编码集
@@ -308,7 +328,7 @@ public abstract class ReflectionUtils {
         String value="";
         for(Map.Entry<String,String[]> parameter:parameterMap.entrySet()){
             key="set"+parameter.getKey();
-            String values[]=parameter.getValue();
+            String[] values =parameter.getValue();
             if(values!=null && values.length>0){
                 value=values[0];
             }
@@ -350,9 +370,7 @@ public abstract class ReflectionUtils {
 
 
     /**
-     *
      * 获取对象(JavaBean)的全部set方法
-     *
      * @param cls 对象(JavaBean)
      * @return List<Method>
      */

@@ -126,9 +126,8 @@ public class DateUtils {
 
 	/**
 	 * 格式化年月日
-	 * 
-	 * @param source
-	 * @return
+	 * @param source 模板
+	 * @return 字符串时间
 	 */
 	public static String formats(Date source) {
 		return format(source, PATTERNS_YYYY_MM_DD);
@@ -157,27 +156,26 @@ public class DateUtils {
 
 	/**
 	 * 返回服务器时间
-	 * 
-	 * @return
+	 * @return 时间
 	 */
 	public static Date getServerDate() {
 		return new Date();
 	}
 
 	/**
-	 * 
-	 * 日期转字符串
+	 * 时间转字符串
+	 * @param date 时间
+	 * @return 字符串
 	 */
 	public static synchronized String dateToString(Date date) {
-
 		return (date == null || "".equals(date.toString())) ? "" : sdf
 				.format(date);
-
 	}
 
 	/**
-	 * 
 	 * 日期转字符串
+	 * @param date 时间
+	 * @return 字符串
 	 */
 	public static synchronized String dateToStringSimple(Date date) {
 
@@ -185,12 +183,12 @@ public class DateUtils {
 				.format(date);
 
 	}
-	
+
 	/**
 	 * String转Timestamp
-	 * @param str
-	 * @return
-	 * @throws ParseException
+	 * @param str 时间字符串
+	 * @return 时间戳
+	 * @throws ParseException 转换异常
 	 */
 	public static Timestamp strToTimeStamp(String str) throws ParseException
 	{
@@ -217,12 +215,11 @@ public class DateUtils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * String转Timestamp
-	 * @param str
-	 * @return
-	 * @throws ParseException
+	 * @param str 字符串
+	 * @return 时间戳
 	 */
 	public static Timestamp stringToTimeStamp(String str)
 	{
@@ -245,8 +242,8 @@ public class DateUtils {
 	}
 
 	/**
-	 * 
 	 * 获得当前时间
+	 * @return 当前时间
 	 */
 	public static String getCurrentDate() {
 
@@ -255,8 +252,8 @@ public class DateUtils {
 	}
 
 	/**
-	 * 
-	 * 获得当前日期2013年7月26日
+	 * 获得当前日期
+	 * @return 当前时间字符串
 	 */
 	public static String getCurrentDateToDay() {
 
@@ -265,8 +262,8 @@ public class DateUtils {
 	}
 
 	/**
-	 * 
 	 * 获得当前时间(包含毫秒)
+	 * @return 当前时间字符串
 	 */
 	public static String getDetailTime() {
 
@@ -275,44 +272,42 @@ public class DateUtils {
 	}
 
 	/**
-	 * 
-	 * 查询日期
+	 * 自然日推移后的实践
+	 * @param date 初试时间
+	 * @param value 偏移的日子
+	 * @return 偏移后的时间
 	 */
-	public static synchronized Date getDate(Date date, int value) {
-
+	public static synchronized Date dayOffSet(Date date, int value) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.DAY_OF_MONTH, value);
 		return cal.getTime();
-
 	}
 
 	/**
-	 * 
 	 * 字符串转时间
+	 * @param str 字符串
+	 * @return 时间
+	 * @throws ParseException 转换异常
 	 */
-	public static synchronized Date strToDate(String str) throws Exception {
-
+	public static synchronized Date strToDate(String str) throws ParseException {
 		return sdfSimple.parse(str);
-
 	}
-	
+
 	/**
-	 * 
 	 * 字符串转时间
+	 * @param str 字符串
+	 * @return 时间
+	 * @throws ParseException 转换异常
 	 */
-	public static synchronized Date stringToDate(String str)throws Exception {
-
+	public static synchronized Date stringToDate(String str)throws ParseException {
 		return sdf.parse(str);
-
 	}
 	
 
 	/**
 	 * 按 {@value #PATTERN_YYYY_MM_DD}格式格式化日期对象
-	 * 
-	 * @param obj
-	 *            日期对象
+	 * @param obj 日期对象
 	 * @return 格式化值
 	 */
 	public static String format(Object obj) {
@@ -325,36 +320,32 @@ public class DateUtils {
 
 	/**
 	 * 把毫秒转换为日期字符串
-	 * 
-	 * @param millis
-	 *            毫秒数
-	 * @return
+	 * @param millis 毫秒数
+	 * @return 时间戳字符串
 	 */
 	public static String getDateTimeByMillisecond(Long millis) {
 		Date date = new Date(millis);
 		SimpleDateFormat format = new SimpleDateFormat(
 				PATTERN_YYYY_MM_DD_HH_MM_SS);
-		String time = format.format(date);
-		return time;
+		return format.format(date);
 	}
 
 	/**
 	 * 把毫秒转换为年+月+日+小时+分+秒
-	 * 
-	 * @param millis
-	 * @return
+	 * @param millis 毫秒数
+	 * @return 时间戳字符串
 	 */
 	public static String convertMillis(Long millis) {
 		/*
 		 * String y = "年"; String m = "月"; String d = "天"; String h = "小时";
 		 * String mi = "分"; String ms = "秒";
 		 */
-		if (millis <= 0l)
+		if (millis <= 0L)
 			return "";
-		Long d = 24 * 60 * 60 * 1000l;
-		Long h = 60 * 60 * 1000l;
-		Long mi = 60 * 1000l;
-		Long ms = 1000l;
+		Long d = 24 * 60 * 60 * 1000L;
+		long h = 60 * 60 * 1000L;
+		long mi = 60 * 1000L;
+		long ms = 1000L;
 		long day = millis / d;
 		long hour = millis % d / h;
 		long min = millis % d % h / mi;
@@ -365,10 +356,10 @@ public class DateUtils {
 	/**
 	 * 计算两个日期相差的天数 日期类型需为：yyyy-MM-dd
 	 * 
-	 * @param startTime
-	 * @param endTime
-	 * @return
-	 * @throws ParseException
+	 * @param startTime 起始时间
+	 * @param endTime 结束时间
+	 * @return 差值
+	 * @throws ParseException 转换异常
 	 */
 	public static int divideDay(String startTime, String endTime)
 			throws ParseException {
@@ -382,11 +373,9 @@ public class DateUtils {
 	
 	/**
 	 * 计算两个日期相差的天数 日期类型需为：yyyy-MM-dd
-	 * 
-	 * @param startTime
-	 * @param endTime
-	 * @return
-	 * @throws ParseException
+	 * @param startTime 起始时间
+	 * @param endTime 结束时间
+	 * @return 差值
 	 */
 	public static int divideDay(Date startTime, Date endTime){
 		long quot = endTime.getTime() - startTime.getTime();
@@ -396,28 +385,30 @@ public class DateUtils {
 
 	/**
 	 * 得到下一个日期
-	 * 
-	 * @param date
-	 * @param day
-	 * @return
-	 * @throws ParseException
+	 * @param date 时间
+	 * @param day 天数
+	 * @return 时间
 	 */
-	public static Date nextDays(Date date, long day) throws ParseException {
+	public static Date nextDays(Date date, long day) {
 
 		long time = date.getTime();
 		time += 1000 * 24 * 60 * 60 * day;
-		Date date1 = new Date(time);
-		return date1;
+		return new Date(time);
 	}
 
-	public static String dayForWeek(String pTime) throws Exception {
+	/**
+	 * 获取当前星期几
+	 * @param pTime 时间戳
+	 * @return 星期几
+	 * @throws ParseException 转换异常
+	 */
+	public static String dayForWeek(String pTime) throws ParseException {
 		String[] weeks = { "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日" };
-
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar c = Calendar.getInstance();
 		c.setTime(format.parse(pTime));
 		int dayForWeek = 0;
-		if (c.get(Calendar.DAY_OF_WEEK) == 1) {
+		if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
 			dayForWeek = 7;
 		} else {
 			dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
@@ -428,12 +419,10 @@ public class DateUtils {
 	/**
 	 * 计算两个日期之间相差的天数
 	 * 
-	 * @param smdate
-	 *            较小的时间
-	 * @param bdate
-	 *            较大的时间
+	 * @param smdate 较小的时间
+	 * @param bdate 较大的时间
 	 * @return 相差天数
-	 * @throws ParseException
+	 * @throws ParseException 转换异常
 	 */
 	public static int daysBetween(Date smdate, Date bdate)
 			throws ParseException {
@@ -451,9 +440,7 @@ public class DateUtils {
 	}
 	/**
 	 * 计算从20190101到现在的天数
-	 *
 	 * @return 相差天数
-	 * @throws ParseException
 	 */
 	public static int daysBetween20190101() {
 		Calendar date20190101 = Calendar.getInstance();
@@ -472,25 +459,22 @@ public class DateUtils {
 
 	/**
 	 * 距离今日多少天
-	 * @param date
-	 * @return
+	 * @param date 时间戳
+	 * @return 天数
 	 */
 	public static int daysBetweenToDay(Timestamp date){
-		Integer press_date = daysBetween20190101();
+		int press_date = daysBetween20190101();
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(date.getTime());
 		int reDate = DateUtils.dayInDate20190101(cal.get(Calendar.YEAR),
 				cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
-		Integer time = press_date - reDate;
-
-		return time;
+		return press_date - reDate;
 	}
 
 	/**
 	 * 传入一个pressdate 获取到对应的日期
-	 *
-	 * @param pressDate
-	 * @return
+	 * @param pressDate 天数数字
+	 * @return 时间对象
 	 */
 	public static Date dayIn20190101(Integer pressDate) {
 		Calendar date20190101 = Calendar.getInstance();
@@ -503,10 +487,10 @@ public class DateUtils {
 
 	/**
 	 * 给定时间计算从20190101到今天的整数值
-	 * @param year
-	 * @param month
-	 * @param day
-	 * @return
+	 * @param year 年
+	 * @param month 月
+	 * @param day 日
+	 * @return 差值
 	 */
 	public static int dayInDate20190101(int year, int month, int day) {
 		Calendar date20190101 = Calendar.getInstance();
@@ -577,9 +561,8 @@ public class DateUtils {
 
 	/**
 	 * 获取指定天数以前的字符串表示
-	 * 
-	 * @param before
-	 * @return
+	 * @param before 天数
+	 * @return 字符串
 	 */
 	public static String getBeforeDayStr(int before) {
 		Calendar calendar = Calendar.getInstance();
@@ -593,8 +576,8 @@ public class DateUtils {
 	/**
 	 * 格式化时间
 	 * 当天:HH:mm,非当天:MM-dd
-	 * @param date
-	 * @return
+	 * @param date 时间
+	 * @return 字符串
 	 */
 	public static String formatDate(Date date) {
 		if(sdfSimple.format(date).equalsIgnoreCase(sdfSimple.format(new Date()))) {
@@ -605,8 +588,8 @@ public class DateUtils {
 	
 	/**
 	 * 格式化时间
-	 * @param date
-	 * @return
+	 * @param date 时间
+	 * @return 字符串
 	 */
 	public static String parse_yyyy_MM_dd_HH_mm(Date date) {
 		return sdf_yyyyMMddHHmm.format(date);
@@ -623,7 +606,7 @@ public class DateUtils {
 	
 	/**
 	 * 将文章发表时间转换成几分钟前、几秒前、几小时前等等提示语
-	 * @param create_time
+	 * @param create_time 创建时间
 	 * @return String
 	 */
 	public static String setDateDiff(Timestamp create_time)
@@ -775,7 +758,7 @@ public class DateUtils {
     
     /**
      * 将月份转换成英文月份
-     * @return
+     * @return map
      */
     public static Map<Integer, String> getMonths()
     {
@@ -835,35 +818,26 @@ public class DateUtils {
         return f_day.format(date).toString();
     }
     
-    /**
-     * 根据日期添加小时
-     * @param dateStr
-     * @param hours
-     * @return
-     */
+
+	/**
+	 * 根据日期添加小时
+	 * @param date 时间
+	 * @param hours 小时
+	 * @return 字符串
+	 */
     public static String addHours(Date date, int hours)
     {
-////    	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//    	
-//    	sdf.format(date)
-//    	Date date=null;
-//    	try {
-//    	date = sdf.parse(dateStr);
-//    	} catch (ParseException e) {
-//    	// TODO 自动生成 catch 块
-//    	e.printStackTrace();
-//    	}
+
     	Calendar ca=Calendar.getInstance();
     	ca.setTime(date);
     	ca.add(Calendar.HOUR_OF_DAY, hours);
-    	
     	return sdf.format(ca.getTime());
     }
     
     /**
      * date转timestamp(父类不能直接转成子类，通过string来转换)
-     * @param date
-     * @return
+     * @param date 时间
+     * @return 时间戳
      */
     public static Timestamp dateToTimeStamp(Date date)
     {
@@ -886,8 +860,8 @@ public class DateUtils {
     
     /**
      * 秒值转换成 时:分:秒格式
-     * @param time
-     * @return
+     * @param time 秒值
+     * @return 字符串
      */
     public static String secToTime(int time) {
         String timeStr = null;

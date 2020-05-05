@@ -57,6 +57,7 @@ public class PropUtil {
     private static PropUtil propUtil = new PropUtil();
     /**
      * 获取当前对象实例
+     * @return PropUtil
      */
     public static PropUtil getInstance() {
         return propUtil;
@@ -89,8 +90,12 @@ public class PropUtil {
         return StringUtils.isEmpty(value)?StringUtils.EMPTY:value;
     }
 
+
     /**
      * 获取配置
+     * @param key key
+     * @param nameSpace ns
+     * @return value
      */
     public String getConfig(String key,String nameSpace) {
         String value = getConfigInLoader(key,nameSpace);

@@ -13,16 +13,17 @@ public abstract class Condition implements Serializable{
 	protected abstract void parseModel(String parameter);
 
 	/**
-	 * 
+	 * 序列号
 	 */
 	private static final long serialVersionUID = 6323255822270908073L;
 
+
 	/**
-	 * 
-	 * 设置查询的字段名及查询类型
+	 * 设置查询的字段名及查询类型(字段为数据库字段名)
 	 * 例子 is_root@string@eq$
+	 * @param parameter 参数条件
+	 * @return 查询条件对象
 	 */
-	@Deprecated
 	public static Condition parseCondition(String parameter){
 		Condition condition ; 
 		int fieldIndex = parameter.indexOf("-");  //是否为多个字段
@@ -37,9 +38,10 @@ public abstract class Condition implements Serializable{
 	}
 
 	/**
-	 *
-	 * 设置查询的字段名及查询类型
-	 * 例子 is_root@string@eq$
+	 * 设置查询的字段名及查询类型 (字段为变量名)
+	 * 例子 isRoot@string@eq$
+	 * @param parameter 参数条件
+	 * @return 查询条件对象
 	 */
 	public static Condition parseModelCondition(String parameter){
 		Condition condition ;
