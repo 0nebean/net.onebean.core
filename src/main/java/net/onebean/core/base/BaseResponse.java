@@ -4,29 +4,30 @@ public class BaseResponse<T> {
 
     private String errCode = null;
     private String errMsg = null;
-    private T datas = null;
+    private T data = null;
 
-    @SuppressWarnings("unchecked")
-    public BaseResponse<T> ok(Object datas){
-        BaseResponse<T> b = new BaseResponse<>();
-        b.setDatas((T) datas);
+    @SuppressWarnings("all")
+    public static BaseResponse ok(Object data){
+        BaseResponse b = new BaseResponse<>();
+        b.setData(data);
         b.setErrCode("0");
         return b;
     }
 
-    public BaseResponse<T> ok(){
-        BaseResponse<T> b = new BaseResponse<>();
+    @SuppressWarnings("all")
+    public static BaseResponse ok(){
+        BaseResponse b = new BaseResponse<>();
         b.setErrCode("0");
         return b;
     }
 
 
-    public T getDatas() {
-        return datas;
+    public T getData() {
+        return data;
     }
 
-    public void setDatas(T datas) {
-        this.datas = datas;
+    public void setData(T data) {
+        this.data = data;
     }
 
     public String getErrCode() {
