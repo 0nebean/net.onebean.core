@@ -1,7 +1,9 @@
 package net.onebean.core.base;
 
-import net.onebean.core.query.Pagination;
 import net.onebean.core.extend.Sort;
+import net.onebean.core.query.Pagination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -12,6 +14,9 @@ import java.util.List;
 @SuppressWarnings("all")
 public class BasePaginationResponse<M> {
 
+    private final static Logger logger = LoggerFactory.getLogger(BasePaginationResponse.class);
+
+
     public BasePaginationResponse() {
     }
 
@@ -20,16 +25,16 @@ public class BasePaginationResponse<M> {
         this.errMsg = errMsg;
     }
 
-    public BasePaginationResponse(String errCode, String errMsg, List<M> datas, Pagination page) {
+    public BasePaginationResponse(String errCode, String errMsg, List<M> data, Pagination page) {
         this.errCode = errCode;
         this.errMsg = errMsg;
-        this.datas = datas;
+        this.data = data;
         this.page = page;
     }
 
     private String errCode = null;
     private String errMsg = null;
-    private List<M> datas = null;
+    private List<M> data = null;
     private Pagination page = null;
     private Sort sort = null;
 
@@ -41,18 +46,24 @@ public class BasePaginationResponse<M> {
         this.sort = sort;
     }
 
-    @SuppressWarnings("unchecked")
-    public static BasePaginationResponse ok(List list){
-        BasePaginationResponse b = new BasePaginationResponse();
-        b.setDatas(list);
+    public  BasePaginationResponse<M> failure(String errorCode,String errorMessage){
+        BasePaginationResponse<M> b = new BasePaginationResponse<>();
+        b.setErrCode(errorCode);
+        b.setErrMsg(errorMessage);
+        logger.info("BasePaginationResponse get an error ,Exception ex ="+this.toString());
+        return b;
+    }
+
+    public BasePaginationResponse<M> ok(List list){
+        BasePaginationResponse<M> b = new BasePaginationResponse();
+        b.setData(list);
         b.setErrCode("0");
         return b;
     }
 
-    @SuppressWarnings("unchecked")
-    public static BasePaginationResponse ok(List list,Pagination page){
-        BasePaginationResponse b = new BasePaginationResponse();
-        b.setDatas(list);
+    public BasePaginationResponse<M> ok(List list,Pagination page){
+        BasePaginationResponse<M> b = new BasePaginationResponse();
+        b.setData(list);
         b.setPage(page);
         b.setErrCode("0");
         return b;
@@ -74,12 +85,12 @@ public class BasePaginationResponse<M> {
         this.errMsg = errMsg;
     }
 
-    public List<M> getDatas() {
-        return datas;
+    public List<M> getData() {
+        return data;
     }
 
-    public void setDatas(List<M> datas) {
-        this.datas = datas;
+    public void setData(List<M> data) {
+        this.data = data;
     }
 
     public Pagination getPage() {

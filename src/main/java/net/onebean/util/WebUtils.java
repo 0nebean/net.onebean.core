@@ -1,10 +1,11 @@
 package net.onebean.util;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import net.onebean.component.SpringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import java.util.Optional;
 
 /**
  * web 工具类
@@ -16,7 +17,8 @@ public class WebUtils {
     private static final String TYPE_OF_IOS = "1";
     private static final String TYPE_OF_MICRO_MESSAGE = "2";
     private static final String TYPE_OF_OTHER = "3";
-
+    private final static String CALL_CLIENT_TYPE_KEY = "CALL_CLIENT_TYPE_KEY";
+    private final static String CALL_CLIENT_TYPE_FEIGN = "FEIGN";
     /**
      * 判断请求平台
      * @param request req
@@ -61,5 +63,16 @@ public class WebUtils {
             }
         }
         return JSONObject.parseObject(jsonObject.toJSONString(),clazz);
+    }
+
+    public static Boolean isFeignCalling(){
+        HttpServletRequest request = null;
+        try {
+            request = SpringUtil.getHttpServletRequest();
+        } catch (Exception e) {
+            //do nothing
+        }
+        String temp = Optional.ofNullable(request).map(r -> r.getHeader(CALL_CLIENT_TYPE_KEY)).orElse("");
+        return temp.equals(CALL_CLIENT_TYPE_FEIGN);
     }
 }

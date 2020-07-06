@@ -11,7 +11,15 @@ public class UagLoginSessionInfo {
     private String uagUsername;
     private String uagDeviceToken;
     private String uagAppId;
+    private String accessToken;
 
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
     public String getLoginStatus() {
         return loginStatus;

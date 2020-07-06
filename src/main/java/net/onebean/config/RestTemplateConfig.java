@@ -7,7 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * rest 配置类
@@ -23,14 +26,16 @@ public class RestTemplateConfig {
     @Bean
     public ClientHttpRequestFactory clientHttpRequestFactory(){
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(Parse.toInt(PropUtil.getInstance().getConfig(SIMPLE_CLIENT_HTTP_REQUEST_FACTORY_READ_TIMEOUT, PropUtil.DEFLAULT_NAME_SPACE)));
-        factory.setReadTimeout(Parse.toInt(PropUtil.getInstance().getConfig(SIMPLE_CLIENT_HTTP_REQUEST_FACTORY_CONNECT_TIMEOUT, PropUtil.DEFLAULT_NAME_SPACE)));
+        factory.setConnectTimeout(Parse.toInt(PropUtil.getInstance().getConfig(SIMPLE_CLIENT_HTTP_REQUEST_FACTORY_READ_TIMEOUT, PropUtil.PUBLIC_CONF_SYSTEM)));
+        factory.setReadTimeout(Parse.toInt(PropUtil.getInstance().getConfig(SIMPLE_CLIENT_HTTP_REQUEST_FACTORY_CONNECT_TIMEOUT, PropUtil.PUBLIC_CONF_SYSTEM)));
         return factory;
     }
 
     @Bean
     public RestTemplate restTemplate(ClientHttpRequestFactory clientHttpRequestFactory){
-        return new RestTemplate(clientHttpRequestFactory);
+        RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
+        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        return restTemplate;
     }
 
 }

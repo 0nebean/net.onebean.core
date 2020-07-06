@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * class类操作工具类
@@ -34,6 +35,15 @@ public class ClassUtils {
 		String result = parts[parts.length - 1];
 		return result.substring(0, 1).toLowerCase()
 				+ (result.length() > 1 ? result.substring(1) : "");
+	}
+
+	/**
+	 * 获取顶层调用者class
+	 * @return class
+	 */
+	public static String getBasicCallerClassName() {
+		StackTraceElement[] es = Thread.currentThread().getStackTrace();
+		return es[es.length - 1].getClassName();
 	}
 
 	/**
@@ -104,6 +114,31 @@ public class ClassUtils {
 		return fullName;
 	}
 
+	/**
+	 * 通过className 获取class
+	 * @param className 类名
+	 * @return class
+	 */
+	public static Class<?> getClassByClassName(String className){
+		Class<?> aClass = null;
+		try {
+			aClass = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return aClass;
+	}
+
+	/**
+	 * 判断类似否指定名字的注解
+	 * @param className 类型
+	 * @param annotationClassName 注解名类型
+	 * @return bool
+	 */
+	public static boolean hasAnnotation(String className, String annotationClassName) {
+		Class<?> clazz = getClassByClassName(className);
+		return hasAnnotation(clazz,annotationClassName);
+	}
 
 	/**
 	 * 判断类似否指定名字的注解
@@ -338,4 +373,31 @@ public class ClassUtils {
 		return null;
 	}
 
+	/**
+	 * 判断对象属性是否是基本数据类型,包括是否包括string
+	 * @param className 类名
+	 * @param incString 是否包括string判断,如果为true就认为string也是基本数据类型
+	 * @return bool
+	 */
+	public static boolean isBaseType(Class<?> className, boolean incString) {
+		if (incString && className.equals(String.class)) {
+			return true;
+		}
+		return className.equals(Integer.class) ||
+				className.equals(int.class) ||
+				className.equals(Byte.class) ||
+				className.equals(byte.class) ||
+				className.equals(Long.class) ||
+				className.equals(long.class) ||
+				className.equals(Double.class) ||
+				className.equals(double.class) ||
+				className.equals(Float.class) ||
+				className.equals(float.class) ||
+				className.equals(Character.class) ||
+				className.equals(char.class) ||
+				className.equals(Short.class) ||
+				className.equals(short.class) ||
+				className.equals(Boolean.class) ||
+				className.equals(boolean.class);
+	}
 }

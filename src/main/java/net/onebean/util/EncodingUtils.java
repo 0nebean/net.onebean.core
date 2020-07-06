@@ -1,10 +1,34 @@
 package net.onebean.util;
 
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 /**
  * 字符集操作工具类
  * @author 0neBean
  */
 public class EncodingUtils {
+    /**
+     * 编码
+     * @param encodedText 字符串
+     * @return 编码后的字符串
+     */
+    public static String encoderBase64(String encodedText){
+        String result = null;
+        result = Base64.getEncoder().encodeToString(encodedText.getBytes(StandardCharsets.UTF_8));
+        return result;
+    }
+    /**
+     * 编码
+     * @param deEncodedText 字符串
+     * @return 编码前的字符串
+     */
+    public static String decoderBase64(String deEncodedText){
+        byte[] base64decodedBytes = Base64.getDecoder().decode(deEncodedText);
+        return new String(base64decodedBytes, StandardCharsets.UTF_8);
+    }
+
     /**
      * 合并byte数组
      * @param arrays byte数组

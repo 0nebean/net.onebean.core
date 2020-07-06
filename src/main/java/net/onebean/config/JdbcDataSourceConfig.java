@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@ConditionalOnProperty(name = "bootstrap.without.jdbc.datasource", havingValue = "false")
+@ConditionalOnProperty(name = "spring.datasource.type")
 @ImportResource(locations={"classpath*:META-INF/spring/*.xml"})
 public class JdbcDataSourceConfig {
 

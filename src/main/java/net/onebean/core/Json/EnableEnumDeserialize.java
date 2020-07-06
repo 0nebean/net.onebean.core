@@ -7,5 +7,5 @@ import java.lang.annotation.*;
 @Target({ ElementType.METHOD })
 @Inherited
 public @interface EnableEnumDeserialize {
-    public String[] key() default "datas";
+    public String[] key() default "data";
 }

@@ -54,6 +54,17 @@ public class RestUtils {
         return restUtils;
     }
 
+    /**
+     * 获取当前对象实例
+     * @return 实例
+     */
+    public static RestUtils getUagRequestInstance(String appId,String accessToken) {
+        restUtils.initHeader();
+        headers.add("appId", appId);
+        headers.add("accessToken", accessToken);
+        return restUtils;
+    }
+
     public Object doPostForRef(String url, Object request, ParameterizedTypeReference<?> responseType){
         RestTemplate restTemplate = SpringUtil.getBean(RestTemplate.class);
         HttpEntity<Object> httpEntity = new HttpEntity<>(request,headers);

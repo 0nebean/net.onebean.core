@@ -22,6 +22,8 @@ public class PropUtil {
     public final static String PUBLIC_CONF_RABBIT_MQ = "public-conf.rabbitmq";
     public final static String PUBLIC_CONF_ALIYUN = "public-conf.aliyun";
     public final static String PUBLIC_CONF_SSO = "public-conf.sso";
+    private static final String LOGGING_LEVEL = "logging.level.root";
+    private static final String LOGGING_LEVEL_INFO = "info";
 
     public static String isActiveApolloConfig = null;
 
@@ -101,13 +103,14 @@ public class PropUtil {
         String value = getConfigInLoader(key,nameSpace);
         if (StringUtils.isEmpty(value) && isActiveRemoteConfig()){
             try {
+                if (key.equals(LOGGING_LEVEL)){
+                    return LOGGING_LEVEL_INFO;
+                }
                 value = ApolloPropUtils.getString(key,nameSpace);
             } catch (Exception ignored) {
             }
         }
         return value;
     }
-
-
 
 }

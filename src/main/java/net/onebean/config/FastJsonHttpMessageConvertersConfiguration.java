@@ -5,7 +5,10 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import net.onebean.component.SpringUtil;
 import net.onebean.util.ReflectionUtils;
+import net.onebean.util.WebUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -30,7 +33,7 @@ public class FastJsonHttpMessageConvertersConfiguration {
 		protected FastJson2HttpMessageConverterConfiguration() {
 		}
 
-		@Bean
+		@Bean("fastJsonHttpMessageConverter")
 		@ConditionalOnMissingBean({ FastJsonHttpMessageConverter.class })
 		public FastJsonHttpMessageConverter fastJsonHttpMessageConverter() {
 			FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
@@ -55,14 +58,12 @@ public class FastJsonHttpMessageConvertersConfiguration {
 					//    循环引用
 					SerializerFeature.DisableCircularReferenceDetect
 					);
-			ValueFilter valueFilter = new ValueFilter() {
-				public Object process(Object o, String s, Object o1) {
-					Field field = ReflectionUtils.getField(o,s);
-					if (null == o1 && field != null && field.getType().isAssignableFrom(Object.class)){
-						o1 = new Object();
-					}
-					return o1;
+			ValueFilter valueFilter = (o, s, o1) -> {
+				Field field = ReflectionUtils.getField(o,s);
+				if (null == o1 && field != null && field.getType().isAssignableFrom(Object.class) && !WebUtils.isFeignCalling()){
+					o1 = new Object();
 				}
+				return o1;
 			};
 			fastJsonConfig.setSerializeFilters(valueFilter);
 			converter.setFastJsonConfig(fastJsonConfig);
