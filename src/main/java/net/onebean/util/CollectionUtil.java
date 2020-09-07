@@ -9,7 +9,52 @@ import java.util.*;
  * 集合工具类
  */
 public class CollectionUtil {
-	
+
+	/**
+	 * 是否是字符串或数字的数组
+	 * @param list list
+	 * @return bool
+	 */
+	public static Boolean isNumberOrStringArray(List<?> list){
+		if (CollectionUtil.isEmpty(list)){
+			throw new RuntimeException("empty list");
+		}
+		return CollectionUtil.getListTClass(list) == String.class || StringUtils.isNumeric(list.get(0).toString());
+	}
+
+	/**
+	 * 获取数组的类型
+	 * @param list list
+	 * @return 类型
+	 */
+	public static Class<?> getListTClass(List<?> list){
+		if (CollectionUtil.isNotEmpty(list)){
+			return list.get(0).getClass();
+		}else {
+			return null;
+		}
+	}
+
+	/**
+	 * list 转 数组
+	 * @param list list
+	 * @return array
+	 */
+	public static String[] list2StringArr(List<?> list){
+		String[] strArray = new String[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			strArray[i] = list.get(i).toString();
+		}
+		return strArray;
+	}
+	/**
+	 * 是否是数组
+	 * @param obj 对象
+	 * @return bool
+	 */
+	public static boolean isArray(Object obj) {
+		return obj.getClass().isArray() || obj instanceof List;
+	}
 	/**
 	 * 判断集合是否为空
 	 * @param obj 集合

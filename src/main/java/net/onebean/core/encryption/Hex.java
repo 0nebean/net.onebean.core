@@ -2,7 +2,7 @@ package net.onebean.core.encryption;
 
 /**
  * 十六进制编码转换工具类
- * @author 0neBean
+ * @author World
  */
 public class Hex {
     private static final char[] HEX = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};

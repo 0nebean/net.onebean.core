@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * @author 0neBean
+ * @author World
  * @param <M> 泛型data对象class
  */
 @SuppressWarnings("all")

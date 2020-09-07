@@ -1,12 +1,10 @@
 package net.onebean.util;
 
+import com.alibaba.fastjson.JSONObject;
 import net.onebean.component.SpringUtil;
 import org.apache.log4j.Logger;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -18,7 +16,8 @@ import java.net.URLConnection;
 
 /**
  * rest请求工具类
- * @author 0neBean
+ *
+ * @author World
  */
 public class RestUtils {
 
@@ -47,6 +46,7 @@ public class RestUtils {
 
     /**
      * 获取当前对象实例
+     *
      * @return 实例
      */
     public static RestUtils getInstance() {
@@ -56,40 +56,60 @@ public class RestUtils {
 
     /**
      * 获取当前对象实例
+     *
      * @return 实例
      */
-    public static RestUtils getUagRequestInstance(String appId,String accessToken) {
+    public static RestUtils getUagRequestInstance(String appId, String accessToken) {
         restUtils.initHeader();
         headers.add("appId", appId);
         headers.add("accessToken", accessToken);
         return restUtils;
     }
 
-    public Object doPostForRef(String url, Object request, ParameterizedTypeReference<?> responseType){
+    public Object doPostForRef(String url, Object request, ParameterizedTypeReference<?> responseType) {
         RestTemplate restTemplate = SpringUtil.getBean(RestTemplate.class);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(request,headers);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(request, headers);
         logger.info("RestUtils doPostForRef url = " + url);
-        return restTemplate.exchange(url, HttpMethod.POST,httpEntity,responseType).getBody();
+        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, responseType).getBody();
     }
 
-    @SuppressWarnings("unchecked")
-    public Object doPostForObj(String url, Object request, Class clazz){
+    public JSONObject doPostForXml(String url, JSONObject param) {
         RestTemplate restTemplate = SpringUtil.getBean(RestTemplate.class);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(request,headers);
-        logger.info("RestUtils doPostForObj url = " + url);
-        return  restTemplate.postForEntity(url,httpEntity,clazz).getBody();
+        logger.info("RestUtils doPostForXmlObj url = " + url);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("ContentType", MediaType.APPLICATION_XML.toString());
+        httpHeaders.add("Accept", MediaType.APPLICATION_XML.toString());
+        HttpEntity<String> formEntity;
+        if (null != param) {
+            String xmlParam = XmlUtils.jsonToXml(param, false);
+            formEntity = new HttpEntity<>(xmlParam, httpHeaders);
+        } else {
+            formEntity = new HttpEntity<>(httpHeaders);
+        }
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, formEntity, String.class);
+        String resXml = responseEntity.getBody();
+        return XmlUtils.xml2JSON(resXml);
     }
 
     @SuppressWarnings("unchecked")
-    public Object doGetForObj(String url, Class clazz){
+    public Object doPostForObj(String url, Object request, Class clazz) {
+        RestTemplate restTemplate = SpringUtil.getBean(RestTemplate.class);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(request, headers);
+        logger.info("RestUtils doPostForObj url = " + url);
+        return restTemplate.postForEntity(url, httpEntity, clazz).getBody();
+    }
+
+    @SuppressWarnings("unchecked")
+    public Object doGetForObj(String url, Class clazz) {
         RestTemplate restTemplate = SpringUtil.getBean(RestTemplate.class);
         logger.info("RestUtils doGetForObj url = " + url);
-        return  restTemplate.getForObject(url,clazz);
+        return restTemplate.getForObject(url, clazz);
     }
 
     /**
      * 向指定 URL 发送POST方法的请求
-     * @param url 发送请求的 URL
+     *
+     * @param url   发送请求的 URL
      * @param param 请求参数，请求参数应该是 拼接url参数 的形式。
      * @return 所代表远程资源的响应结果
      */
@@ -124,20 +144,19 @@ public class RestUtils {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("发送 POST 请求出现异常！"+e);
+            System.out.println("发送 POST 请求出现异常！" + e);
             e.printStackTrace();
         }
         //使用finally块来关闭输出流、输入流
-        finally{
-            try{
-                if(out!=null){
+        finally {
+            try {
+                if (out != null) {
                     out.close();
                 }
-                if(in!=null){
+                if (in != null) {
                     in.close();
                 }
-            }
-            catch(IOException ex){
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }

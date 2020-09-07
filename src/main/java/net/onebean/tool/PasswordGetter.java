@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author 0neBean
+ * @author World
  * 密码生成器
  */
 public class PasswordGetter {

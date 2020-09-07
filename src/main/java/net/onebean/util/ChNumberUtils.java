@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 /**
  * 数字转换为汉语中人民币的大写
- * @author 0neBean
+ * @author World
  */
 public class ChNumberUtils {
     /**

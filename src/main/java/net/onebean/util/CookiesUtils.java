@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * 操作cookie 类
- * @author 0neBean
+ * @author World
  */
 public class CookiesUtils {
 

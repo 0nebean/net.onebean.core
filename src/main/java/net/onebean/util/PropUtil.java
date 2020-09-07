@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * 配置文件读取类
- * @author 0neBean
+ * @author World
  */
 public class PropUtil {
 

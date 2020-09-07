@@ -6,7 +6,7 @@ import net.onebean.core.extend.Sort;
 import javax.validation.Valid;
 
 /**
- * @author 0neBean
+ * @author World
  * @param <M> 泛型data对象class
  */
 @SuppressWarnings("all")

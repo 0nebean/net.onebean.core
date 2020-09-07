@@ -1,5 +1,6 @@
 package net.onebean.core.query;
 
+import net.onebean.util.CollectionUtil;
 import net.onebean.util.StringUtils;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class ConditionMap extends HashMap<String, Object>{
 
 		for (String s:conditionArr) {
 			Condition temp = Condition.parseCondition(s.substring(0,s.indexOf("$")));
-			temp.setValue(s.substring(s.indexOf("$")+1,s.length()));
+			temp.setValue(s.substring(s.indexOf("$")+1));
 			this.put(s,temp);
 		}
 	}
@@ -96,7 +97,13 @@ public class ConditionMap extends HashMap<String, Object>{
 
 		for (String s:conditionArr) {
 			Condition temp = Condition.parseModelCondition(s.substring(0,s.indexOf("$")));
-			temp.setValue(s.substring(s.indexOf("$")+1,s.length()));
+			String value = s.substring(s.indexOf("$")+1);
+			if (value.contains(",")){
+				List<String> list = CollectionUtil.stringArr2List(value.split(","));
+				temp.setValue(list);
+			}else{
+				temp.setValue(s.substring(s.indexOf("$")+1));
+			}
 			this.put(s,temp);
 		}
 	}

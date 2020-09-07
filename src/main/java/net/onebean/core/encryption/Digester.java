@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @author 0neBean
+ * @author World
  * 加密容器
  */
 public class Digester {

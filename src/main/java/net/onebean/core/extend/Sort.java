@@ -1,7 +1,7 @@
 package net.onebean.core.extend;
 
 /**
- * @author 0neBean
+ * @author World
  * 排序封装字段
  */
 public class Sort {

@@ -62,7 +62,7 @@ public class CreateJavaTool {
     private void init(){
         frame = new JFrame();
         frame.setSize(WIN_WIDTH, WIN_HEIGHT);
-        frame.setTitle("代码生成工具 by 0neBean");
+        frame.setTitle("代码生成工具 by World");
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
         int screenWidth = screenSize.width;

@@ -4,7 +4,7 @@ package net.onebean.core.base;
 import java.util.Map;
 
 /**
- * @author 0neBean
+ * @author World
  * meizi UI tree model
  */
 public class BaseTree {

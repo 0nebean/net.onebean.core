@@ -11,6 +11,7 @@ import net.onebean.core.extend.LogSQLExcutionTimeInterceptor;
 import net.onebean.core.extend.PaginationInterceptor;
 import net.onebean.core.form.Parse;
 import net.onebean.util.PropUtil;
+import net.onebean.core.extend.SqlMapper;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -137,7 +138,7 @@ public class JdbcDataSourceConfig {
         //设置mybatis接口的扫描路径
         mapperScannerConfigurer.setBasePackage(PropUtil.getInstance().getConfig("org.mybatis.base.package", PropUtil.PUBLIC_CONF_JDBC));
         //设置mybatis接口的抽象接口
-        mapperScannerConfigurer.setMarkerInterface(net.onebean.core.extend.SqlMapper.class);
+        mapperScannerConfigurer.setMarkerInterface(SqlMapper.class);
         //指定sqlSessionFactory
         mapperScannerConfigurer.setSqlSessionFactoryBeanName(sqlSessionFactory.getClass().getName());
         return  mapperScannerConfigurer;

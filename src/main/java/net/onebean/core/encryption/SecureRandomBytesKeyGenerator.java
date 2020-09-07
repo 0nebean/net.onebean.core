@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 
 /**
  * 随机盐生成工具
- * @author 0neBean
+ * @author World
  */
 public class SecureRandomBytesKeyGenerator {
     private final SecureRandom random;

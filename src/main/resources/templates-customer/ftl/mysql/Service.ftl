@@ -2,9 +2,9 @@ package ${service_package_name};
 
 
 <#if is_split_table == true>
-import net.onebean.core.base.IBaseSplitBizManual;
+import IBaseSplitBizManual;
 <#else>
-import net.onebean.core.base.IBaseBiz;
+import IBaseBiz;
 </#if>
 import ${model_package_name}.${model_name};
 

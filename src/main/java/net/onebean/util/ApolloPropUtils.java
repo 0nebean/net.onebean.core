@@ -3,7 +3,7 @@ package net.onebean.util;
 import com.ctrip.framework.apollo.ConfigService;
 
 /**
- * @author 0neBean
+ * @author World
  * Apollo配置中心工具类
  */
 

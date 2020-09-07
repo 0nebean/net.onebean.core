@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author 0neBean
+ * @author World
  * FreeMarker 操作工具类
  */
 public class FreeMarkerTemplateUtils {

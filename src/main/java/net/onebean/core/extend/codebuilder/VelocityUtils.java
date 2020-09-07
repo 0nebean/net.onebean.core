@@ -12,7 +12,7 @@ import java.io.StringWriter;
 import java.util.Map;
 
 /**
- * @author 0neBean
+ * @author World
  */
 public class VelocityUtils {
 

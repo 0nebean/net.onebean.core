@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 
 /**
  * jockson反序列化时间转换插件
- * @author 0nebean
+ * @author World
  */
 public class TimeStamp_Deserializer extends JsonDeserializer<Timestamp> {
 

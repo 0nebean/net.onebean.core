@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * mybatis接口
  * 继承了SqlMapper接口，MapperScannerConfigurer配置中指定了markerInterface为该接口
- * @author 0neBean
+ * @author World
  * @param <T> 泛型实体类型
  */
 public interface BaseDao<T> extends SqlMapper {

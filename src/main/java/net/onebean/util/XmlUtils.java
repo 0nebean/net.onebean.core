@@ -8,17 +8,15 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * xml 操作工具类
- * @author 0neBean
+ *
+ * @author World
  */
 public class XmlUtils {
 
@@ -36,8 +34,8 @@ public class XmlUtils {
         Document document = reader.read(inputStream);
         Element root = document.getRootElement();
         List<Element> elementList = root.elements();
-        for (Element element : elementList){
-            jsonObject.put(element.getName(),element.getText());
+        for (Element element : elementList) {
+            jsonObject.put(element.getName(), element.getText());
         }
         inputStream.close();
         return jsonObject;
@@ -46,26 +44,107 @@ public class XmlUtils {
 
     /**
      * 转化成xml, 单层无嵌套
-     * @param param map
+     *
+     * @param param      map
      * @param isAddCDATA 添加专业
      * @return xml str
      */
     public static String mapToXml(Map<String, Object> param, boolean isAddCDATA) {
-        return StringUtils.isEmpty(param)?"":iterMap(param,isAddCDATA);
+        return StringUtils.isEmpty(param) ? "" : iterMap(param, isAddCDATA);
+    }
+
+    /**
+     * 转换一个xml格式的字符串到json格式
+     *
+     * @param xml xml格式的字符串
+     * @return 成功返回json 格式的字符串;失败反回null
+     */
+    public static JSONObject xml2JSON(String xml) {
+        JSONObject obj = new JSONObject();
+        try {
+            Document doc = DocumentHelper.parseText(xml);
+            Element root = doc.getRootElement();
+            obj.put(root.getName(), iterateElement(root));
+            return obj;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 一个迭代方法
+     *
+     * @param element
+     * @return java.util.Map 实例
+     */
+    @SuppressWarnings("unchecked")
+    private static Map iterateElement(Element element) {
+        List jiedian = element.elements();
+        Element et = null;
+        Map obj = new HashMap();
+        Object temp;
+        List list = null;
+        for (int i = 0; i < jiedian.size(); i++) {
+            list = new LinkedList();
+            et = (Element) jiedian.get(i);
+            if (et.getTextTrim().equals("")) {
+                if (et.elements().size() == 0)
+                    continue;
+                if (obj.containsKey(et.getName())) {
+                    temp = obj.get(et.getName());
+                    if (temp instanceof List) {
+                        list = (List) temp;
+                        list.add(iterateElement(et));
+                    } else if (temp instanceof Map) {
+                        list.add((HashMap) temp);
+                        list.add(iterateElement(et));
+                    } else {
+                        list.add((String) temp);
+                        list.add(iterateElement(et));
+                    }
+                    obj.put(et.getName(), list);
+                } else {
+                    obj.put(et.getName(), iterateElement(et));
+                }
+            } else {
+                if (obj.containsKey(et.getName())) {
+                    temp = obj.get(et.getName());
+                    if (temp instanceof List) {
+                        list = (List) temp;
+                        list.add(et.getTextTrim());
+                    } else if (temp instanceof Map) {
+                        list.add((HashMap) temp);
+                        list.add(iterateElement(et));
+                    } else {
+                        list.add((String) temp);
+                        list.add(et.getTextTrim());
+                    }
+                    obj.put(et.getName(), list);
+                } else {
+                    obj.put(et.getName(), et.getTextTrim());
+                }
+
+            }
+
+        }
+        return obj;
     }
 
     /**
      * 转化成xml, 单层无嵌套
+     *
      * @param jsonObject json
      * @param isAddCDATA 添加专业
      * @return xml str
      */
     public static String jsonToXml(JSONObject jsonObject, boolean isAddCDATA) {
-        LinkedHashMap<String, Object> jsonMap = JSON.parseObject(JSON.toJSONString(jsonObject), new TypeReference<LinkedHashMap<String, Object>>() {});
-        return StringUtils.isEmpty(jsonMap)?"":iterMap(jsonMap,isAddCDATA);
+        LinkedHashMap<String, Object> jsonMap = JSON.parseObject(JSON.toJSONString(jsonObject), new TypeReference<LinkedHashMap<String, Object>>() {
+        });
+        return StringUtils.isEmpty(jsonMap) ? "" : iterMap(jsonMap, isAddCDATA);
     }
 
-    private static String iterMap(Map<String,Object> jsonMap,boolean isAddCDATA){
+    private static String iterMap(Map<String, Object> jsonMap, boolean isAddCDATA) {
         StringBuilder stringBuilder = new StringBuilder(PREFIX_XML);
         for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
             stringBuilder.append("<").append(entry.getKey()).append(">");
@@ -88,6 +167,7 @@ public class XmlUtils {
 
     /**
      * 将xml字符串转换成json
+     *
      * @param xml xm字符串
      * @return JSONObject
      */

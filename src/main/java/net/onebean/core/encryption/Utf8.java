@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
 
 /**
  * utf8字符编码转码工具类
- * @author 0neBean
+ * @author World
  */
 public class Utf8 {
     private static final Charset CHARSET = Charset.forName("UTF-8");

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * password 生成 解密工具类
- * @author 0neBean
+ * @author World
  */
 @Service
 public class PasswordEncoder {

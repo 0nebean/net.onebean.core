@@ -751,6 +751,15 @@ public class StringUtils {
 	}
 
 	/**
+	 * 加密手机号
+	 * @param phoneNumber 手机号
+	 * @return 结果
+	 */
+	public static String encryptionPhoneNumber(String phoneNumber) {
+		return phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7);
+	}
+
+	/**
 	 * 将对象忽略Null值解析成字符串
 	 * @param value 要解析的对象
 	 * @return 解析的字符串
@@ -949,5 +958,145 @@ public class StringUtils {
 		return i;
 	}
 
+
+	/**
+	 * 获取jdbcType
+	 * @param databaseType 数据库类型
+	 * @return jdbcType
+	 */
+	public static String getJdbcType(String databaseType){
+		String jdbcType = "";
+		databaseType = databaseType.toUpperCase();
+		if(databaseType.equals("ARRAY")){
+			jdbcType = "ARRAY";
+		}
+		if(databaseType.equals("BIT")){
+			jdbcType = "BIT";
+		}
+		if(databaseType.equals("TINYINT")){
+			jdbcType = "TINYINT";
+		}
+		if(databaseType.equals("SMALLINT")){
+			jdbcType = "SMALLINT";
+		}
+		if(databaseType.equals("INT") || databaseType.equals("MEDIUMINT")){
+			jdbcType = "INTEGER";
+		}
+		if(databaseType.equals("BIGINT")){
+			jdbcType = "BIGINT";
+		}
+		if(databaseType.equals("FLOAT")){
+			jdbcType = "FLOAT";
+		}
+		if(databaseType.equals("REAL")){
+			jdbcType = "REAL";
+		}
+		if(databaseType.equals("DOUBLE")){
+			jdbcType = "DOUBLE";
+		}
+		if(databaseType.equals("NUMERIC")){
+			jdbcType = "NUMERIC";
+		}
+		if(databaseType.equals("DECIMAL")){
+			jdbcType = "DECIMAL";
+		}
+		if(databaseType.equals("CHAR")){
+			jdbcType = "CHAR";
+		}
+		if(databaseType.equals("VARCHAR")){
+			jdbcType = "VARCHAR";
+		}
+		if(databaseType.equals("LONGVARCHAR")){
+			jdbcType = "LONGVARCHAR";
+		}
+		if(databaseType.equals("DATE")){
+			jdbcType = "DATE";
+		}
+		if(databaseType.equals("TIME")){
+			jdbcType = "TIME";
+		}
+		if(databaseType.equals("TIMESTAMP")){
+			jdbcType = "TIMESTAMP";
+		}
+		if(databaseType.equals("BINARY")){
+			jdbcType = "BINARY";
+		}
+		if(databaseType.equals("VARBINARY")){
+			jdbcType = "VARBINARY";
+		}
+		if(databaseType.equals("LONGVARBINARY")){
+			jdbcType = "LONGVARBINARY";
+		}
+		if(databaseType.equals("NULL")){
+			jdbcType = "NULL";
+		}
+		if(databaseType.equals("OTHER")){
+			jdbcType = "OTHER";
+		}
+		if(databaseType.equals("BLOB")){
+			jdbcType = "BLOB";
+		}
+		if(databaseType.equals("CLOB")){
+			jdbcType = "CLOB";
+		}
+		if(databaseType.equals("BOOLEAN")){
+			jdbcType = "BOOLEAN";
+		}
+		if(databaseType.equals("CURSOR")){
+			jdbcType = "CURSOR";
+		}
+		if(databaseType.equals("UNDEFINED")){
+			jdbcType = "UNDEFINED";
+		}
+		if(databaseType.equals("NVARCHAR")){
+			jdbcType = "NVARCHAR";
+		}
+		if(databaseType.equals("NCHAR")){
+			jdbcType = "NCHAR";
+		}
+		if(databaseType.equals("NCLOB")){
+			jdbcType = "NCLOB";
+		}
+		if(databaseType.equals("STRUCT")){
+			jdbcType = "STRUCT";
+		}
+		if(databaseType.equals("JAVA_OBJECT")){
+			jdbcType = "JAVA_OBJECT";
+		}
+		if(databaseType.equals("DISTINCT")){
+			jdbcType = "DISTINCT";
+		}
+		if(databaseType.equals("REF")){
+			jdbcType = "REF";
+		}
+		if(databaseType.equals("DATALINK")){
+			jdbcType = "DATALINK";
+		}
+		if(databaseType.equals("ROWID")){
+			jdbcType = "ROWID";
+		}
+		if(databaseType.equals("LONGNVARCHAR")){
+			jdbcType = "LONGNVARCHAR";
+		}
+		if(databaseType.equals("SQLXML")){
+			jdbcType = "SQLXML";
+		}
+		if(databaseType.equals("DATETIMEOFFSET")){
+			jdbcType = "DATETIMEOFFSET";
+		}
+		return jdbcType;
+	}
+
+	/**
+	 * 去除字符串外的数组括号
+	 * @param str 字符串
+	 * @return 字符串
+	 */
+	public static String cleanArrayStr(String str){
+		if (str.startsWith("[") && str.endsWith("]")){
+			str = str.substring(1,str.length() -1);
+		}
+		return str;
+	}
 
 }

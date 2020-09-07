@@ -1,14 +1,14 @@
 package ${model_package_name};
-import net.onebean.core.extend.FiledName;
-import net.onebean.core.extend.TableName;
-import net.onebean.core.model.BaseModel;
+import FiledName;
+import TableName;
+import BaseModel;
 
 <#if is_split_table == true>
-import net.onebean.core.model.InterfaceBaseSplitModel;
+import InterfaceBaseSplitModel;
 <#elseif is_split_table == false && logically_delete == true>
-import net.onebean.core.model.InterfaceBaseDeletedModel;
+import InterfaceBaseDeletedModel;
 <#else>
-import net.onebean.core.model.InterfaceBaseModel;
+import InterfaceBaseModel;
 </#if>
 
 <#if fieldArr?exists>

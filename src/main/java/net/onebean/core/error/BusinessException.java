@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author 0neBean
+ * @author World
  */
 public class BusinessException extends RuntimeException {
 

@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * 类型转换
  * 
- * @author 0neBean
+ * @author World
  * 
  */
 public class Parse {
@@ -33,6 +33,15 @@ public class Parse {
 		} catch (Exception ignored) {
 		}
 		return d;
+	}
+
+	/**
+	 * 无损转换
+	 * @param value 目标值
+	 * @return BigDecimal
+	 */
+	public static BigDecimal toBigDecimal(String value) {
+		return new BigDecimal(value);
 	}
 
 	/**

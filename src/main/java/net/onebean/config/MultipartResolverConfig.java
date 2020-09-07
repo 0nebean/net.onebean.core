@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 /**
- * @author 0neBean
+ * @author World
  */
 @Configuration
 public class MultipartResolverConfig {

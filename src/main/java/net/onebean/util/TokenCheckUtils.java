@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import java.util.Calendar;
 
 /**
- * @author 0neBean
+ * @author World
  */
 public class TokenCheckUtils {
 
