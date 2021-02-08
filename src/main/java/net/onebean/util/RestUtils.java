@@ -17,7 +17,7 @@ import java.net.URLConnection;
 /**
  * rest请求工具类
  *
- * @author World
+ * @author 0neBean
  */
 public class RestUtils {
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * byte数组操作工具
- * @author World
+ * @author 0neBean
  */
 public class ByteHexUtils {
 

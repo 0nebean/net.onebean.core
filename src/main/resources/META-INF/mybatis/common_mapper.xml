@@ -29,7 +29,6 @@
 
 
 	<sql id="orCondition">
-			
 		<if test="orCondition.operator!=null and orCondition.operator=='in'">
 			${orCondition.field} ${orCondition.operator}
 			<foreach item="one" index="index" collection="orCondition.newValue"
@@ -41,9 +40,8 @@
 			${orCondition.field} ${orCondition.operator}
 			#{orCondition.newValue}
 		</if>
-			
-	
 	</sql>
+
 	<sql id="dynamicConditionsNoWhere">
 		<if test="conditions!=null">
 			<foreach collection="conditions" item="condition" index="index">
@@ -65,7 +63,8 @@
 					
 			</foreach>
 		</if>	
-	</sql>	
+	</sql>
+
 	<sql id="dynamicConditions">
 		<where>
 			<include refid="common.dynamicConditionsNoWhere"/>

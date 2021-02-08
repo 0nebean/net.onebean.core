@@ -67,8 +67,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
         List<String> columns = new ArrayList<String>();
         Map<String, String> columnMap = new HashMap<String, String>();
         List<String> paramColumns = new ArrayList<String>();
-        List<PropertyInfo> propertyinfos = ModelMappingManager.getBeanInfo(
-                clazz).getProperties();
+        List<PropertyInfo> propertyinfos = ModelMappingManager.getBeanInfo(clazz).getProperties();
         boolean idIsString = false;
         for (PropertyInfo propertyinfo : propertyinfos) {
             Method m = propertyinfo.getReadMethod();
@@ -82,7 +81,6 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
                     mName = filed.value();
                     mName = StringUtils.humpToUnderline(mName);
                 } else {
-
                     Object cName = ClassUtils.getMethodAnnotationValue(m, "Column", "name");
                     if (cName != null) {
                         mName = cName.toString();
@@ -108,7 +106,6 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
             } else {
                 Field field = propertyinfo.getField();
                 Object cName = ClassUtils.getFieldAnnotationValue(field, "Column", "name");
-
                 if (cName != null) {
                     String mName = cName.toString();
                     String paramName = generateColumn4Field(field);
@@ -292,8 +289,7 @@ public class MybatisCRUDBuilder extends UniversalCodeBuilder {
             updateSql.append("${suffix}");
         }
         updateSql.append(" <set> ");
-        for (Iterator<String> itor = columnMap.keySet().iterator(); itor.hasNext(); ) {
-            String key = itor.next();
+        for (String key : columnMap.keySet()) {
             String value = columnMap.get(key);
             updateSql.append(" <if test=\"entity.").append(value).append(" != null\"> ");
             updateSql.append(key).append("=#{entity.").append(value).append("},");

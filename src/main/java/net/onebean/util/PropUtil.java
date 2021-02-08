@@ -1,6 +1,6 @@
 package net.onebean.util;
 
-import net.onebean.core.extend.ApolloConfInitializer;
+import net.onebean.core.extend.ConfigInitializer;
 import net.onebean.core.metadata.PropertiesLoader;
 
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * 配置文件读取类
- * @author World
+ * @author 0neBean
  */
 public class PropUtil {
 
@@ -20,7 +20,6 @@ public class PropUtil {
     public final static String PUBLIC_CONF_FREEMARKER = "public-conf.freemarker";
     public final static String PUBLIC_CONF_SPRING_CLOUD = "public-conf.spring-cloud";
     public final static String PUBLIC_CONF_RABBIT_MQ = "public-conf.rabbitmq";
-    public final static String PUBLIC_CONF_ALIYUN = "public-conf.aliyun";
     public final static String PUBLIC_CONF_SSO = "public-conf.sso";
     private static final String LOGGING_LEVEL = "logging.level.root";
     private static final String LOGGING_LEVEL_INFO = "info";
@@ -33,7 +32,7 @@ public class PropUtil {
     */
     private static Boolean isActiveRemoteConfig(){
         if (null == isActiveApolloConfig) {
-            isActiveApolloConfig = System.getProperty(ApolloConfInitializer.SPRING_CONFIG_ACTIVE_APOLLO);
+            isActiveApolloConfig = System.getProperty(ConfigInitializer.SPRING_CONFIG_ACTIVE_APOLLO);
             if (null == isActiveApolloConfig) {
                 isActiveApolloConfig = "";
             }

@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * rest 配置类
- * @author World
+ * @author 0neBean
  */
 @Configuration
 @ConditionalOnClass(value = {RestTemplate.class})

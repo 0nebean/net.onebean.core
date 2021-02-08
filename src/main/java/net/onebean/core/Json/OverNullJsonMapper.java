@@ -10,7 +10,7 @@ import java.io.IOException;
 
 /**
  * 理序列化过程中的Null值，把值替换成""空字符串
- * @author World
+ * @author 0neBean
  */
 public class OverNullJsonMapper extends ObjectMapper {
 

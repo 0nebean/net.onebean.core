@@ -17,7 +17,7 @@ import java.util.Set;
 
 /**
  * 结合apollo动态刷新日志级别
- * @author World
+ * @author 0neBean
  */
 @Configuration
 @ConditionalOnProperty(name = "spring.config.active.apollo",havingValue = "true")

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 /**
  * 加密类
- * @author World
+ * @author 0neBean
  */
 public class EncryptionUtils {
     /**

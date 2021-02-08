@@ -52,13 +52,11 @@
 	
 	<select id="find" resultType="${entityClass}" useCache="${cached}">
 		${findSql}
-            
 	</select>
 	
 	<delete id="deleteByIds" parameterType="list" flushCache="${cached}">
 		${deleteByIdsSql}
-	
-	</delete>	 
+	</delete>
 	
 	<delete id="updateBatch" flushCache="${cached}">
 		${updateBatchSql}

@@ -4,7 +4,7 @@ import org.springframework.beans.BeanUtils;
 
 /**
  * 用于提供函数式的反射方法
- * @author World
+ * @author 0neBean
  */
 public class BaseReflectModel {
 

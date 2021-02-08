@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * 文件压缩工具类
- * @author World
+ * @author 0neBean
  */
 public class TarFileUtil {
 

@@ -6,10 +6,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author World
+ * @author 0neBean
  * 密码生成器
  */
 public class PasswordGetter {
+
+    public static void main(String[] args) {
+        new PasswordGetter();
+    }
 
     public static void runIt() {
         StringBuilder password = new StringBuilder();

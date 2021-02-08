@@ -26,7 +26,7 @@ import java.util.Map;
  * ，子类继承此方法时必须指明对应的Model和Dao具体实现类，在setBaseDao(BaseDao)方法中使用spring注解方式实现。
  * 子类在需要使用dao对象的地方 ，直接调用baseDao.method()，该类当前只支持自动装配一个dao实例，如果需要多个，
  * 在自己的service类中以spring注解方式自行配置。
- * @author World
+ * @author 0neBean
  * @param <T> 主要操作的实体类型
  * @param <K> 主要操作的Dao类型
  */

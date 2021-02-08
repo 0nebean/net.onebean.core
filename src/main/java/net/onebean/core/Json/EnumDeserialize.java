@@ -7,5 +7,5 @@ import java.lang.annotation.*;
 @Target({ ElementType.FIELD })
 @Inherited
 public @interface EnumDeserialize {
-    Class<? extends  Enum> using();
+    Class<? extends  Enum<?>> using();
 }

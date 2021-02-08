@@ -14,9 +14,10 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
- * @author World
+ * @author 0neBean
  * FreeMarker 操作工具类
  */
 public class FreeMarkerTemplateUtils {
@@ -24,39 +25,35 @@ public class FreeMarkerTemplateUtils {
 
     private static Logger logger = (Logger) LoggerFactory.getLogger(FreeMarkerTemplateUtils.class);
     private final static String FREEMARKER_FTL_KEY = "apache.freemarker.ftl.path";
-    private final static String CHARSET_STR ="utf-8";
+    private final static String CHARSET_STR = "utf-8";
 
     private FreeMarkerTemplateUtils() {
     }
 
     private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_22);
 
-    public static void main(String[] args) {
-        String asas = "\\templates-customer\\ftl";
-
-    }
 
     static {
         String basePackage = PropUtil.getInstance().getConfig(FREEMARKER_FTL_KEY, PropUtil.PUBLIC_CONF_FREEMARKER);
         String absoluteClassPath = ClassUtils.getAbsoluteClassPath();
         absoluteClassPath = absoluteClassPath.equals(".") ? "" : absoluteClassPath;
-        logger.info("un replace separator, basePackage = "+basePackage);
-        if (ClassUtils.getOperatingSystemPlatform().equals(ClassUtils.OPERATING_SYSTEM_PLATFORM_WINDOWS)){
-            logger.info("replace basePackage separator to windows = "+basePackage);
-            basePackage = basePackage.replace(ClassUtils.LINUX_SEPARATOR,ClassUtils.WINDOWS_SEPARATOR);
-        }else{
-            logger.info("replace basePackage separator to linux = "+basePackage);
-            basePackage = basePackage.replace(ClassUtils.WINDOWS_SEPARATOR,ClassUtils.LINUX_SEPARATOR);
+        logger.info("un replace separator, basePackage = " + basePackage);
+        if (Objects.equals(ClassUtils.getOperatingSystemPlatform(), ClassUtils.OPERATING_SYSTEM_PLATFORM_WINDOWS)) {
+            logger.info("replace basePackage separator to windows = " + basePackage);
+            basePackage = basePackage.replace(ClassUtils.LINUX_SEPARATOR, ClassUtils.WINDOWS_SEPARATOR);
+        } else {
+            logger.info("replace basePackage separator to linux = " + basePackage);
+            basePackage = basePackage.replace(ClassUtils.WINDOWS_SEPARATOR, ClassUtils.LINUX_SEPARATOR);
         }
-        logger.info("replaced separator, basePackage = "+basePackage);
+        logger.info("replaced separator, basePackage = " + basePackage);
         basePackage = absoluteClassPath + basePackage + ClassUtils.CURRENT_OPERATING_SYSTEM_SEPARATOR;
-        logger.info("full path, basePackage = "+basePackage);
+        logger.info("full path, basePackage = " + basePackage);
         try {
             if (ClassUtils.isAbsolutePath(basePackage)) {
-                logger.info("init freeMarker by FileTemplateLoader, basePackage = "+ basePackage);
+                logger.info("init freeMarker by FileTemplateLoader, basePackage = " + basePackage);
                 CONFIGURATION.setTemplateLoader(new FileTemplateLoader(new File(basePackage)));
             } else {
-                logger.info("init freeMarker by ClassTemplateLoader, basePackage = "+ basePackage);
+                logger.info("init freeMarker by ClassTemplateLoader, basePackage = " + basePackage);
                 CONFIGURATION.setTemplateLoader(new ClassTemplateLoader(FreeMarkerTemplateUtils.class, basePackage));
             }
         } catch (IOException e) {
@@ -70,6 +67,7 @@ public class FreeMarkerTemplateUtils {
 
     /**
      * 获取模板
+     *
      * @param templateName 模板路径
      * @return Template
      */
@@ -77,57 +75,60 @@ public class FreeMarkerTemplateUtils {
         try {
             return CONFIGURATION.getTemplate(templateName);
         } catch (IOException e) {
-            logger.error("getTemplate get an err , e = ",e);
+            logger.error("getTemplate get an err , e = ", e);
             return null;
         }
     }
 
     /**
      * 根据模板生成string
-     * @param param 参数
+     *
+     * @param param        参数
      * @param templatePath 模板名字
      * @return string
      */
-    public static String generateStringFromFreeMarker(JSONObject param, String templatePath){
+    public static String generateStringFromFreeMarker(JSONObject param, String templatePath) {
         try {
-            Map<String,Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
             for (Map.Entry<String, Object> entry : param.entrySet()) {
-                data.put(entry.getKey(),entry.getValue());
+                data.put(entry.getKey(), entry.getValue());
             }
             Template template = FreeMarkerTemplateUtils.getTemplate(templatePath);
             StringWriter out = new StringWriter();
+            assert template != null;
             template.process(data, out);
             return out.getBuffer().toString();
         } catch (Exception e) {
-            logger.error("generateStringFromFreeMarker get an err , e = ",e);
+            logger.error("generateStringFromFreeMarker get an err , e = ", e);
             return null;
         }
     }
 
     /**
      * 生成模板文件
-     * @param param 参数
+     *
+     * @param param          参数
      * @param targetFilePath 目标路径
-     * @param templatePath 模板路径
+     * @param templatePath   模板路径
      */
-    public static void generateFile(JSONObject param, String targetFilePath, String templatePath){
+    public static void generateFile(JSONObject param, String targetFilePath, String templatePath) {
         File mapperFile = new File(targetFilePath);
         FileOutputStream fos = null;
         Writer out = null;
         try {
             fos = new FileOutputStream(mapperFile);
-            out = new BufferedWriter(new OutputStreamWriter(fos, CHARSET_STR),10240);
+            out = new BufferedWriter(new OutputStreamWriter(fos, CHARSET_STR), 10240);
             Template template = FreeMarkerTemplateUtils.getTemplate(templatePath);
-            template.process(param,out);
+            template.process(param, out);
         } catch (Exception e) {
-            logger.error("generateUpstream error e = ",e);
-            throw new BusinessException("999999","generate freeMarker template failure");
-        }finally {
+            logger.error("generateUpstream error e = ", e);
+            throw new BusinessException("999999", "generate freeMarker template failure");
+        } finally {
             try {
                 fos.close();
                 out.close();
             } catch (IOException e) {
-                logger.error("generateUpstream error e = ",e);
+                logger.error("generateUpstream error e = ", e);
             }
         }
     }

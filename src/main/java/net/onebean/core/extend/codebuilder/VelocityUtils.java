@@ -12,7 +12,7 @@ import java.io.StringWriter;
 import java.util.Map;
 
 /**
- * @author World
+ * @author 0neBean
  */
 public class VelocityUtils {
 
@@ -22,7 +22,7 @@ public class VelocityUtils {
     /**
      * 当前对象实例
      */
-    private static VelocityUtils velocityUtils = new VelocityUtils();
+    private static final VelocityUtils velocityUtils = new VelocityUtils();
 
     /**
      * 获取当前对象实例
@@ -64,6 +64,7 @@ public class VelocityUtils {
                 logger.error("velocity mergeTemplate error = ", e);
             }
         }
+        assert writer != null;
         return writer.toString();
     }
 }

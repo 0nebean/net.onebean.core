@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * 操作cookie 类
- * @author World
+ * @author 0neBean
  */
 public class CookiesUtils {
 
@@ -23,12 +23,7 @@ public class CookiesUtils {
      */
     public static Cookie getCookieByName(String name) {
         Map<String, Cookie> cookieMap = ReadCookieMap();
-        if (cookieMap.containsKey(name)) {
-            Cookie cookie = (Cookie) cookieMap.get(name);
-            return cookie;
-        } else {
-            return null;
-        }
+        return cookieMap.getOrDefault(name, null);
     }
 
 

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Velocity 引擎工厂类
- * @author World
+ * @author 0neBean
  */
 public class VelocityEngineFactory {
 

@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * xml 操作工具类
  *
- * @author World
+ * @author 0neBean
  */
 public class XmlUtils {
 

@@ -6,7 +6,7 @@ import java.util.Base64;
 
 /**
  * 字符集操作工具类
- * @author World
+ * @author 0neBean
  */
 public class EncodingUtils {
     /**

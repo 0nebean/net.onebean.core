@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 /**
  * 数字转换为汉语中人民币的大写
- * @author World
+ * @author 0neBean
  */
 public class ChNumberUtils {
     /**
@@ -45,7 +45,7 @@ public class ChNumberUtils {
      * @return 对应的汉语大写
      */
     public static String number2CNMontrayUnit(BigDecimal numberOfMoney) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         // -1, 0, or 1 as the value of this BigDecimal is negative, zero, or
         // positive.
         int signum = numberOfMoney.signum();

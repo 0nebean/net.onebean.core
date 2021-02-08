@@ -31,7 +31,7 @@ import java.util.List;
 public class DynamicMapperSqlSessionFactoryBean extends SqlSessionFactoryBean {
 
 	private static final String modelPathKey = "org.mybaits.jvm.model.class.classpath";
-	private static final String entityPathKey = "org.mybaits.jvm.entity.class.classpath";
+//	private static final String entityPathKey = "org.mybaits.jvm.entity.class.classpath";
 	
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DynamicMapperSqlSessionFactoryBean.class);
@@ -99,14 +99,13 @@ public class DynamicMapperSqlSessionFactoryBean extends SqlSessionFactoryBean {
 		List<Class<?>> classList = new ArrayList<Class<?>>();
 		try {
 			String modelPath = PropUtil.getInstance().getConfig(modelPathKey,PropUtil.PUBLIC_CONF_JDBC);
-			String entityPath = PropUtil.getInstance().getConfig(entityPathKey,PropUtil.PUBLIC_CONF_JDBC);
+//			String entityPath = PropUtil.getInstance().getConfig(entityPathKey,PropUtil.PUBLIC_CONF_JDBC);
 			Resource[] rs_model = resolver.getResources(modelPath);
-			// by tangmingbao 为了支持移动端数据上报 而添加，此处model的匹配规则应该是可配置
-			Resource[] rs_entity = resolver.getResources(entityPath);
+//			Resource[] rs_entity = resolver.getResources(entityPath);
 
-			Resource[] rs=(Resource[]) ArrayUtils.addAll(rs_model,rs_entity);
-			
-			for(Resource resource : rs){								
+			//			Resource[] rs=(Resource[]) ArrayUtils.addAll(rs_model,rs_entity);
+
+			for(Resource resource : rs_model){
 				String className = metadataReaderFactory.getMetadataReader(resource).getClassMetadata().getClassName();				
 				Class<?> clazz;
 				try {

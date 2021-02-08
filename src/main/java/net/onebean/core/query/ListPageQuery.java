@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * 包含分页，排序，查询条件的统一条件对象
- * @author World
+ * @author 0neBean
  */
 public class ListPageQuery implements Serializable {
 	/**

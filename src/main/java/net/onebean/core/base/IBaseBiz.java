@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * 所有service接口的父接口
- * @author World
+ * @author 0neBean
  * @param <T> 泛型实体类型
  */
 public interface IBaseBiz<T extends BaseIncrementIdModel> {

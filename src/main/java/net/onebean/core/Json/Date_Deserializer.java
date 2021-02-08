@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * jockson反序列化时间转换插件
- * @author World
+ * @author 0neBean
  */
 public class Date_Deserializer extends JsonDeserializer<Date> {
 

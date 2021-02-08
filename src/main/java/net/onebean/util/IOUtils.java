@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
 
 /**
  * IO操作工具类
- * @author World
+ * @author 0neBean
  */
 public class IOUtils {
 
